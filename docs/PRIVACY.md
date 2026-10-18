@@ -25,7 +25,8 @@
 - **Sem perfilamento**: nenhuma telemetria, nenhum tracker, nenhum SDK de anúncios.
 - Direitos do titular: apagar histórico/base = privacidade restaurada instantânea no aparelho. Se você usou a conta,
   **Conta › Excluir meus dados na nuvem** apaga backup e denúncias do servidor (`DELETE /api/v1/antispam/me`), e
-  cada denúncia pode ser excluída em **Conta › Minhas denúncias**.
+  cada denúncia pode ser excluída em **Conta › Minhas denúncias**. A Conta Conexus inteira se exclui em
+  **Conta › Excluir a Conta Conexus** ou em <https://auth.conexus-systems.com.br/conta/excluir>.
 
 ## Conta Conexus (opcional)
 

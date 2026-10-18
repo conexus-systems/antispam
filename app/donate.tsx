@@ -4,26 +4,26 @@ import QRCode from 'react-native-qrcode-svg';
 import { useRouter } from 'expo-router';
 import { spacing, useTheme } from '../src/ui/theme';
 import {
+  GLYPHS,
   MetroButton,
   MetroEmpty,
-  MetroHeader,
   MetroListItem,
   MetroLoading,
-  MetroPage,
   MetroSection,
   MetroTag,
   MetroText,
   MetroTextField,
-} from '../src/ui/metro';
+} from '@conexus/metro-ui';
+import { useConexusAccount } from '@conexus/account-expo';
+import { AppScreen, Flush } from '../src/ui/app';
 import { buildPixPayload } from '../src/core/donation/pix';
 import {
-  accountErrorMessage,
+  antispamErrorMessage,
   DONATION_STATUS_LABELS,
   formatReais,
   openCheckout,
   parseReais,
   paymentsApi,
-  useAccount,
   type Donation,
 } from '../src/account';
 
@@ -35,7 +35,7 @@ export default function Donate() {
   const [custom, setCustom] = useState('');
   const pixKey = process.env.EXPO_PUBLIC_DONATION_PIX_KEY ?? '';
   const router = useRouter();
-  const account = useAccount();
+  const account = useConexusAccount();
   const [note, setNote] = useState('');
   const [donating, setDonating] = useState(false);
   const [donations, setDonations] = useState<{ loading: boolean; items: Donation[]; error: string | null }>({ loading: false, items: [], error: null });
@@ -45,7 +45,7 @@ export default function Donate() {
     try {
       setDonations({ loading: false, items: await paymentsApi.listDonations(), error: null });
     } catch (e) {
-      setDonations((d) => ({ ...d, loading: false, error: accountErrorMessage(e) }));
+      setDonations((d) => ({ ...d, loading: false, error: antispamErrorMessage(e) }));
     }
   }, []);
 
@@ -92,7 +92,7 @@ export default function Donate() {
       setNote('');
       void loadDonations();
     } catch (e) {
-      Alert.alert('Doação pela conta', accountErrorMessage(e));
+      Alert.alert('Doação pela conta', antispamErrorMessage(e));
     } finally {
       setDonating(false);
     }
@@ -112,9 +112,9 @@ export default function Donate() {
             onChangeText={(v) => setNote(v.slice(0, 500))}
             maxLength={500}
           />
-          <MetroButton
-            title={cents ? `Doar ${formatReais(cents)} pela conta` : 'Doar pela conta'}
-            icon="heart"
+          <MetroButton block
+            label={cents ? `Doar ${formatReais(cents)} pela conta` : 'Doar pela conta'}
+            icon={GLYPHS.heart}
             variant="primary"
             loading={donating}
             disabled={!cents}
@@ -123,21 +123,27 @@ export default function Donate() {
         </MetroSection>
         <MetroSection title="Minhas doações">
           {donations.error && <MetroText variant="body" tone="danger">{donations.error}</MetroText>}
-          {donations.loading && <MetroLoading label="Carregando doações" />}
-          {!donations.loading && !donations.error && donations.items.length === 0 && <MetroEmpty message="Nenhuma doação pela conta ainda." />}
-          <View>
+          {donations.loading && <Flush><MetroLoading label="Carregando doações" /></Flush>}
+          {!donations.loading && !donations.error && donations.items.length === 0 && (
+            <Flush>
+              <MetroEmpty message="Nenhuma doação pela conta ainda." />
+            </Flush>
+          )}
+          <Flush>
             {donations.items.map((d) => (
               <MetroListItem
                 key={d.id}
                 title={d.currency === 'BRL' ? formatReais(d.amountCents) : `${d.currency} ${(d.amountCents / 100).toFixed(2)}`}
                 subtitle={`${new Date(d.createdAt).toLocaleDateString('pt-BR')}${d.productSlug && d.productSlug !== 'antispam-br' ? ` · ${d.productSlug}` : ''}`}
-                value={DONATION_STATUS_LABELS[d.status]}
-                valueColor={d.status === 'paid' ? theme.primary : d.status === 'pending' ? theme.warn : theme.mute}
-                divider
+                trailing={
+                  <MetroText variant="caption" color={d.status === 'paid' ? theme.primary : d.status === 'pending' ? theme.warn : theme.mute}>
+                    {DONATION_STATUS_LABELS[d.status]}
+                  </MetroText>
+                }
               />
             ))}
-          </View>
-          <MetroButton title="Atualizar" small style={{ alignSelf: 'flex-start' }} onPress={() => void loadDonations()} />
+          </Flush>
+          <MetroButton label="Atualizar" size="small" onPress={() => void loadDonations()} />
         </MetroSection>
       </>
     ) : account.status === 'signedOut' ? (
@@ -145,12 +151,12 @@ export default function Donate() {
         <MetroText variant="body" tone="muted">
           Opcional: entre com a Conta Conexus para doar pelo serviço de pagamentos e acompanhar suas doações.
         </MetroText>
-        <MetroButton title="Entrar na conta" icon="lock" small style={{ alignSelf: 'flex-start' }} onPress={() => router.push('/account')} />
+        <MetroButton label="Entrar na conta" icon={GLYPHS.lock} size="small" onPress={() => router.push('/login')} />
       </MetroSection>
     ) : null;
 
   return (
-    <MetroPage header={<MetroHeader title="Apoie o projeto" />}>
+    <AppScreen title="Apoie o projeto">
       <MetroSection>
         <MetroText variant="body">
           O AntiSpam BR é gratuito, open source, sem anúncios e sem venda de dados. Se ele estiver sendo útil,
@@ -167,9 +173,9 @@ export default function Donate() {
         <View style={{ flexDirection: 'row', gap: spacing.s }}>
           {AMOUNTS.map((v) => (
             <View key={v} style={{ flex: 1 }}>
-              <MetroButton
-                title={`R$ ${v}`}
-                small
+              <MetroButton block
+                label={`R$ ${v}`}
+                size="small"
                 variant={amount === v && !custom ? 'primary' : 'secondary'}
                 accessibilityLabel={`R$ ${v}${amount === v && !custom ? ', selecionado' : ''}`}
                 onPress={() => { setAmount(v); setCustom(''); }}
@@ -193,7 +199,7 @@ export default function Donate() {
                 <QRCode value={payload} size={220} color={theme.fieldFocusText} backgroundColor={theme.fieldFocusBg} />
               </View>
             )}
-            <MetroButton title="Copiar código PIX" icon="copy" variant="primary" onPress={copy} />
+            <MetroButton block label="Copiar código PIX" icon={GLYPHS.copy} variant="primary" onPress={copy} />
             {payload && (
               <MetroText variant="caption" numberOfLines={2}>
                 {payload}
@@ -203,7 +209,7 @@ export default function Donate() {
         ) : (
           <MetroText variant="body" tone="muted">
             Doação PIX ainda não configurada neste build.{'\n'}
-            Defina a variável <MetroText variant="body" tone="info">EXPO_PUBLIC_DONATION_PIX_KEY</MetroText> na sua
+            Defina a variável <MetroText variant="body" color={theme.info}>EXPO_PUBLIC_DONATION_PIX_KEY</MetroText> na sua
             sessão de build (nunca no código-fonte) e esta tela gerará o BR Code automaticamente.
           </MetroText>
         )}
@@ -211,9 +217,9 @@ export default function Donate() {
 
       {accountSection}
 
-      <MetroText variant="caption">
-        Obrigado por usar um app livre.
-      </MetroText>
-    </MetroPage>
+      <MetroSection>
+        <MetroText variant="caption">Obrigado por usar um app livre.</MetroText>
+      </MetroSection>
+    </AppScreen>
   );
 }

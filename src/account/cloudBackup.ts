@@ -8,9 +8,7 @@ import { validateBackup } from '../app/backup';
 import type { AppState } from '../app/store';
 import { MODE_DEFAULTS, type DecisionEngineConfig } from '../core/decision/decisionEngine';
 import type { ProtectionMode, Rule } from '../core/types';
-import type { CloudBackupPayload } from './api';
-import { utf8Encode } from './base64';
-import { AccountError } from './errors';
+import { AntispamError, type CloudBackupPayload } from './api';
 
 export const CLOUD_BACKUP_VERSION = 1 as const;
 export const CLOUD_BACKUP_MAX_BYTES = 256 * 1024;
@@ -61,9 +59,19 @@ export function serializeBackup(s: BackupSource, deviceName?: string | null): Cl
   };
 }
 
-/** Tamanho aproximado em bytes UTF-8 do corpo JSON. */
+/** Bytes UTF-8 de uma string (sem depender de TextEncoder). */
+export function utf8Length(value: string): number {
+  let bytes = 0;
+  for (const ch of value) {
+    const cp = ch.codePointAt(0) ?? 0;
+    bytes += cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+  }
+  return bytes;
+}
+
+/** Tamanho em bytes UTF-8 do corpo JSON. */
 export function payloadBytes(payload: CloudBackupPayload): number {
-  return utf8Encode(JSON.stringify(payload)).length;
+  return utf8Length(JSON.stringify(payload));
 }
 
 function isThreshold(v: unknown): v is number {
@@ -87,10 +95,10 @@ function parseCustom(v: unknown): DecisionEngineConfig | null {
 
 /**
  * Valida o `data` vindo da nuvem (JSON opaco para o servidor) e devolve o patch a aplicar.
- * Qualquer desvio do formato → AccountError('backup_invalid'); nada é aplicado parcialmente.
+ * Qualquer desvio do formato → AntispamError('backup_invalid'); nada é aplicado parcialmente.
  */
 export function parseCloudBackupData(data: unknown, current: Pick<AppState, 'settings' | 'config'>): RestorePatch {
-  if (!data || typeof data !== 'object' || Array.isArray(data)) throw new AccountError('backup_invalid');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) throw new AntispamError('backup_invalid');
   const d = data as Record<string, unknown>;
   const settings = (d.settings && typeof d.settings === 'object' && !Array.isArray(d.settings) ? d.settings : {}) as Record<string, unknown>;
   const mode = (settings.mode ?? 'BALANCED') as ProtectionMode;
@@ -102,7 +110,7 @@ export function parseCloudBackupData(data: unknown, current: Pick<AppState, 'set
       data: { mode, rules: d.rules, allowlist: d.allowed, blacklist: d.blocked },
     }),
   );
-  if (!check.ok) throw new AccountError('backup_invalid');
+  if (!check.ok) throw new AntispamError('backup_invalid');
   let config: DecisionEngineConfig;
   if (mode === 'CUSTOM') {
     const custom = parseCustom(settings.custom);

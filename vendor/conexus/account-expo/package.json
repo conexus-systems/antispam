@@ -1,0 +1,20 @@
+{
+  "name": "@conexus/account-expo",
+  "version": "0.1.0",
+  "description": "Conexus Account (bff-auth) for Expo apps: public PKCE client, secure session, refresh, authed fetch, ready-made W10M login screen.",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/index.ts",
+  "react-native": "src/index.ts",
+  "types": "src/index.ts",
+  "files": ["src", "!src/**/__tests__", "README.md", "VERSION"],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@conexus/metro-ui": "^0.1.0",
+    "expo-crypto": "*",
+    "expo-secure-store": "*",
+    "expo-web-browser": "*",
+    "react": ">=19",
+    "react-native": ">=0.79"
+  }
+}

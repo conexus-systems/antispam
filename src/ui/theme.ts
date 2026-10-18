@@ -3,7 +3,7 @@
  *
  * Porte 1:1 dos tokens do Conexus Launcher (ui/Theme.kt, Accent.kt, Type.kt, Motion.kt).
  * Telas e componentes NÃO definem cores, tamanhos de fonte, raios ou durações próprias:
- * usam `useTheme()` (tema do sistema, escuro por padrão) e os componentes de `src/ui/metro/`.
+ * usam `useTheme()` (tema do sistema, escuro por padrão) e os componentes de `@conexus/metro-ui` (vendor/conexus/metro-ui).
  *
  * Cor de destaque: a marca era verde (#22C55E = proteção); a essencial W10M mais próxima é
  * Verde #60A917. Vermelho = bloqueio, laranja/âmbar = suspeito (cores do próprio W10M).
