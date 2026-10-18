@@ -3,7 +3,7 @@
  * motor crítico em ambiente Node (sem device).
  */
 jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+  require('@react-native-async-storage/async-storage/jest'),
 );
 
 jest.mock('expo-notifications', () => ({

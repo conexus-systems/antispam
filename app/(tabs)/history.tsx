@@ -1,8 +1,17 @@
 import { useMemo, useState } from 'react';
-import { Alert, FlatList, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { theme } from '../../src/ui/theme';
-import { actionColor, actionLabel } from '../../src/ui/theme';
-import { Badge, Btn, Card } from '../../src/ui/components';
+import { Alert, FlatList, View } from 'react-native';
+import { actionColor, actionLabel, spacing, useTheme } from '../../src/ui/theme';
+import {
+  MetroButton,
+  MetroDialog,
+  MetroEmpty,
+  MetroHeader,
+  MetroListItem,
+  MetroMenu,
+  MetroPage,
+  MetroTag,
+  MetroText,
+} from '../../src/ui/metro';
 import { useAppState, getState, toggleList } from '../../src/app/store';
 import { reportHistoryEntry } from '../../src/app/screening';
 import { REPORT_CATEGORY_LABELS, type HistoryEntry, type ReportCategory } from '../../src/core/types';
@@ -10,9 +19,11 @@ import { REPORT_CATEGORY_LABELS, type HistoryEntry, type ReportCategory } from '
 const CATEGORIES = Object.keys(REPORT_CATEGORY_LABELS) as ReportCategory[];
 
 export default function History() {
+  const theme = useTheme();
   const history = useAppState((s) => s.history);
   const [openId, setOpenId] = useState<string | null>(null);
   const [reporting, setReporting] = useState<HistoryEntry | null>(null);
+  const [menuFor, setMenuFor] = useState<HistoryEntry | null>(null);
 
   const stats = useMemo(() => {
     const blocked = history.filter((h) => h.action === 'BLOCK').length;
@@ -37,89 +48,83 @@ export default function History() {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={{ padding: 16, paddingBottom: 8 }}>
-        <Text style={styles.title}>Histórico</Text>
-        <Text style={{ color: theme.textDim, fontSize: 13 }}>
-          {history.length} chamadas · {stats.blocked} bloqueadas · ⏱️ ~{stats.savedMin} min poupados (estimativa)
-        </Text>
-      </View>
-
+    <MetroPage
+      scroll={false}
+      header={
+        <MetroHeader
+          title="Histórico"
+          subtitle={`${history.length} chamadas · ${stats.blocked} bloqueadas · ~${stats.savedMin} min poupados (estimativa)`}
+        />
+      }
+    >
       <FlatList
         data={history}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ padding: 16, paddingTop: 8, gap: 10, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingHorizontal: theme.gutter, paddingBottom: spacing.xl * 2 }}
         ListEmptyComponent={
-          <Card>
-            <Text style={{ color: theme.textDim, textAlign: 'center', paddingVertical: 20 }}>
-              Nenhuma chamada ainda.{'\n'}Use o simulador na aba Início para ver o app funcionando.
-            </Text>
-          </Card>
+          <MetroEmpty message={'Nenhuma chamada ainda.\nUse o simulador na aba Início para ver o app funcionando.'} />
         }
         renderItem={({ item }) => {
           const open = openId === item.id;
           return (
-            <Card>
-              <Pressable onPress={() => setOpenId(open ? null : item.id)}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <View style={{ flexShrink: 1 }}>
-                    <Text style={{ color: theme.text, fontWeight: '700', fontSize: 15 }}>
-                      {item.name || item.display || 'Número oculto'}
-                    </Text>
-                    <Text style={{ color: theme.textDim, fontSize: 12 }}>
-                      {new Date(item.at).toLocaleString('pt-BR')} · score {item.score}
-                    </Text>
-                  </View>
-                  <Badge text={actionLabel(item.action)} color={actionColor(item.action)} filled />
-                </View>
-              </Pressable>
+            <View style={{ borderBottomWidth: 1, borderBottomColor: theme.border }}>
+              <MetroListItem
+                title={item.name || item.display || 'Número oculto'}
+                subtitle={`${new Date(item.at).toLocaleString('pt-BR')} · score ${item.score}`}
+                selected={open}
+                onPress={() => setOpenId(open ? null : item.id)}
+                onLongPress={() => setMenuFor(item)}
+                accessibilityHint={open ? 'Recolher detalhes' : 'Mostrar motivos e ações'}
+                right={<MetroTag text={actionLabel(item.action)} color={actionColor(item.action, theme)} filled />}
+              />
 
               {open && (
-                <View style={{ marginTop: 10, gap: 8 }}>
-                  <Text style={{ color: theme.textDim, fontSize: 13 }}>Motivos (decisão explicável):</Text>
-                  {item.reasons.length === 0 && <Text style={{ color: theme.mute, fontSize: 13 }}>• Nenhum sinal relevante.</Text>}
+                <View style={{ paddingBottom: spacing.m, gap: spacing.s }}>
+                  <MetroText variant="caption">Motivos (decisão explicável):</MetroText>
+                  {item.reasons.length === 0 && <MetroText variant="body" tone="mute">• Nenhum sinal relevante.</MetroText>}
                   {item.reasons.map((r) => (
-                    <Text key={r} style={{ color: theme.text, fontSize: 13 }}>• {r}</Text>
+                    <MetroText key={r} variant="body">• {r}</MetroText>
                   ))}
-                  {item.simulated && <Badge text="simulada" color={theme.info} />}
-                  <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
-                    <Btn title="🚩 Denunciar" variant="danger" small onPress={() => setReporting(item)} />
-                    <Btn title="✅ Sempre permitir" small onPress={() => quickAction(item, 'allow')} />
-                    <Btn title="🚫 Bloquear nº" variant="danger" small onPress={() => quickAction(item, 'block')} />
+                  {item.simulated && <MetroTag text="simulada" color={theme.info} />}
+                  <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap', marginTop: spacing.xs }}>
+                    <MetroButton title="Denunciar" icon="flag" variant="danger" small onPress={() => setReporting(item)} />
+                    <MetroButton title="Sempre permitir" icon="check" small onPress={() => quickAction(item, 'allow')} />
+                    <MetroButton title="Bloquear nº" icon="block" variant="danger" small onPress={() => quickAction(item, 'block')} />
                   </View>
                 </View>
               )}
-            </Card>
+            </View>
           );
         }}
       />
 
-      <Modal visible={!!reporting} transparent animationType="slide" onRequestClose={() => setReporting(null)}>
-        <View style={styles.modalBackdrop}>
-          <Card style={{ width: '92%', maxHeight: '80%' }}>
-            <Text style={{ color: theme.text, fontWeight: '800', fontSize: 17, marginBottom: 4 }}>
-              Denunciar {reporting?.display}
-            </Text>
-            <Text style={{ color: theme.textDim, fontSize: 13, marginBottom: 12 }}>
-              Obrigado por ajudar! A denúncia é processada localmente (anti-abuse: denunciantes únicos, recência e falso-positivos).
-            </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {CATEGORIES.map((cat) => (
-                <Btn key={cat} title={REPORT_CATEGORY_LABELS[cat]} variant="ghost" small onPress={() => chooseCategory(cat)} />
-              ))}
-            </View>
-            <View style={{ marginTop: 12 }}>
-              <Btn title="Cancelar" variant="ghost" small onPress={() => setReporting(null)} />
-            </View>
-          </Card>
+      <MetroMenu
+        visible={!!menuFor}
+        onClose={() => setMenuFor(null)}
+        items={
+          menuFor
+            ? [
+                { label: 'Denunciar', icon: 'flag', destructive: true, onPress: () => setReporting(menuFor) },
+                { label: 'Sempre permitir', icon: 'check', onPress: () => quickAction(menuFor, 'allow') },
+                { label: 'Bloquear nº', icon: 'block', destructive: true, onPress: () => quickAction(menuFor, 'block') },
+              ]
+            : []
+        }
+      />
+
+      <MetroDialog
+        visible={!!reporting}
+        title={`Denunciar ${reporting?.display ?? ''}`}
+        message="Obrigado por ajudar! A denúncia é processada localmente (anti-abuse: denunciantes únicos, recência e falso-positivos)."
+        onRequestClose={() => setReporting(null)}
+        buttons={[{ title: 'Cancelar', onPress: () => setReporting(null) }]}
+      >
+        <View>
+          {CATEGORIES.map((cat) => (
+            <MetroListItem key={cat} title={REPORT_CATEGORY_LABELS[cat]} onPress={() => chooseCategory(cat)} />
+          ))}
         </View>
-      </Modal>
-    </View>
+      </MetroDialog>
+    </MetroPage>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: theme.bg },
-  title: { color: theme.text, fontSize: 24, fontWeight: '800' },
-  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 16 },
-});

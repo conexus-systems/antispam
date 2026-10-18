@@ -4,10 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { hydrate, getState } from '../src/app/store';
 import { ensureDb } from '../src/app/screening';
-import { theme } from '../src/ui/theme';
+import { useTheme } from '../src/ui/theme';
 import { getDefaultExpoNotificationBehavior } from '../src/app/notifications';
 
 export default function RootLayout() {
+  const theme = useTheme();
   const [ready, setReady] = useState(false);
   useEffect(() => {
     (async () => {
@@ -24,7 +25,7 @@ export default function RootLayout() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
-      <StatusBar style="light" />
+      <StatusBar style={theme.dark ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
