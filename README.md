@@ -1,6 +1,6 @@
 # AntiSpam BR 🛡️
 
-**Bloqueio inteligente de chamadas de spam — 100% open source, sem anúncios, sem cadastro, privacy-first.**
+**Bloqueio inteligente de chamadas de spam — 100% open source, sem anúncios, cadastro opcional, privacy-first.**
 
 Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003`, emergências (que **nunca** são bloqueadas), e toma decisões **explicáveis** em **< 100 ms**, totalmente **offline**.
 
@@ -25,6 +25,7 @@ Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003
 | IA Assistente opcional via **OpenRouter** (off por padrão, **nunca** decide bloqueio) | ✅ |
 | Backup JSON validado (anti-payload-malicioso) | ✅ |
 | Doação PIX com BR Code gerado no aparelho (CRC16/EMV) | ✅ |
+| Conta Conexus **opcional**: backup manual na nuvem, denúncias identificadas, doação pela conta ([docs/ACCOUNT.md](docs/ACCOUNT.md)) | ✅ 0.3.0 |
 | Simulador de chamadas (funciona no Expo Go, iOS e Android) | ✅ |
 | Módulo nativo Kotlin de referência (CallScreeningService + RoleManager) | ✅ código de referência |
 | Bloqueio real em device | 🔜 dev build (ver [Roadmap](docs/ROADMAP.md)) |
@@ -54,15 +55,15 @@ npm run typecheck # TypeScript estrito
 
 ## 🔐 Privacidade por design
 
-- Processamento **100% local** por padrão; sem conta, sem telemetria, sem anúncios.
+- Processamento **100% local** por padrão; conta opcional, sem telemetria, sem anúncios.
 - Contatos/histórico **nunca** saem do aparelho.
-- A única rede opcional é a **IA Assistente** (você fornece a chave OpenRouter; envia apenas o número que você pediu para analisar).
+- Rede só no que você escolhe: **IA Assistente** (sua chave OpenRouter; envia só o número que você pediu para analisar) e a **Conta Conexus** opcional (backup que você manda fazer, denúncias que você marca para enviar, doações) — ver [docs/ACCOUNT.md](docs/ACCOUNT.md).
 - Base comunitária (futuro) usará **hash-prefix / k-anonymity** — ver `docs/PRIVACY.md` e `docs/THREAT_MODEL.md`.
 
 ## 🗂️ Estrutura
 
 ```
-app/                  # Telas (expo-router): onboarding, (tabs), donate
+app/                  # Telas (expo-router): onboarding, (tabs), donate, account
 src/core/             # Motor puro e testável
   phone/              #   normalização BR + emergências + regras 0303
   detection/          #   SpamScore + CampaignDetector

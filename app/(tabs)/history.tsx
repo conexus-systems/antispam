@@ -11,10 +11,12 @@ import {
   MetroPage,
   MetroTag,
   MetroText,
+  MetroToggle,
 } from '../../src/ui/metro';
 import { useAppState, getState, toggleList } from '../../src/app/store';
 import { reportHistoryEntry } from '../../src/app/screening';
 import { REPORT_CATEGORY_LABELS, type HistoryEntry, type ReportCategory } from '../../src/core/types';
+import { accountErrorMessage, antispamApi, isE164, useAccount } from '../../src/account';
 
 const CATEGORIES = Object.keys(REPORT_CATEGORY_LABELS) as ReportCategory[];
 
@@ -24,6 +26,14 @@ export default function History() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [reporting, setReporting] = useState<HistoryEntry | null>(null);
   const [menuFor, setMenuFor] = useState<HistoryEntry | null>(null);
+  /** Denúncia identificada: opcional por denúncia, sempre começa desligada. */
+  const [sendWithAccount, setSendWithAccount] = useState(false);
+  const account = useAccount();
+
+  function openReport(entry: HistoryEntry) {
+    setSendWithAccount(false);
+    setReporting(entry);
+  }
 
   const stats = useMemo(() => {
     const blocked = history.filter((h) => h.action === 'BLOCK').length;
@@ -33,9 +43,21 @@ export default function History() {
 
   async function chooseCategory(cat: ReportCategory) {
     if (!reporting) return;
-    await reportHistoryEntry(reporting.id, cat);
+    const entry = reporting;
+    const identified = sendWithAccount && account.status === 'signedIn';
+    await reportHistoryEntry(entry.id, cat);
     setReporting(null);
-    Alert.alert('Obrigado!', 'Denúncia registrada localmente. Ela fortalece sua base e, quando a base comunitária estiver ativa, ajudará todos.');
+    setSendWithAccount(false);
+    if (!identified) {
+      Alert.alert('Obrigado!', 'Denúncia registrada localmente. Ela fortalece sua base e, quando a base comunitária estiver ativa, ajudará todos.');
+      return;
+    }
+    try {
+      await antispamApi.createReport({ number: entry.number, category: cat, occurredAt: entry.at });
+      Alert.alert('Obrigado!', 'Denúncia registrada no aparelho e enviada com a sua Conta Conexus. Veja ou exclua em Conta › Minhas denúncias.');
+    } catch (e) {
+      Alert.alert('Denúncia registrada só no aparelho', accountErrorMessage(e));
+    }
   }
 
   function quickAction(entry: HistoryEntry, kind: 'allow' | 'block') {
@@ -87,7 +109,7 @@ export default function History() {
                   ))}
                   {item.simulated && <MetroTag text="simulada" color={theme.info} />}
                   <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap', marginTop: spacing.xs }}>
-                    <MetroButton title="Denunciar" icon="flag" variant="danger" small onPress={() => setReporting(item)} />
+                    <MetroButton title="Denunciar" icon="flag" variant="danger" small onPress={() => openReport(item)} />
                     <MetroButton title="Sempre permitir" icon="check" small onPress={() => quickAction(item, 'allow')} />
                     <MetroButton title="Bloquear nº" icon="block" variant="danger" small onPress={() => quickAction(item, 'block')} />
                   </View>
@@ -104,7 +126,7 @@ export default function History() {
         items={
           menuFor
             ? [
-                { label: 'Denunciar', icon: 'flag', destructive: true, onPress: () => setReporting(menuFor) },
+                { label: 'Denunciar', icon: 'flag', destructive: true, onPress: () => openReport(menuFor) },
                 { label: 'Sempre permitir', icon: 'check', onPress: () => quickAction(menuFor, 'allow') },
                 { label: 'Bloquear nº', icon: 'block', destructive: true, onPress: () => quickAction(menuFor, 'block') },
               ]
@@ -119,6 +141,19 @@ export default function History() {
         onRequestClose={() => setReporting(null)}
         buttons={[{ title: 'Cancelar', onPress: () => setReporting(null) }]}
       >
+        {account.status === 'signedIn' && (
+          <MetroToggle
+            label="Enviar com minha conta"
+            description={
+              reporting && isE164(reporting.number)
+                ? 'Envia número, categoria e data para a sua Conta Conexus. A denúncia local acontece de qualquer jeito.'
+                : 'Só números no formato internacional (+55…) podem ser enviados.'
+            }
+            value={sendWithAccount}
+            onValueChange={setSendWithAccount}
+            disabled={!reporting || !isE164(reporting.number)}
+          />
+        )}
         <View>
           {CATEGORIES.map((cat) => (
             <MetroListItem key={cat} title={REPORT_CATEGORY_LABELS[cat]} onPress={() => chooseCategory(cat)} />

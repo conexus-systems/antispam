@@ -6,6 +6,7 @@ import { hydrate, getState } from '../src/app/store';
 import { ensureDb } from '../src/app/screening';
 import { useTheme } from '../src/ui/theme';
 import { getDefaultExpoNotificationBehavior } from '../src/app/notifications';
+import { account } from '../src/account';
 
 export default function RootLayout() {
   const theme = useTheme();
@@ -15,6 +16,8 @@ export default function RootLayout() {
       await hydrate();
       await ensureDb();
       await getDefaultExpoNotificationBehavior();
+      // Só lê tokens do armazenamento seguro; sem client_id não faz nada (e nunca chama a rede aqui).
+      await account.init().catch(() => {});
       setReady(true);
     })();
   }, []);
@@ -36,6 +39,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="verify" />
         <Stack.Screen name="donate" />
+        <Stack.Screen name="account" />
       </Stack>
     </View>
   );

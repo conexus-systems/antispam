@@ -16,7 +16,10 @@ export default function TabsLayout() {
   return (
     <Tabs
       tabBar={(props) => (
-        <MetroAppBar {...props} icons={ICONS} menu={[{ label: 'Apoiar o projeto', onPress: () => router.push('/donate') }]} />
+        <MetroAppBar {...props} icons={ICONS} menu={[
+            { label: 'Conta', onPress: () => router.push('/account') },
+            { label: 'Apoiar o projeto', onPress: () => router.push('/donate') },
+          ]} />
       )}
       screenOptions={{
         headerShown: false,
