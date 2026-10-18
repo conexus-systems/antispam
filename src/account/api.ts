@@ -1,13 +1,61 @@
 /**
- * Clientes das rotas usadas pelo AntiSpam BR:
- * - API BFF: `/api/v1/antispam/backup`, `/api/v1/antispam/reports`, `/api/v1/antispam/me`.
+ * Clientes das rotas usadas pelo AntiSpam BR, sobre a sessão de `@conexus/account-expo` (`authorizedRequest`:
+ * Bearer, 401 → refresh → nova tentativa única, erros com mensagem fixa):
+ * - API BFF (`apiBaseUrl`): `/api/v1/antispam/backup`, `/api/v1/antispam/reports`, `/api/v1/antispam/me`.
  * - Payments BFF: `POST/GET /v1/me/donations` (formato de bff-payment `Api::V1::Me::DonationsController`).
  * Toda resposta é validada campo a campo; nada do corpo vai para a tela além dos campos esperados.
  */
-import { BILLING_RETURN_URI, PRODUCT_SLUG } from './config';
-import { AccountError } from './errors';
-import type { AccountSession } from './session';
+import {
+  CONEXUS_ACCOUNT_ERROR_MESSAGES,
+  ConexusAccountError,
+  isConexusAccountError,
+  type ConexusAccountErrorCode,
+  type ConexusSession,
+} from '@conexus/account-expo';
 import type { ReportCategory } from '../core/types';
+
+export const SCHEME = 'antispambr';
+export const BILLING_RETURN_URI = `${SCHEME}://billing/return`;
+export const PRODUCT_SLUG = 'antispam-br';
+
+// ---------- Erros ----------
+
+/** Erros só do AntiSpam BR (os da conta/HTTP são `ConexusAccountError` do pacote). */
+export type AntispamErrorCode = 'checkout_insecure' | 'number_not_supported' | 'backup_invalid' | 'reauth_required';
+
+export const ANTISPAM_ERROR_MESSAGES: Record<AntispamErrorCode, string> = {
+  checkout_insecure: 'Link de pagamento recusado (não é HTTPS).',
+  number_not_supported: 'Este número não está no formato internacional (+55…) e não pode ser enviado.',
+  backup_invalid: 'O backup da nuvem está em formato inválido e não foi aplicado.',
+  reauth_required: 'Esta sessão não vale para o AntiSpam BR. Entre novamente.',
+};
+
+/** Textos do pacote ajustados ao AntiSpam BR (o app funciona sem conta; limites do servidor). */
+const MESSAGE_OVERRIDES: Partial<Record<ConexusAccountErrorCode, string>> = {
+  invalid_client: 'O AntiSpam BR ainda não está registrado na Conta Conexus.',
+  network: 'Sem conexão com os serviços Conexus. O app continua funcionando sem conta.',
+  audience_not_allowed: 'O AntiSpam BR ainda não está autorizado neste serviço Conexus.',
+  not_found: 'Nada encontrado na nuvem.',
+  payload_too_large: 'Dados grandes demais para enviar (backup: limite de 256 KB).',
+  rate_limited: 'Limite de uso atingido. Tente novamente mais tarde (denúncias: até 50 por dia).',
+  unavailable: 'Serviço Conexus indisponível no momento. O app continua funcionando sem conta.',
+};
+
+export class AntispamError extends Error {
+  readonly code: AntispamErrorCode;
+  constructor(code: AntispamErrorCode) {
+    super(ANTISPAM_ERROR_MESSAGES[code]);
+    this.name = 'AntispamError';
+    this.code = code;
+  }
+}
+
+/** Mensagem segura para qualquer erro (nunca expõe corpo do servidor, tokens ou exceções desconhecidas). */
+export function antispamErrorMessage(error: unknown): string {
+  if (error instanceof AntispamError) return error.message;
+  if (error instanceof ConexusAccountError) return MESSAGE_OVERRIDES[error.code] ?? error.message;
+  return MESSAGE_OVERRIDES.unavailable ?? CONEXUS_ACCOUNT_ERROR_MESSAGES.unavailable;
+}
 
 // ---------- Backup ----------
 
@@ -125,10 +173,10 @@ export interface Donation {
 
 export function donationBody(amountCents: number, message?: string | null) {
   if (!Number.isInteger(amountCents) || amountCents < DONATION_MIN_CENTS || amountCents > DONATION_MAX_CENTS) {
-    throw new AccountError('validation_failed');
+    throw new ConexusAccountError('validation_failed');
   }
   const note = message?.trim() || undefined;
-  if (note && note.length > DONATION_MESSAGE_MAX) throw new AccountError('validation_failed');
+  if (note && note.length > DONATION_MESSAGE_MAX) throw new ConexusAccountError('validation_failed');
   return {
     amount_cents: amountCents,
     currency: 'BRL',
@@ -156,11 +204,11 @@ export function formatReais(cents: number): string {
 // ---------- Parsing ----------
 
 function obj(v: unknown): Record<string, unknown> {
-  if (!v || typeof v !== 'object' || Array.isArray(v)) throw new AccountError('invalid_response');
+  if (!v || typeof v !== 'object' || Array.isArray(v)) throw new ConexusAccountError('invalid_response');
   return v as Record<string, unknown>;
 }
 function str(v: unknown, max = 200): string {
-  if (typeof v !== 'string' || v.length > max) throw new AccountError('invalid_response');
+  if (typeof v !== 'string' || v.length > max) throw new ConexusAccountError('invalid_response');
   return v;
 }
 function optStr(v: unknown, max = 500): string | null {
@@ -171,7 +219,7 @@ function id(v: unknown): string {
   return str(v, 64);
 }
 function int(v: unknown): number {
-  if (typeof v !== 'number' || !Number.isInteger(v) || v < 0) throw new AccountError('invalid_response');
+  if (typeof v !== 'number' || !Number.isInteger(v) || v < 0) throw new ConexusAccountError('invalid_response');
   return v;
 }
 
@@ -202,7 +250,7 @@ export function parseReport(json: unknown): CloudReport {
 
 export function parseReportPage(json: unknown): CloudReportPage {
   const p = obj(json);
-  if (!Array.isArray(p.reports)) throw new AccountError('invalid_response');
+  if (!Array.isArray(p.reports)) throw new ConexusAccountError('invalid_response');
   return {
     reports: p.reports.slice(0, 200).map(parseReport),
     page: int(p.page),
@@ -214,7 +262,7 @@ export function parseReportPage(json: unknown): CloudReportPage {
 export function parseCheckout(json: unknown): DonationCheckout {
   const c = obj(json);
   const url = str(c.checkout_url, 4096);
-  if (!/^https:\/\/[^\s/@]+(\/|$|\?)/.test(url)) throw new AccountError('checkout_insecure');
+  if (!/^https:\/\/[^\s/@]+(\/|$|\?)/.test(url)) throw new AntispamError('checkout_insecure');
   return { donationId: id(c.donation_id), checkoutUrl: url, provider: str(c.provider, 64) };
 }
 
@@ -222,7 +270,7 @@ const STATUSES: DonationStatus[] = ['pending', 'paid', 'failed', 'expired'];
 
 export function parseDonations(json: unknown): Donation[] {
   const root = obj(json);
-  if (!Array.isArray(root.donations)) throw new AccountError('invalid_response');
+  if (!Array.isArray(root.donations)) throw new ConexusAccountError('invalid_response');
   return root.donations.slice(0, 100).map((item) => {
     const d = obj(item);
     const status = str(d.status, 32) as DonationStatus;
@@ -239,38 +287,51 @@ export function parseDonations(json: unknown): Donation[] {
 
 // ---------- Clientes ----------
 
-export function createAntispamApi(session: AccountSession) {
-  const base = () => `${session.config.apiUrl}/api/v1/antispam`;
-  const call = (url: string, opts: Parameters<AccountSession['authorizedRequest']>[1]) =>
-    session.authorizedRequest(url, opts, { disconnectOnForbidden: true });
+type RequestOpts = Parameters<ConexusSession['authorizedRequest']>[1];
+
+const API = '/api/v1/antispam';
+
+export function createAntispamApi(session: ConexusSession) {
+  /**
+   * Caminho relativo → `apiBaseUrl` da conta. A API do AntiSpam responde 403 `forbidden` quando o token não foi
+   * emitido para este app: o pacote encerra a sessão local (`disconnectOnForbidden`) e aqui vira `reauth_required`.
+   */
+  async function call(path: string, opts: RequestOpts) {
+    try {
+      return await session.authorizedRequest(`${API}${path}`, opts, { disconnectOnForbidden: true });
+    } catch (e) {
+      if (isConexusAccountError(e, 'forbidden')) throw new AntispamError('reauth_required');
+      throw e;
+    }
+  }
   return {
     /** null quando não há backup na nuvem (404). */
     async getBackup(): Promise<CloudBackup | null> {
       try {
-        const res = await call(`${base()}/backup`, { method: 'GET' });
+        const res = await call('/backup', { method: 'GET' });
         return parseBackup(res.json);
       } catch (e) {
-        if (e instanceof AccountError && e.code === 'not_found') return null;
+        if (isConexusAccountError(e, 'not_found')) return null;
         throw e;
       }
     },
     async putBackup(payload: CloudBackupPayload): Promise<{ updatedAt: string }> {
-      const res = await call(`${base()}/backup`, { method: 'PUT', json: payload });
+      const res = await call('/backup', { method: 'PUT', json: payload });
       const body = obj(res.json);
       return { updatedAt: str(body.updated_at, 64) };
     },
     async deleteBackup(): Promise<void> {
       try {
-        await call(`${base()}/backup`, { method: 'DELETE' });
+        await call('/backup', { method: 'DELETE' });
       } catch (e) {
-        if (!(e instanceof AccountError && e.code === 'not_found')) throw e;
+        if (!isConexusAccountError(e, 'not_found')) throw e;
       }
     },
     async createReport(input: { number: string; category: ReportCategory; note?: string; occurredAt?: string }): Promise<CloudReport> {
       const number = toE164(input.number);
-      if (!number) throw new AccountError('number_not_supported');
+      if (!number) throw new AntispamError('number_not_supported');
       const note = input.note?.trim();
-      const res = await call(`${base()}/reports`, {
+      const res = await call('/reports', {
         method: 'POST',
         json: {
           number,
@@ -282,29 +343,30 @@ export function createAntispamApi(session: AccountSession) {
       return parseReport(res.json);
     },
     async listReports(page = 1): Promise<CloudReportPage> {
-      const res = await call(`${base()}/reports?page=${Math.max(1, Math.floor(page))}`, { method: 'GET' });
+      const res = await call(`/reports?page=${Math.max(1, Math.floor(page))}`, { method: 'GET' });
       return parseReportPage(res.json);
     },
     async deleteReport(reportId: string): Promise<void> {
-      await call(`${base()}/reports/${encodeURIComponent(reportId)}`, { method: 'DELETE' });
+      await call(`/reports/${encodeURIComponent(reportId)}`, { method: 'DELETE' });
     },
     /** Apaga backup e denúncias do usuário no servidor. */
     async deleteMyData(): Promise<void> {
-      await call(`${base()}/me`, { method: 'DELETE' });
+      await call('/me', { method: 'DELETE' });
     },
   };
 }
 
-export function createPaymentsApi(session: AccountSession) {
-  const base = () => `${session.config.paymentsUrl}/v1/me/donations`;
+/** `paymentsUrl`: URL base HTTPS do Payments BFF (fora da API do app, por isso absoluta). */
+export function createPaymentsApi(session: ConexusSession, paymentsUrl: string) {
+  const url = `${paymentsUrl}/v1/me/donations`;
   return {
     async donate(amountCents: number, message?: string | null): Promise<DonationCheckout> {
       const body = donationBody(amountCents, message);
-      const res = await session.authorizedRequest(base(), { method: 'POST', json: body });
+      const res = await session.authorizedRequest(url, { method: 'POST', json: body });
       return parseCheckout(res.json);
     },
     async listDonations(): Promise<Donation[]> {
-      const res = await session.authorizedRequest(base(), { method: 'GET' });
+      const res = await session.authorizedRequest(url, { method: 'GET' });
       return parseDonations(res.json);
     },
   };

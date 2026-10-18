@@ -1,17 +1,8 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { spacing, useTheme } from '../../src/ui/theme';
-import {
-  MetroButton,
-  MetroHeader,
-  MetroPage,
-  MetroRow,
-  MetroScore,
-  MetroSection,
-  MetroTag,
-  MetroText,
-  MetroTextField,
-} from '../../src/ui/metro';
+import { GLYPHS, MetroButton, MetroSection, MetroTag, MetroText, MetroTextField } from '@conexus/metro-ui';
+import { AppScreen, MetroRow, MetroScore } from '../../src/ui/app';
 import { useAppState, toggleList } from '../../src/app/store';
 import { getDb, ensureDb } from '../../src/app/screening';
 import { normalizePhone, formatDisplay } from '../../src/core/phone/normalize';
@@ -92,7 +83,7 @@ export default function Verify() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <MetroPage header={<MetroHeader title="Verificar número" />}>
+      <AppScreen title="Verificar número">
         <MetroSection>
           <MetroTextField
             label="Número"
@@ -101,14 +92,14 @@ export default function Verify() {
             placeholder="(11) 99999-9999 ou +5511…"
             keyboardType="phone-pad"
             onSubmitEditing={analyze}
-            help="A análise local nunca envia o número para a Internet."
+            hint="A análise local nunca envia o número para a Internet."
           />
-          <MetroButton title="Analisar" variant="primary" onPress={analyze} loading={analyzing} />
+          <MetroButton block label="Analisar" variant="primary" onPress={analyze} loading={analyzing} />
         </MetroSection>
 
         {result && (
           <>
-            <View style={{ flexDirection: 'row', gap: spacing.l, alignItems: 'flex-start' }}>
+            <View style={{ flexDirection: 'row', gap: spacing.l, alignItems: 'flex-start', paddingHorizontal: spacing.m }}>
               <MetroScore score={result.score} />
               <View style={{ flex: 1, gap: spacing.xs }}>
                 <MetroText variant="subtitle">{result.display}</MetroText>
@@ -123,7 +114,7 @@ export default function Verify() {
 
             <MetroSection title="Por que este score?">
               {result.contributions.length === 0 && (
-                <MetroText variant="body" tone="mute">Nenhum sinal de risco encontrado nesta base local.</MetroText>
+                <MetroText variant="body" color={theme.mute}>Nenhum sinal de risco encontrado nesta base local.</MetroText>
               )}
               <View>
                 {result.contributions.map((c, i) => (
@@ -136,8 +127,8 @@ export default function Verify() {
 
             <MetroSection title="Ações rápidas">
               <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap' }}>
-                <MetroButton title="Sempre permitir" icon="check" small onPress={() => toggleList('allowlist', result.canonical)} />
-                <MetroButton title="Bloquear sempre" icon="block" variant="danger" small onPress={() => toggleList('blacklist', result.canonical)} />
+                <MetroButton label="Sempre permitir" icon={GLYPHS.check} size="small" onPress={() => toggleList('allowlist', result.canonical)} />
+                <MetroButton label="Bloquear sempre" icon={GLYPHS.block} variant="danger" size="small" onPress={() => toggleList('blacklist', result.canonical)} />
               </View>
             </MetroSection>
 
@@ -150,7 +141,7 @@ export default function Verify() {
                 </MetroText>
               )}
               {ai.enabled && !aiInsight && (
-                <MetroButton title="Pedir análise à IA" onPress={askAi} loading={aiLoading} />
+                <MetroButton block label="Pedir análise à IA" onPress={askAi} loading={aiLoading} />
               )}
               {aiError && <MetroText variant="body" tone="danger" accessibilityLiveRegion="polite">{aiError}</MetroText>}
               {aiInsight && (
@@ -161,7 +152,7 @@ export default function Verify() {
                     <MetroText key={`r${i}`} variant="body" tone="muted">• {r}</MetroText>
                   ))}
                   {aiInsight.advice.map((a, i) => (
-                    <MetroText key={`a${i}`} variant="body" tone="info">→ {a}</MetroText>
+                    <MetroText key={`a${i}`} variant="body" color={theme.info}>→ {a}</MetroText>
                   ))}
                   <MetroText variant="caption">
                     Opinião gerada por IA — use como apoio, não como verdade.
@@ -171,7 +162,7 @@ export default function Verify() {
             </MetroSection>
           </>
         )}
-      </MetroPage>
+      </AppScreen>
     </KeyboardAvoidingView>
   );
 }

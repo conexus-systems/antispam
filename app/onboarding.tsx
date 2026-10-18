@@ -3,7 +3,7 @@ import { Alert, Platform, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { spacing, useTheme } from '../src/ui/theme';
-import { Glyph, MetroButton, MetroPage, MetroText, type GlyphName } from '../src/ui/metro';
+import { Glyph, GLYPHS, MetroButton, MetroScreen, MetroText, type GlyphName } from '@conexus/metro-ui';
 import { setState } from '../src/app/store';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, requestCallScreeningRole } from '../src/app/nativeBridge';
 
@@ -60,10 +60,10 @@ export default function Onboarding() {
   }
 
   return (
-    <MetroPage scroll={false} contentStyle={{ paddingHorizontal: theme.gutter }}>
+    <MetroScreen padded>
       <View style={{ flex: 1, justifyContent: 'center', gap: spacing.xl }}>
         <MetroText variant="kicker">AntiSpam BR</MetroText>
-        <Glyph name={s.icon} size={72} color={theme.primary} strokeWidth={1.2} />
+        <Glyph name={s.icon} size={72} color={theme.primary} />
         <MetroText variant="header" accessibilityRole="header">{s.title}</MetroText>
         <MetroText variant="body" tone="muted">{s.body}</MetroText>
         <View
@@ -79,20 +79,20 @@ export default function Onboarding() {
       <View style={{ gap: spacing.m, paddingBottom: spacing.xl }}>
         {step < STEPS.length - 1 ? (
           <>
-            <MetroButton title="Continuar" variant="primary" onPress={() => { Haptics.selectionAsync().catch(() => {}); setStep(step + 1); }} />
-            <MetroButton title="Pular" onPress={() => router.replace('/(tabs)')} />
+            <MetroButton block label="Continuar" variant="primary" onPress={() => { Haptics.selectionAsync().catch(() => {}); setStep(step + 1); }} />
+            <MetroButton block label="Pular" onPress={() => router.replace('/(tabs)')} />
           </>
         ) : (
           <>
-            <MetroButton title={activating ? 'Ativando…' : 'Ativar proteção'} icon="shield" variant="primary" onPress={activate} loading={activating} />
+            <MetroButton block label={activating ? 'Ativando…' : 'Ativar proteção'} icon={GLYPHS.shield} variant="primary" onPress={activate} loading={activating} />
             <MetroButton
-              title="Ativar depois — explorar em modo demonstração"
+              label="Ativar depois — explorar em modo demonstração"
               variant="text"
               onPress={() => { setState({ onboardingDone: true }); router.replace('/(tabs)'); }}
             />
           </>
         )}
       </View>
-    </MetroPage>
+    </MetroScreen>
   );
 }

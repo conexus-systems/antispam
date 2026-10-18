@@ -2,21 +2,21 @@ import { useMemo, useState } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { actionColor, actionLabel, spacing, useTheme } from '../../src/ui/theme';
 import {
+  GLYPHS,
   MetroButton,
   MetroDialog,
   MetroEmpty,
-  MetroHeader,
   MetroListItem,
-  MetroMenu,
-  MetroPage,
   MetroTag,
   MetroText,
   MetroToggle,
-} from '../../src/ui/metro';
+} from '@conexus/metro-ui';
 import { useAppState, getState, toggleList } from '../../src/app/store';
 import { reportHistoryEntry } from '../../src/app/screening';
 import { REPORT_CATEGORY_LABELS, type HistoryEntry, type ReportCategory } from '../../src/core/types';
-import { accountErrorMessage, antispamApi, isE164, useAccount } from '../../src/account';
+import { useConexusAccount } from '@conexus/account-expo';
+import { antispamApi, antispamErrorMessage, isE164 } from '../../src/account';
+import { AppScreen } from '../../src/ui/app';
 
 const CATEGORIES = Object.keys(REPORT_CATEGORY_LABELS) as ReportCategory[];
 
@@ -25,10 +25,9 @@ export default function History() {
   const history = useAppState((s) => s.history);
   const [openId, setOpenId] = useState<string | null>(null);
   const [reporting, setReporting] = useState<HistoryEntry | null>(null);
-  const [menuFor, setMenuFor] = useState<HistoryEntry | null>(null);
   /** Denúncia identificada: opcional por denúncia, sempre começa desligada. */
   const [sendWithAccount, setSendWithAccount] = useState(false);
-  const account = useAccount();
+  const account = useConexusAccount();
 
   function openReport(entry: HistoryEntry) {
     setSendWithAccount(false);
@@ -44,7 +43,7 @@ export default function History() {
   async function chooseCategory(cat: ReportCategory) {
     if (!reporting) return;
     const entry = reporting;
-    const identified = sendWithAccount && account.status === 'signedIn';
+    const identified = sendWithAccount && account.isSignedIn;
     await reportHistoryEntry(entry.id, cat);
     setReporting(null);
     setSendWithAccount(false);
@@ -56,7 +55,7 @@ export default function History() {
       await antispamApi.createReport({ number: entry.number, category: cat, occurredAt: entry.at });
       Alert.alert('Obrigado!', 'Denúncia registrada no aparelho e enviada com a sua Conta Conexus. Veja ou exclua em Conta › Minhas denúncias.');
     } catch (e) {
-      Alert.alert('Denúncia registrada só no aparelho', accountErrorMessage(e));
+      Alert.alert('Denúncia registrada só no aparelho', antispamErrorMessage(e));
     }
   }
 
@@ -70,19 +69,15 @@ export default function History() {
   }
 
   return (
-    <MetroPage
+    <AppScreen
       scroll={false}
-      header={
-        <MetroHeader
-          title="Histórico"
-          subtitle={`${history.length} chamadas · ${stats.blocked} bloqueadas · ~${stats.savedMin} min poupados (estimativa)`}
-        />
-      }
+      title="Histórico"
+      subtitle={`${history.length} chamadas · ${stats.blocked} bloqueadas · ~${stats.savedMin} min poupados (estimativa)`}
     >
       <FlatList
         data={history}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingHorizontal: theme.gutter, paddingBottom: spacing.xl * 2 }}
+        contentContainerStyle={{ paddingBottom: spacing.xl * 2 }}
         ListEmptyComponent={
           <MetroEmpty message={'Nenhuma chamada ainda.\nUse o simulador na aba Início para ver o app funcionando.'} />
         }
@@ -95,23 +90,22 @@ export default function History() {
                 subtitle={`${new Date(item.at).toLocaleString('pt-BR')} · score ${item.score}`}
                 selected={open}
                 onPress={() => setOpenId(open ? null : item.id)}
-                onLongPress={() => setMenuFor(item)}
                 accessibilityHint={open ? 'Recolher detalhes' : 'Mostrar motivos e ações'}
-                right={<MetroTag text={actionLabel(item.action)} color={actionColor(item.action, theme)} filled />}
+                trailing={<MetroTag text={actionLabel(item.action)} color={actionColor(item.action, theme)} filled />}
               />
 
               {open && (
-                <View style={{ paddingBottom: spacing.m, gap: spacing.s }}>
+                <View style={{ paddingHorizontal: spacing.m, paddingBottom: spacing.m, gap: spacing.s }}>
                   <MetroText variant="caption">Motivos (decisão explicável):</MetroText>
-                  {item.reasons.length === 0 && <MetroText variant="body" tone="mute">• Nenhum sinal relevante.</MetroText>}
+                  {item.reasons.length === 0 && <MetroText variant="body" color={theme.mute}>• Nenhum sinal relevante.</MetroText>}
                   {item.reasons.map((r) => (
                     <MetroText key={r} variant="body">• {r}</MetroText>
                   ))}
                   {item.simulated && <MetroTag text="simulada" color={theme.info} />}
                   <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap', marginTop: spacing.xs }}>
-                    <MetroButton title="Denunciar" icon="flag" variant="danger" small onPress={() => openReport(item)} />
-                    <MetroButton title="Sempre permitir" icon="check" small onPress={() => quickAction(item, 'allow')} />
-                    <MetroButton title="Bloquear nº" icon="block" variant="danger" small onPress={() => quickAction(item, 'block')} />
+                    <MetroButton label="Denunciar" icon={GLYPHS.flag} variant="danger" size="small" onPress={() => openReport(item)} />
+                    <MetroButton label="Sempre permitir" icon={GLYPHS.check} size="small" onPress={() => quickAction(item, 'allow')} />
+                    <MetroButton label="Bloquear nº" icon={GLYPHS.block} variant="danger" size="small" onPress={() => quickAction(item, 'block')} />
                   </View>
                 </View>
               )}
@@ -120,28 +114,14 @@ export default function History() {
         }}
       />
 
-      <MetroMenu
-        visible={!!menuFor}
-        onClose={() => setMenuFor(null)}
-        items={
-          menuFor
-            ? [
-                { label: 'Denunciar', icon: 'flag', destructive: true, onPress: () => openReport(menuFor) },
-                { label: 'Sempre permitir', icon: 'check', onPress: () => quickAction(menuFor, 'allow') },
-                { label: 'Bloquear nº', icon: 'block', destructive: true, onPress: () => quickAction(menuFor, 'block') },
-              ]
-            : []
-        }
-      />
-
       <MetroDialog
         visible={!!reporting}
         title={`Denunciar ${reporting?.display ?? ''}`}
         message="Obrigado por ajudar! A denúncia é processada localmente (anti-abuse: denunciantes únicos, recência e falso-positivos)."
-        onRequestClose={() => setReporting(null)}
-        buttons={[{ title: 'Cancelar', onPress: () => setReporting(null) }]}
+        onDismiss={() => setReporting(null)}
+        buttons={[{ text: 'Cancelar', style: 'cancel' }]}
       >
-        {account.status === 'signedIn' && (
+        {account.isSignedIn && (
           <MetroToggle
             label="Enviar com minha conta"
             description={
@@ -160,6 +140,6 @@ export default function History() {
           ))}
         </View>
       </MetroDialog>
-    </MetroPage>
+    </AppScreen>
   );
 }

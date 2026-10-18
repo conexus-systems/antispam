@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { Alert, Clipboard, Pressable, View } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Alert, Clipboard, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 import { spacing, useTheme } from '../../src/ui/theme';
 import {
+  GLYPHS,
   MetroButton,
   MetroDialog,
-  MetroHeader,
-  MetroIconButton,
   MetroListItem,
   MetroPage,
-  MetroPivot,
+  MetroPivotPager,
   MetroRadio,
-  MetroRow,
   MetroSection,
-  MetroSwitch,
   MetroText,
   MetroTextField,
   MetroToggle,
-} from '../../src/ui/metro';
+} from '@conexus/metro-ui';
+import { useConexusAccount } from '@conexus/account-expo';
+import { AppScreen, Flush, MetroRow } from '../../src/ui/app';
 import {
   useAppState,
   setMode,
@@ -33,7 +33,17 @@ import { getDb } from '../../src/app/screening';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, openCallScreeningSettings, requestCallScreeningRole } from '../../src/app/nativeBridge';
 import { HANDLE_0303_LABELS, type Handle0303 } from '../../src/core/phone/brazilRules';
 import type { ProtectionMode } from '../../src/core/types';
-import { useAccount } from '../../src/account';
+
+const APP_VERSION: string = Constants.expoConfig?.version ?? '';
+
+/** Conteúdo de uma página do pivô: rolável, com o mesmo espaçamento das outras telas. */
+function pivotPage(content: ReactNode) {
+  return (
+    <MetroPage scroll padded={false}>
+      <View style={{ gap: spacing.xl, paddingBottom: spacing.xl * 2 }}>{content}</View>
+    </MetroPage>
+  );
+}
 
 const MODES: Array<{ id: ProtectionMode; label: string; desc: string }> = [
   { id: 'OFF', label: 'Desativado', desc: 'Não analisa nem bloqueia nada.' },
@@ -54,7 +64,7 @@ export default function Settings() {
   const blacklist = useAppState((s) => s.blacklist);
   const ai = useAppState((s) => s.ai);
   const history = useAppState((s) => s.history);
-  const account = useAccount();
+  const account = useConexusAccount();
 
   const [newRule, setNewRule] = useState({ name: '', prefix: '' });
   const [listInput, setListInput] = useState({ allow: '', block: '' });
@@ -108,30 +118,32 @@ export default function Settings() {
         <MetroSection>
           <MetroRow label="Papel de filtragem de chamadas" value={roleHeld ? 'Ativo' : 'Inativo'} color={roleHeld ? theme.primary : theme.danger} />
           <View style={{ flexDirection: 'row', gap: spacing.s }}>
-            <MetroButton title="Conceder papel" variant="primary" small onPress={async () => { await requestCallScreeningRole(); await refreshRole(); }} />
-            <MetroButton title="Abrir configurações" small onPress={() => openCallScreeningSettings()} />
+            <MetroButton label="Conceder papel" variant="primary" size="small" onPress={async () => { await requestCallScreeningRole(); await refreshRole(); }} />
+            <MetroButton label="Abrir configurações" size="small" onPress={() => openCallScreeningSettings()} />
           </View>
         </MetroSection>
       )}
       <MetroSection title="Proteção">
-        <View accessibilityRole="radiogroup">
-          {MODES.map((m) => (
-            <MetroRadio key={m.id} label={m.label} description={m.desc} selected={mode === m.id} onSelect={() => setMode(m.id)} />
-          ))}
-        </View>
+        <Flush>
+          <View accessibilityRole="radiogroup">
+            {MODES.map((m) => (
+              <MetroRadio key={m.id} label={m.label} hint={m.desc} selected={mode === m.id} onSelect={() => setMode(m.id)} />
+            ))}
+          </View>
+        </Flush>
       </MetroSection>
       {mode === 'CUSTOM' && (
         <MetroSection title="Personalizado">
           <MetroText variant="caption">Bloquear a partir do score:</MetroText>
           <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap' }}>
             {[60, 70, 75, 85, 90].map((v) => (
-              <MetroButton key={v} title={String(v)} small variant={config.blockThreshold === v ? 'primary' : 'secondary'} onPress={() => setCustomConfig({ blockThreshold: v })} />
+              <MetroButton key={v} label={String(v)} size="small" variant={config.blockThreshold === v ? 'primary' : 'secondary'} onPress={() => setCustomConfig({ blockThreshold: v })} />
             ))}
           </View>
           <MetroText variant="caption" style={{ marginTop: spacing.s }}>Chamadas 0303 (telemarketing):</MetroText>
           <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap' }}>
             {(Object.keys(HANDLE_0303_LABELS) as Handle0303[]).map((k) => (
-              <MetroButton key={k} title={HANDLE_0303_LABELS[k]} small variant={config.handle0303 === k ? 'primary' : 'secondary'} onPress={() => setCustomConfig({ handle0303: k })} />
+              <MetroButton key={k} label={HANDLE_0303_LABELS[k]} size="small" variant={config.handle0303 === k ? 'primary' : 'secondary'} onPress={() => setCustomConfig({ handle0303: k })} />
             ))}
           </View>
         </MetroSection>
@@ -141,36 +153,26 @@ export default function Settings() {
 
   const rulesPage = (
     <MetroSection title={`Regras (${rules.length})`}>
-      <View>
+      <Flush>
         {rules.map((r) => (
           <MetroListItem
             key={r.id}
             title={r.name}
             subtitle={`${r.match.kind}: ${('value' in r.match && r.match.value) || ('pattern' in r.match && r.match.pattern) || ''} · ação ${r.action}`}
-            divider
-            right={
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
-                <Pressable
-                  onPress={() => upsertRule({ ...r, enabled: !r.enabled })}
-                  accessibilityRole="switch"
-                  accessibilityLabel={r.name}
-                  accessibilityState={{ checked: r.enabled }}
-                  hitSlop={12}
-                  style={{ minHeight: 44, justifyContent: 'center' }}
-                >
-                  <MetroSwitch value={r.enabled} />
-                </Pressable>
-                <MetroIconButton icon="close" label={`Remover regra ${r.name}`} onPress={() => removeRule(r.id)} />
-              </View>
-            }
+            meta={r.enabled ? 'ativa' : 'desativada'}
+            metaTone={r.enabled ? 'accent' : 'muted'}
+            actions={[
+              { label: r.enabled ? 'Desativar' : 'Ativar', accessibilityLabel: `${r.enabled ? 'Desativar' : 'Ativar'} regra ${r.name}`, onPress: () => upsertRule({ ...r, enabled: !r.enabled }) },
+              { label: 'Remover', accessibilityLabel: `Remover regra ${r.name}`, onPress: () => removeRule(r.id) },
+            ]}
           />
         ))}
-      </View>
+      </Flush>
       <View style={{ flexDirection: 'row', gap: spacing.s, marginTop: spacing.s }}>
         <MetroTextField containerStyle={{ flex: 1 }} placeholder="Nome da regra" value={newRule.name} onChangeText={(v) => setNewRule((p) => ({ ...p, name: v }))} />
         <MetroTextField containerStyle={{ flex: 1 }} placeholder="+55114002…" value={newRule.prefix} onChangeText={(v) => setNewRule((p) => ({ ...p, prefix: v }))} keyboardType="phone-pad" />
       </View>
-      <MetroButton title="Adicionar regra de prefixo (bloquear)" icon="add" variant="primary" onPress={addPrefixRule} />
+      <MetroButton block label="Adicionar regra de prefixo (bloquear)" icon={GLYPHS.add} variant="primary" onPress={addPrefixRule} />
     </MetroSection>
   );
 
@@ -184,7 +186,7 @@ export default function Settings() {
         </View>
         <View style={{ flexDirection: 'row', gap: spacing.s, alignItems: 'flex-start' }}>
           <MetroTextField containerStyle={{ flex: 1 }} placeholder="+5511999999999" value={listInput.allow} onChangeText={(v) => setListInput((p) => ({ ...p, allow: v }))} keyboardType="phone-pad" />
-          <MetroButton title="Adicionar" small onPress={() => addToList('allow')} />
+          <MetroButton label="Adicionar" size="small" onPress={() => addToList('allow')} />
         </View>
       </MetroSection>
       <MetroSection title={`Bloqueados (${blacklist.length})`}>
@@ -195,7 +197,7 @@ export default function Settings() {
         </View>
         <View style={{ flexDirection: 'row', gap: spacing.s, alignItems: 'flex-start' }}>
           <MetroTextField containerStyle={{ flex: 1 }} placeholder="+5511999999999" value={listInput.block} onChangeText={(v) => setListInput((p) => ({ ...p, block: v }))} keyboardType="phone-pad" />
-          <MetroButton title="Adicionar" small onPress={() => addToList('block')} />
+          <MetroButton label="Adicionar" size="small" onPress={() => addToList('block')} />
         </View>
       </MetroSection>
     </>
@@ -204,12 +206,13 @@ export default function Settings() {
   const generalPage = (
     <>
       <MetroSection title="Conta Conexus (opcional)">
+        <Flush>
         <MetroListItem
-          icon="lock"
+          icon={GLYPHS.lock}
           title="Conta"
           subtitle={
-            account.status === 'signedIn'
-              ? account.profile?.email ?? account.profile?.name ?? 'Conectado'
+            account.isSignedIn
+              ? account.user?.email ?? account.user?.name ?? 'Conectado'
               : account.status === 'disabled'
                 ? 'Em breve · o app funciona sem conta'
                 : 'Backup na nuvem, denúncias identificadas e doações'
@@ -217,20 +220,23 @@ export default function Settings() {
           onPress={() => router.push('/account')}
           accessibilityHint="Abre a tela da Conta Conexus"
         />
+        </Flush>
       </MetroSection>
 
       <MetroSection title="IA Assistente (OpenRouter)">
-        <MetroToggle
-          label="IA Assistente"
-          description="Off por padrão · nunca decide bloqueios"
-          value={ai.enabled}
-          onValueChange={(v) => setState({ ai: { ...ai, enabled: v } })}
-        />
+        <Flush>
+          <MetroToggle
+            label="IA Assistente"
+            description="Off por padrão · nunca decide bloqueios"
+            value={ai.enabled}
+            onValueChange={(v) => setState({ ai: { ...ai, enabled: v } })}
+          />
+        </Flush>
         {ai.enabled && (
           <>
             <MetroTextField label="Chave OpenRouter" placeholder="sk-or-v1-…" value={aiKeyInput} onChangeText={setAiKeyInput} autoCapitalize="none" secureTextEntry />
             <MetroTextField label="Modelo" placeholder="Modelo (opcional, ex.: deepseek/deepseek-chat-v3.1:free)" value={ai.model} onChangeText={(v) => setState({ ai: { ...ai, model: v } })} autoCapitalize="none" />
-            <MetroButton title="Salvar chave" variant="primary" small style={{ alignSelf: 'flex-start' }} onPress={() => { setState({ ai: { ...ai, apiKey: aiKeyInput.trim() } }); Alert.alert('Salvo', 'Chave armazenada apenas neste aparelho.'); }} />
+            <MetroButton label="Salvar chave" variant="primary" size="small" onPress={() => { setState({ ai: { ...ai, apiKey: aiKeyInput.trim() } }); Alert.alert('Salvo', 'Chave armazenada apenas neste aparelho.'); }} />
             <MetroText variant="caption">
               Use modelos ":free" do OpenRouter. A chave sai do aparelho somente para openrouter.ai ao pedir análise.
             </MetroText>
@@ -244,10 +250,10 @@ export default function Settings() {
         </MetroText>
         <View style={{ flexDirection: 'row', gap: spacing.s }}>
           <View style={{ flex: 1 }}>
-            <MetroButton title="Exportar (copiar)" small onPress={doExport} />
+            <MetroButton block label="Exportar (copiar)" size="small" onPress={doExport} />
           </View>
           <View style={{ flex: 1 }}>
-            <MetroButton title="Importar (colar)" small onPress={doImport} />
+            <MetroButton block label="Importar (colar)" size="small" onPress={doImport} />
           </View>
         </View>
       </MetroSection>
@@ -256,50 +262,52 @@ export default function Settings() {
         <View>
           <MetroRow label="Registros de reputação" value={String(getDb().size)} />
           <MetroRow label="Chamadas no histórico" value={String(history.length)} />
-          <MetroRow label="Armazenamento" value={account.status === 'signedIn' ? 'aparelho + backup manual na conta' : 'somente no aparelho'} color={theme.primary} />
+          <MetroRow label="Armazenamento" value={account.isSignedIn ? 'aparelho + backup manual na conta' : 'somente no aparelho'} color={theme.primary} />
         </View>
       </MetroSection>
 
       <MetroSection title="Sobre">
         <View>
-          <MetroRow label="Versão" value="0.3.0" />
+          <MetroRow label="Versão" value={APP_VERSION} />
           <MetroRow label="Licença" value="MIT (open source)" />
           <MetroRow label="Telemetria" value="nenhuma" color={theme.primary} />
           <MetroRow label="Anúncios" value="nenhum" color={theme.primary} />
         </View>
-        <MetroButton title="Apoiar o projeto" icon="heart" onPress={() => router.push('/donate')} />
+        <MetroButton block label="Apoiar o projeto" icon={GLYPHS.heart} onPress={() => router.push('/donate')} />
       </MetroSection>
 
       <MetroSection title="Reset">
-        <MetroButton title="Limpar histórico" variant="danger" small style={{ alignSelf: 'flex-start' }} onPress={() => setConfirmReset(true)} />
+        <MetroButton label="Limpar histórico" variant="danger" size="small" onPress={() => setConfirmReset(true)} />
       </MetroSection>
 
-      <MetroText variant="caption">
-        AntiSpam BR · fail-safe: em caso de dúvida, a chamada é permitida.
-      </MetroText>
+      <MetroSection>
+        <MetroText variant="caption">
+          AntiSpam BR · fail-safe: em caso de dúvida, a chamada é permitida.
+        </MetroText>
+      </MetroSection>
     </>
   );
 
   return (
-    <MetroPage scroll={false} header={<MetroHeader title="Ajustes" />}>
-      <MetroPivot
+    <AppScreen scroll={false} title="Ajustes">
+      <MetroPivotPager
         pages={[
-          { key: 'protection', title: 'proteção', render: () => protection },
-          { key: 'rules', title: 'regras', render: () => rulesPage },
-          { key: 'lists', title: 'listas', render: () => listsPage },
-          { key: 'general', title: 'geral', render: () => generalPage },
+          { key: 'protection', title: 'proteção', render: () => pivotPage(protection) },
+          { key: 'rules', title: 'regras', render: () => pivotPage(rulesPage) },
+          { key: 'lists', title: 'listas', render: () => pivotPage(listsPage) },
+          { key: 'general', title: 'geral', render: () => pivotPage(generalPage) },
         ]}
       />
       <MetroDialog
         visible={confirmReset}
         title="Confirmar"
         message="Apagar todo o histórico local?"
-        onRequestClose={() => setConfirmReset(false)}
+        onDismiss={() => setConfirmReset(false)}
         buttons={[
-          { title: 'Apagar', destructive: true, onPress: () => { setState({ history: [] }); setConfirmReset(false); } },
-          { title: 'Cancelar', onPress: () => setConfirmReset(false) },
+          { text: 'Apagar', style: 'destructive', onPress: () => setState({ history: [] }) },
+          { text: 'Cancelar', style: 'cancel' },
         ]}
       />
-    </MetroPage>
+    </AppScreen>
   );
 }

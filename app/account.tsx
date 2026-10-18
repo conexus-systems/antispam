@@ -1,34 +1,29 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { spacing, useTheme } from '../src/ui/theme';
 import {
+  GLYPHS,
   MetroButton,
   MetroDialog,
   MetroEmpty,
-  MetroHeader,
   MetroIconButton,
   MetroListItem,
   MetroLoading,
   MetroNotice,
-  MetroPage,
-  MetroRow,
   MetroSection,
   MetroText,
-} from '../src/ui/metro';
+} from '@conexus/metro-ui';
+import { useConexusAccount } from '@conexus/account-expo';
+import { AppScreen, Flush, MetroRow } from '../src/ui/app';
 import { getState } from '../src/app/store';
 import {
-  account,
-  accountConfig,
-  accountErrorMessage,
   antispamApi,
+  antispamErrorMessage,
   applyRestore,
   backupNow,
   CLOUD_REPORT_CATEGORY_LABELS,
   fetchRestorePreview,
-  openExternal,
   summaryText,
-  useAccount,
   type CloudReport,
 } from '../src/account';
 
@@ -48,9 +43,9 @@ function when(iso: string): string {
 }
 
 export default function Account() {
-  const theme = useTheme();
   const router = useRouter();
-  const { status, profile } = useAccount();
+  const account = useConexusAccount();
+  const { status, user } = account;
   const [busy, setBusy] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<Confirm | null>(null);
   const [backupInfo, setBackupInfo] = useState<BackupInfo>({ state: 'loading' });
@@ -68,7 +63,7 @@ export default function Account() {
       const b = await antispamApi.getBackup();
       setBackupInfo(b ? { state: 'ok', updatedAt: b.updatedAt, deviceName: b.deviceName } : { state: 'none' });
     } catch (e) {
-      setBackupInfo({ state: 'error', message: accountErrorMessage(e) });
+      setBackupInfo({ state: 'error', message: antispamErrorMessage(e) });
     }
   }, []);
 
@@ -79,7 +74,7 @@ export default function Account() {
       setReports((prev) => (page === 1 ? res.reports : [...prev, ...res.reports.filter((r) => !prev.some((p) => p.id === r.id))]));
       setReportsMeta({ page: res.page, total: res.total, loading: false, error: null });
     } catch (e) {
-      setReportsMeta((m) => ({ ...m, loading: false, error: accountErrorMessage(e) }));
+      setReportsMeta((m) => ({ ...m, loading: false, error: antispamErrorMessage(e) }));
     }
   }, []);
 
@@ -94,16 +89,14 @@ export default function Account() {
     try {
       await fn();
     } catch (e) {
-      Alert.alert('Conta Conexus', accountErrorMessage(e));
+      Alert.alert('Conta Conexus', antispamErrorMessage(e));
     } finally {
       setBusy(null);
     }
   }
 
-  const signIn = () =>
-    run('signin', async () => {
-      await account.signIn();
-    });
+  /** Tela padrão de login Conexus (só "Entrar" e "Criar conta", no navegador). */
+  const signIn = () => router.push('/login');
 
   const signOut = () =>
     run('signout', async () => {
@@ -211,9 +204,11 @@ export default function Account() {
   if (status === 'disabled') {
     body = (
       <>
-        <MetroNotice title="Em breve" tone="info">
-          O login com a Conta Conexus ainda não está ativo nesta versão. O AntiSpam BR continua 100% funcional, offline e sem cadastro.
-        </MetroNotice>
+        <MetroSection>
+          <MetroNotice title="Em breve" tone="info">
+            O login com a Conta Conexus ainda não está ativo nesta versão. O AntiSpam BR continua 100% funcional, offline e sem cadastro.
+          </MetroNotice>
+        </MetroSection>
         <MetroSection title="Para que serve a conta">
           <MetroText variant="body" tone="muted">
             Quando ativada, a conta (opcional) permite guardar um backup das suas listas, enviar denúncias identificadas e acompanhar
@@ -231,9 +226,9 @@ export default function Account() {
           <MetroText variant="body">
             Entre ou crie a sua Conta Conexus para fazer backup das listas, enviar denúncias identificadas e doar pela conta.
           </MetroText>
-          <MetroButton title="Entrar ou criar conta" icon="lock" variant="primary" loading={busy === 'signin'} onPress={signIn} />
+          <MetroButton block label="Entrar ou criar conta" icon={GLYPHS.lock} variant="primary" onPress={signIn} />
           <MetroText variant="caption">
-            Abre a página segura da Conta Conexus no navegador (Google ou e-mail e senha). Sua senha nunca passa pelo app.
+            A mesma conta de todos os apps Conexus. O login acontece na página segura da Conta Conexus, no navegador: sua senha nunca passa pelo app.
           </MetroText>
         </MetroSection>
         {whatGoes}
@@ -243,12 +238,14 @@ export default function Account() {
     body = (
       <>
         <MetroSection title="Conta Conexus">
-          <MetroListItem icon="lock" large title={profile?.name || 'Conta Conexus'} subtitle={profile?.email ?? undefined} />
-          <MetroButton title="Sair" small style={{ alignSelf: 'flex-start' }} loading={busy === 'signout'} onPress={signOut} />
+          <Flush>
+            <MetroListItem icon={GLYPHS.lock} large title={user?.name || 'Conta Conexus'} subtitle={user?.email ?? undefined} />
+          </Flush>
+          <MetroButton label="Sair" size="small" loading={busy === 'signout'} onPress={signOut} />
         </MetroSection>
 
         <MetroSection title="Backup na nuvem">
-          {backupInfo.state === 'loading' && <MetroLoading label="Consultando backup" />}
+          {backupInfo.state === 'loading' && <Flush><MetroLoading label="Consultando backup" /></Flush>}
           {backupInfo.state === 'none' && <MetroText variant="body" tone="muted">Nenhum backup na nuvem ainda.</MetroText>}
           {backupInfo.state === 'error' && <MetroText variant="body" tone="danger">{backupInfo.message}</MetroText>}
           {backupInfo.state === 'ok' && (
@@ -257,70 +254,76 @@ export default function Account() {
               {!!backupInfo.deviceName && <MetroRow label="Aparelho" value={backupInfo.deviceName} />}
             </View>
           )}
-          <MetroButton title="Fazer backup agora" icon="copy" variant="primary" onPress={askBackup} />
-          <MetroButton title="Restaurar deste backup" icon="history" loading={busy === 'restore'} onPress={askRestore} disabled={backupInfo.state === 'none'} />
-          {backupInfo.state === 'ok' && <MetroButton title="Apagar backup da nuvem" variant="text" onPress={askDeleteBackup} />}
+          <MetroButton block label="Fazer backup agora" icon={GLYPHS.copy} variant="primary" onPress={askBackup} />
+          <MetroButton block label="Restaurar deste backup" icon={GLYPHS.history} loading={busy === 'restore'} onPress={askRestore} disabled={backupInfo.state === 'none'} />
+          {backupInfo.state === 'ok' && <MetroButton label="Apagar backup da nuvem" variant="text" onPress={askDeleteBackup} />}
         </MetroSection>
 
         <MetroSection title={`Minhas denúncias${reportsMeta.total ? ` (${reportsMeta.total})` : ''}`}>
           {reportsMeta.error && <MetroText variant="body" tone="danger">{reportsMeta.error}</MetroText>}
           {!reportsMeta.error && !reportsMeta.loading && reports.length === 0 && (
-            <MetroEmpty message={'Nenhuma denúncia enviada com a conta.\nNo Histórico, ao denunciar, marque "Enviar com minha conta".'} />
+            <Flush>
+              <MetroEmpty message={'Nenhuma denúncia enviada com a conta.\nNo Histórico, ao denunciar, marque "Enviar com minha conta".'} />
+            </Flush>
           )}
-          <View>
+          <Flush>
             {reports.map((r) => (
               <MetroListItem
                 key={r.id}
                 title={r.number}
                 subtitle={`${CLOUD_REPORT_CATEGORY_LABELS[r.category]} · ${when(r.createdAt)}${r.note ? ` · ${r.note}` : ''}`}
-                divider
-                right={<MetroIconButton icon="delete" label={`Excluir denúncia de ${r.number}`} onPress={() => askDeleteReport(r)} />}
+                trailing={
+                  <MetroIconButton icon={GLYPHS.delete} accessibilityLabel={`Excluir denúncia de ${r.number}`} onPress={() => askDeleteReport(r)} />
+                }
               />
             ))}
-          </View>
-          {reportsMeta.loading && <MetroLoading label="Carregando denúncias" />}
+          </Flush>
+          {reportsMeta.loading && <Flush><MetroLoading label="Carregando denúncias" /></Flush>}
           {!reportsMeta.loading && reports.length < reportsMeta.total && (
-            <MetroButton title="Carregar mais" small style={{ alignSelf: 'flex-start' }} onPress={() => loadReports(reportsMeta.page + 1)} />
+            <MetroButton label="Carregar mais" size="small" onPress={() => loadReports(reportsMeta.page + 1)} />
           )}
           {!reportsMeta.loading && reportsMeta.error && (
-            <MetroButton title="Tentar de novo" small style={{ alignSelf: 'flex-start' }} onPress={() => loadReports(1)} />
+            <MetroButton label="Tentar de novo" size="small" onPress={() => loadReports(1)} />
           )}
         </MetroSection>
 
         <MetroSection title="Doações">
-          <MetroButton title="Doar e ver minhas doações" icon="heart" onPress={() => router.push('/donate')} />
+          <MetroButton block label="Doar e ver minhas doações" icon={GLYPHS.heart} onPress={() => router.push('/donate')} />
         </MetroSection>
 
         {whatGoes}
 
         <MetroSection title="Seus dados">
-          <MetroButton title="Excluir meus dados na nuvem" icon="delete" variant="danger" onPress={askDeleteMyData} />
+          <MetroButton block label="Excluir meus dados na nuvem" icon={GLYPHS.delete} variant="danger" onPress={askDeleteMyData} />
           <MetroText variant="caption">Apaga backup e denúncias desta conta no servidor do AntiSpam BR.</MetroText>
-          <MetroButton title="Como excluir a Conta Conexus" variant="text" onPress={() => void openExternal(accountConfig.accountDeletionUrl)} />
+          <MetroButton label="Excluir a Conta Conexus" variant="text" accessibilityRole="link" onPress={() => void account.openDeleteAccount()} />
+          <MetroText variant="caption">{account.deleteAccountUrl}</MetroText>
         </MetroSection>
       </>
     );
   }
 
   return (
-    <MetroPage header={<MetroHeader title="Conta" />}>
+    <AppScreen title="Conta">
       {body}
       {busy === 'confirm' && <MetroLoading label="Enviando" />}
-      <MetroText variant="caption">Conta opcional · o app funciona inteiro sem ela.</MetroText>
+      <MetroSection>
+        <MetroText variant="caption">Conta opcional · o app funciona inteiro sem ela.</MetroText>
+      </MetroSection>
       <MetroDialog
         visible={!!confirm}
         title={confirm?.title ?? ''}
         message={confirm?.message}
-        onRequestClose={() => setConfirm(null)}
+        onDismiss={() => setConfirm(null)}
         buttons={
           confirm
             ? [
-                { title: confirm.action, primary: !confirm.destructive, destructive: confirm.destructive, onPress: () => void confirmNow() },
-                { title: 'Cancelar', onPress: () => setConfirm(null) },
+                { text: confirm.action, style: confirm.destructive ? 'destructive' : 'default', onPress: () => void confirmNow() },
+                { text: 'Cancelar', style: 'cancel' },
               ]
             : []
         }
       />
-    </MetroPage>
+    </AppScreen>
   );
 }

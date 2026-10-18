@@ -25,7 +25,7 @@ Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003
 | IA Assistente opcional via **OpenRouter** (off por padrão, **nunca** decide bloqueio) | ✅ |
 | Backup JSON validado (anti-payload-malicioso) | ✅ |
 | Doação PIX com BR Code gerado no aparelho (CRC16/EMV) | ✅ |
-| Conta Conexus **opcional**: backup manual na nuvem, denúncias identificadas, doação pela conta ([docs/ACCOUNT.md](docs/ACCOUNT.md)) | ✅ 0.3.0 |
+| Conta Conexus **opcional**: backup manual na nuvem, denúncias identificadas, doação pela conta ([docs/ACCOUNT.md](docs/ACCOUNT.md)) | ✅ 0.3.0 (padrão Conexus na 0.4.0) |
 | Simulador de chamadas (funciona no Expo Go, iOS e Android) | ✅ |
 | Módulo nativo Kotlin de referência (CallScreeningService + RoleManager) | ✅ código de referência |
 | Bloqueio real em device | 🔜 dev build (ver [Roadmap](docs/ROADMAP.md)) |
@@ -33,7 +33,7 @@ Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003
 ## 🚀 Rodando
 
 ```bash
-npm install
+npm install --legacy-peer-deps   # expo-router × expo-constants têm conflito de peer no SDK 58
 npx expo start          # escaneie o QR com Expo Go (iOS/Android)
 ```
 
@@ -45,6 +45,34 @@ npx expo start          # escaneie o QR com Expo Go (iOS/Android)
 npx expo prebuild --platform android
 npx expo run:android
 ```
+
+## 👤 Conta Conexus (opcional)
+
+O app funciona inteiro sem conta. Com ela: backup manual na nuvem, denúncias identificadas e doações pela conta
+(detalhes em [docs/ACCOUNT.md](docs/ACCOUNT.md)). Login, sessão e o kit visual W10M vêm dos pacotes compartilhados
+da Conexus, vendorizados em `vendor/conexus/`:
+
+| Pacote | Uso aqui |
+|---|---|
+| `@conexus/account-expo` | login PKCE no navegador (bff-auth), sessão no `expo-secure-store`, refresh, `authorizedRequest`, `<ConexusLoginScreen/>` |
+| `@conexus/metro-ui` | tema e componentes W10M (destaque verde `#60A917`) |
+
+Não edite `vendor/conexus/**`: para atualizar, rode `bin/conexus-vendor <caminho deste repo>` na
+`conexus-platform` e commite (o CI pode conferir com `--check`).
+
+**Rodando local com login:** as variáveis são públicas (vão no bundle) e opcionais:
+
+```bash
+EXPO_PUBLIC_CONEXUS_CLIENT_ID=<client_id público do "AntiSpam BR" no bff-auth> \
+EXPO_PUBLIC_CONEXUS_AUTH_URL=https://auth.conexus-systems.com.br \
+EXPO_PUBLIC_CONEXUS_API_URL=https://api.conexus-systems.com.br \
+npx expo start
+```
+
+Sem `EXPO_PUBLIC_CONEXUS_CLIENT_ID` o login fica desligado ("Em breve") e o app não chama a rede da Conta.
+`EXPO_PUBLIC_CONEXUS_AUTH_URL` vazio = produção. Redirect registrado no bff-auth: `antispambr://oauth/callback`
+(o Expo Go usa outro scheme; teste o login num build de desenvolvimento ou no APK). Excluir a conta:
+<https://auth.conexus-systems.com.br/conta/excluir>. Roteiro de produção: [docs/MIGRACAO_CONTA_CONEXUS.md](docs/MIGRACAO_CONTA_CONEXUS.md).
 
 ## 🧪 Testes
 
@@ -63,7 +91,7 @@ npm run typecheck # TypeScript estrito
 ## 🗂️ Estrutura
 
 ```
-app/                  # Telas (expo-router): onboarding, (tabs), donate, account
+app/                  # Telas (expo-router): onboarding, (tabs), donate, account, login
 src/core/             # Motor puro e testável
   phone/              #   normalização BR + emergências + regras 0303
   detection/          #   SpamScore + CampaignDetector
@@ -75,7 +103,9 @@ src/core/             # Motor puro e testável
   donation/           #   PIX BR Code (EMV + CRC16)
   ai/                 #   cliente OpenRouter (opcional, off por padrão)
 src/app/              # Store global, screening service, backup, ponte nativa
-src/ui/               # Design system (tema + componentes)
+src/account/          # Conta Conexus do app (APIs do AntiSpam/Payments, backup na nuvem) sobre @conexus/account-expo
+src/ui/               # Tokens do app (score, ações) + peças próprias sobre @conexus/metro-ui
+vendor/conexus/       # Pacotes compartilhados vendorizados (não editar)
 native/android/       # Kotlin de referência (CallScreeningService)
 docs/                 # RESEARCH, PRD, ARCHITECTURE, THREAT_MODEL, PRIVACY, ROADMAP…
 __tests__/            # Testes do motor crítico (Jest)

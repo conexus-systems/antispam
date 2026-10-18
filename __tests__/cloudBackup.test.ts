@@ -1,6 +1,6 @@
 import { parseCloudBackupData, payloadBytes, serializeBackup, summarize, summaryText, type BackupSource } from '../src/account/cloudBackup';
 import { MODE_DEFAULTS } from '../src/core/decision/decisionEngine';
-import { AccountError } from '../src/account/errors';
+import { AntispamError as AccountError } from '../src/account/api';
 import type { Rule } from '../src/core/types';
 
 const rule: Rule = { id: 'r1', name: 'Prefixo 0303', enabled: true, action: 'BLOCK', match: { kind: 'prefix', value: '0303' } };
