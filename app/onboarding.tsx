@@ -1,25 +1,25 @@
 import { useState } from 'react';
-import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { theme } from '../src/ui/theme';
-import { Btn, Card } from '../src/ui/components';
+import { spacing, useTheme } from '../src/ui/theme';
+import { Glyph, MetroButton, MetroPage, MetroText, type GlyphName } from '../src/ui/metro';
 import { setState } from '../src/app/store';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, requestCallScreeningRole } from '../src/app/nativeBridge';
 
 const STEPS = [
   {
-    emoji: '📵',
+    icon: 'phoneOff' as GlyphName,
     title: 'Chega de chamadas indesejadas',
     body: 'Bloqueie telemarketing, golpes e robocalls antes do telefone tocar. 100% local, explicável e gratuito.',
   },
   {
-    emoji: '🔒',
+    icon: 'lock' as GlyphName,
     title: 'Seus dados ficam no seu celular',
     body: 'Sem cadastro, sem anúncios, sem envio de contatos ou histórico. A análise de cada chamada acontece no aparelho.',
   },
   {
-    emoji: '🛡️',
+    icon: 'shield' as GlyphName,
     title: 'Ative a proteção',
     body: 'O Android pede que o AntiSpam BR seja definido como app de identificação e filtragem de chamadas. É assim que ele consegue proteger você.',
   },
@@ -27,6 +27,7 @@ const STEPS = [
 
 export default function Onboarding() {
   const router = useRouter();
+  const theme = useTheme();
   const [step, setStep] = useState(0);
   const [activating, setActivating] = useState(false);
   const s = STEPS[step];
@@ -59,43 +60,39 @@ export default function Onboarding() {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={{ flex: 1, justifyContent: 'center', gap: 24 }}>
-        <Text style={{ fontSize: 72, textAlign: 'center' }}>{s.emoji}</Text>
-        <Text style={styles.title}>{s.title}</Text>
-        <Card>
-          <Text style={styles.body}>{s.body}</Text>
-        </Card>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+    <MetroPage scroll={false} contentStyle={{ paddingHorizontal: theme.gutter }}>
+      <View style={{ flex: 1, justifyContent: 'center', gap: spacing.xl }}>
+        <MetroText variant="kicker">AntiSpam BR</MetroText>
+        <Glyph name={s.icon} size={72} color={theme.primary} strokeWidth={1.2} />
+        <MetroText variant="header" accessibilityRole="header">{s.title}</MetroText>
+        <MetroText variant="body" tone="muted">{s.body}</MetroText>
+        <View
+          style={{ flexDirection: 'row', gap: spacing.s }}
+          accessible
+          accessibilityLabel={`Passo ${step + 1} de ${STEPS.length}`}
+        >
           {STEPS.map((_, i) => (
-            <View key={i} style={[styles.dot, i === step && { backgroundColor: theme.primary, width: 20 }]} />
+            <View key={i} style={{ width: i === step ? 24 : 8, height: 8, backgroundColor: i === step ? theme.primary : theme.border }} />
           ))}
         </View>
       </View>
-      <View style={{ gap: 12, paddingBottom: 32 }}>
+      <View style={{ gap: spacing.m, paddingBottom: spacing.xl }}>
         {step < STEPS.length - 1 ? (
           <>
-            <Btn title="Continuar" onPress={() => { if (theme) Haptics.selectionAsync().catch(() => {}); setStep(step + 1); }} />
-            <Btn title="Pular" variant="ghost" onPress={() => router.replace('/(tabs)')} />
+            <MetroButton title="Continuar" variant="primary" onPress={() => { Haptics.selectionAsync().catch(() => {}); setStep(step + 1); }} />
+            <MetroButton title="Pular" onPress={() => router.replace('/(tabs)')} />
           </>
         ) : (
           <>
-            <Btn title={activating ? 'Ativando…' : '🛡️ Ativar proteção'} onPress={activate} loading={activating} />
-            <Pressable onPress={() => { setState({ onboardingDone: true }); router.replace('/(tabs)'); }}>
-              <Text style={{ color: theme.textDim, textAlign: 'center', padding: 8 }}>
-                Ativar depois — explorar em modo demonstração
-              </Text>
-            </Pressable>
+            <MetroButton title={activating ? 'Ativando…' : 'Ativar proteção'} icon="shield" variant="primary" onPress={activate} loading={activating} />
+            <MetroButton
+              title="Ativar depois — explorar em modo demonstração"
+              variant="text"
+              onPress={() => { setState({ onboardingDone: true }); router.replace('/(tabs)'); }}
+            />
           </>
         )}
       </View>
-    </View>
+    </MetroPage>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: theme.bg, padding: 24 },
-  title: { color: theme.text, fontSize: 26, fontWeight: '800', textAlign: 'center' },
-  body: { color: theme.textDim, fontSize: 15, lineHeight: 22 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: theme.border },
-});

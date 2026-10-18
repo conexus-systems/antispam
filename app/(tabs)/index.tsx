@@ -1,9 +1,19 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import * as Notifications from 'expo-notifications';
-import { theme } from '../../src/ui/theme';
-import { Badge, Btn, Card, Row } from '../../src/ui/components';
+import { spacing, useTheme } from '../../src/ui/theme';
+import {
+  MetroButton,
+  MetroHeader,
+  MetroListItem,
+  MetroNotice,
+  MetroPage,
+  MetroRow,
+  MetroSection,
+  MetroTag,
+  MetroText,
+} from '../../src/ui/metro';
 import { getState, setState, useAppState } from '../../src/app/store';
 import { simulateCall } from '../../src/app/screening';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable } from '../../src/app/nativeBridge';
@@ -17,6 +27,7 @@ function isToday(iso: string): boolean {
 
 export default function Home() {
   const router = useRouter();
+  const theme = useTheme();
   const history = useAppState((s) => s.history);
   const mode = useAppState((s) => s.mode);
   const [simulating, setSimulating] = useState(false);
@@ -49,111 +60,94 @@ export default function Home() {
   }
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 40 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={styles.title}>AntiSpam BR</Text>
-        <Badge text={active ? '🟢 PROTEÇÃO ATIVA' : '⚪ DESATIVADA'} color={active ? theme.primary : theme.mute} filled={active} />
-      </View>
+    <MetroPage header={<MetroHeader title="Início" />}>
+      <MetroTag text={active ? 'PROTEÇÃO ATIVA' : 'DESATIVADA'} color={active ? theme.primary : theme.mute} filled={active} />
 
-      <Card>
-        <Row label="Modo" value={mode} color={theme.info} />
-        <Row label="Hoje" value={`${today.analyzed} analisadas`} />
-        <Row label="Permitidas" value={String(today.allowed)} color={theme.primary} />
-        <Row label="Silenciadas" value={String(today.silenced)} color={theme.mute} />
-        <Row label="Bloqueadas" value={String(today.blocked)} color={theme.danger} />
-        <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
+      <MetroSection>
+        <MetroRow label="Modo" value={mode} color={theme.info} />
+        <MetroRow label="Hoje" value={`${today.analyzed} analisadas`} />
+        <MetroRow label="Permitidas" value={String(today.allowed)} color={theme.primary} />
+        <MetroRow label="Silenciadas" value={String(today.silenced)} color={theme.mute} />
+        <MetroRow label="Bloqueadas" value={String(today.blocked)} color={theme.danger} />
+        <View style={{ marginTop: spacing.s, flexDirection: 'row', gap: spacing.s }}>
           <View style={{ flex: 1 }}>
-            <Btn title="📜 Ver histórico" variant="ghost" small onPress={() => router.push('/(tabs)/history')} />
+            <MetroButton title="Ver histórico" small onPress={() => router.push('/(tabs)/history')} />
           </View>
           <View style={{ flex: 1 }}>
-            <Btn title="❤️ Apoiar projeto" variant="ghost" small onPress={() => router.push('/donate')} />
+            <MetroButton title="Apoiar projeto" small onPress={() => router.push('/donate')} />
           </View>
         </View>
-      </Card>
+      </MetroSection>
 
       {!isNativeScreeningAvailable() && (
-        <Card style={{ borderColor: theme.warn }}>
-          <Text style={{ color: theme.warn, fontWeight: '700', marginBottom: 4 }}>⚠️ Modo demonstração</Text>
-          <Text style={{ color: theme.textDim, fontSize: 13, lineHeight: 20 }}>
-            Você está no Expo Go: todas as telas e o motor de decisão funcionam, mas o Android só entrega chamadas
-            reais a um development build (APK/AAB com o módulo nativo). Use o simulador abaixo para ver o app em ação.
-          </Text>
-        </Card>
+        <MetroNotice title="Modo demonstração" tone="warn">
+          Você está no Expo Go: todas as telas e o motor de decisão funcionam, mas o Android só entrega chamadas
+          reais a um development build (APK/AAB com o módulo nativo). Use o simulador abaixo para ver o app em ação.
+        </MetroNotice>
       )}
       {isNativeScreeningAvailable() && roleHeld === false && (
-        <Card style={{ borderColor: theme.danger }}>
-          <Text style={{ color: theme.danger, fontWeight: '700', marginBottom: 4 }}>Proteção nativa não ativada</Text>
-          <Text style={{ color: theme.textDim, fontSize: 13 }}>
-            Conceda o papel de filtragem de chamadas nas Configurações do app.
-          </Text>
-        </Card>
+        <MetroNotice title="Proteção nativa não ativada" tone="danger">
+          Conceda o papel de filtragem de chamadas nas Configurações do app.
+        </MetroNotice>
       )}
 
-      <Card>
-        <Text style={styles.cardTitle}>Simular chamada recebida</Text>
-        <Text style={{ color: theme.textDim, fontSize: 13, marginBottom: 10 }}>
+      <MetroSection title="Simular chamada recebida">
+        <MetroText variant="caption">
           Teste o pipeline completo (normalização → regras → base → score → decisão).
-        </Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        </MetroText>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s }}>
           <View style={{ width: '48%' }}>
-            <Btn title="0303 313 0303" variant="warn" small loading={simulating} onPress={() => simulate('03033130303')} />
+            <MetroButton title="0303 313 0303" small loading={simulating} onPress={() => simulate('03033130303')} />
           </View>
           <View style={{ width: '48%' }}>
-            <Btn title="0800 empresa" variant="warn" small onPress={() => simulate('08001234567')} />
+            <MetroButton title="0800 empresa" small onPress={() => simulate('08001234567')} />
           </View>
           <View style={{ width: '48%' }}>
-            <Btn title="Telemarketing +55 11 4002-8922" small variant="warn" onPress={() => simulate('+551140028922')} />
+            <MetroButton title="Telemarketing +55 11 4002-8922" small onPress={() => simulate('+551140028922')} />
           </View>
           <View style={{ width: '48%' }}>
-            <Btn title="Golpe +55 11 98765-4321" small variant="warn" onPress={() => simulate('+5511987654321')} />
+            <MetroButton title="Golpe +55 11 98765-4321" small onPress={() => simulate('+5511987654321')} />
           </View>
           <View style={{ width: '48%' }}>
-            <Btn title="Fixo SP (11) 3061-4000" small onPress={() => simulate('1130614000')} />
+            <MetroButton title="Fixo SP (11) 3061-4000" small variant="primary" onPress={() => simulate('1130614000')} />
           </View>
           <View style={{ width: '48%' }}>
-            <Btn title="🚨 190 (emergência)" small onPress={() => simulate('190')} />
+            <MetroButton title="190 (emergência)" small variant="primary" onPress={() => simulate('190')} />
           </View>
         </View>
         {lastScore != null && (
-          <Text style={{ color: theme.primary, marginTop: 10, fontWeight: '600' }}>
+          <MetroText variant="body" tone="accent" accessibilityLiveRegion="polite">
             Última decisão registrada no histórico (score {lastScore}).
-          </Text>
+          </MetroText>
         )}
-      </Card>
+      </MetroSection>
 
-      <Card onPress={() => router.push('/verify')}>
-        <Text style={styles.cardTitle}>🔍 Verificar número</Text>
-        <Text style={{ color: theme.textDim, fontSize: 13 }}>
-          Consulte score local, explicabilidade e (opcional) análise de IA antes de retornar uma ligação.
-        </Text>
-      </Card>
+      <MetroListItem
+        icon="search"
+        large
+        title="Verificar número"
+        subtitle="Consulte score local, explicabilidade e (opcional) análise de IA antes de retornar uma ligação."
+        onPress={() => router.push('/verify')}
+      />
 
-      <Card>
-        <Text style={styles.cardTitle}>Atalhos</Text>
-        <View style={{ gap: 8, marginTop: 6 }}>
-          <Btn title="⚙️ Configurações e regras" variant="ghost" small onPress={() => router.push('/(tabs)/settings')} />
-          <Btn
-            title="🔔 Permissão de notificações"
-            variant="ghost"
-            small
+      <MetroSection title="Atalhos">
+        <View>
+          <MetroListItem icon="settings" title="Configurações e regras" onPress={() => router.push('/(tabs)/settings')} />
+          <MetroListItem
+            icon="bell"
+            title="Permissão de notificações"
             onPress={async () => {
               await requestNotificationPermission();
               void Notifications.getPermissionsAsync();
             }}
           />
-          <Btn title="🧹 Limpar histórico" variant="ghost" small onPress={() => setState({ history: [] })} />
+          <MetroListItem icon="delete" title="Limpar histórico" onPress={() => setState({ history: [] })} />
         </View>
-      </Card>
+      </MetroSection>
 
-      <Text style={{ color: theme.mute, fontSize: 12, textAlign: 'center', lineHeight: 18 }}>
+      <MetroText variant="caption">
         100% local · sem anúncios · open source{'\n'}Decisões explicáveis e fail-safe: em dúvida, permite.
-      </Text>
-    </ScrollView>
+      </MetroText>
+    </MetroPage>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: theme.bg },
-  title: { color: theme.text, fontSize: 24, fontWeight: '800' },
-  cardTitle: { color: theme.text, fontSize: 16, fontWeight: '700', marginBottom: 6 },
-});

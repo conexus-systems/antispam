@@ -1,28 +1,26 @@
-import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
-import { theme } from '../../src/ui/theme';
+import { Tabs, useRouter } from 'expo-router';
+import { useTheme } from '../../src/ui/theme';
+import { MetroAppBar, type GlyphName } from '../../src/ui/metro';
 
-const ICONS: Record<string, string> = {
-  index: '🛡️',
-  history: '📜',
-  verify: '🔍',
-  settings: '⚙️',
+/** Ícones de traço fino da app bar W10M (substituem os emojis da tab bar antiga). */
+const ICONS: Record<string, GlyphName> = {
+  index: 'shield',
+  history: 'history',
+  verify: 'search',
+  settings: 'settings',
 };
 
 export default function TabsLayout() {
+  const router = useRouter();
+  const theme = useTheme();
   return (
     <Tabs
+      tabBar={(props) => (
+        <MetroAppBar {...props} icons={ICONS} menu={[{ label: 'Apoiar o projeto', onPress: () => router.push('/donate') }]} />
+      )}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: theme.card, borderTopColor: theme.border, height: 62, paddingBottom: 8 },
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.textDim,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
-        tabBarIcon: ({ color, size, focused }) => (
-          <Text style={{ fontSize: focused ? size : size - 2, opacity: focused ? 1 : 0.75 }}>
-            {ICONS[typeof color === 'string' ? '' : ''] ?? ''}
-          </Text>
-        ),
+        sceneStyle: { backgroundColor: theme.bg },
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Início' }} />

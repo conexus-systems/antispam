@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Alert, Clipboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Clipboard, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import { theme } from '../src/ui/theme';
-import { Badge, Btn, Card } from '../src/ui/components';
+import { spacing, useTheme } from '../src/ui/theme';
+import { MetroButton, MetroHeader, MetroPage, MetroSection, MetroTag, MetroText, MetroTextField } from '../src/ui/metro';
 import { buildPixPayload } from '../src/core/donation/pix';
 
 const AMOUNTS = [5, 10, 20];
 
 export default function Donate() {
+  const theme = useTheme();
   const [amount, setAmount] = useState<number>(10);
   const [custom, setCustom] = useState('');
   const pixKey = process.env.EXPO_PUBLIC_DONATION_PIX_KEY ?? '';
@@ -38,85 +39,68 @@ export default function Donate() {
   }
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 40 }}>
-      <Text style={styles.title}>❤️ Apoie o projeto</Text>
-
-      <Card>
-        <Text style={{ color: theme.text, fontSize: 14, lineHeight: 22 }}>
+    <MetroPage header={<MetroHeader title="Apoie o projeto" />}>
+      <MetroSection>
+        <MetroText variant="body">
           O AntiSpam BR é gratuito, open source, sem anúncios e sem venda de dados. Se ele estiver sendo útil,
           você pode ajudar voluntariamente a manter o desenvolvimento e a base de spam comunitária.
-        </Text>
-        <View style={{ flexDirection: 'row', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
-          <Badge text="nunca obrigatória" color={theme.primary} />
-          <Badge text="não desbloqueia recursos" color={theme.primary} />
-          <Badge text="sem versão premium" color={theme.primary} />
+        </MetroText>
+        <View style={{ flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap' }}>
+          <MetroTag text="nunca obrigatória" color={theme.primary} />
+          <MetroTag text="não desbloqueia recursos" color={theme.primary} />
+          <MetroTag text="sem versão premium" color={theme.primary} />
         </View>
-      </Card>
+      </MetroSection>
 
-      <Card>
-        <Text style={styles.cardTitle}>Valores sugeridos</Text>
-        <View style={{ flexDirection: 'row', gap: 8 }}>
+      <MetroSection title="Valores sugeridos">
+        <View style={{ flexDirection: 'row', gap: spacing.s }}>
           {AMOUNTS.map((v) => (
             <View key={v} style={{ flex: 1 }}>
-              <Btn title={`R$ ${v}`} small variant={amount === v && !custom ? 'primary' : 'ghost'} onPress={() => { setAmount(v); setCustom(''); }} />
+              <MetroButton
+                title={`R$ ${v}`}
+                small
+                variant={amount === v && !custom ? 'primary' : 'secondary'}
+                accessibilityLabel={`R$ ${v}${amount === v && !custom ? ', selecionado' : ''}`}
+                onPress={() => { setAmount(v); setCustom(''); }}
+              />
             </View>
           ))}
         </View>
-        <TextInput
-          style={styles.input}
+        <MetroTextField
           placeholder="Outro valor (R$)"
-          placeholderTextColor={theme.mute}
           keyboardType="decimal-pad"
           value={custom}
           onChangeText={setCustom}
         />
-      </Card>
+      </MetroSection>
 
-      <Card>
-        <Text style={styles.cardTitle}>PIX (Copia e Cola)</Text>
+      <MetroSection title="PIX (Copia e Cola)">
         {pixKey ? (
           <>
             {payload && (
-              <View style={{ alignItems: 'center', paddingVertical: 12, backgroundColor: '#fff', borderRadius: 12 }}>
-                <QRCode value={payload} size={220} color="#0B1220" backgroundColor="#fff" />
+              <View style={{ alignItems: 'center', paddingVertical: spacing.m, backgroundColor: theme.fieldFocusBg }}>
+                <QRCode value={payload} size={220} color={theme.fieldFocusText} backgroundColor={theme.fieldFocusBg} />
               </View>
             )}
-            <View style={{ marginTop: 12 }}>
-              <Btn title="📋 Copiar código PIX" onPress={copy} />
-            </View>
+            <MetroButton title="Copiar código PIX" icon="copy" variant="primary" onPress={copy} />
             {payload && (
-              <Text numberOfLines={2} style={{ color: theme.mute, fontSize: 10, marginTop: 8 }}>
+              <MetroText variant="caption" numberOfLines={2}>
                 {payload}
-              </Text>
+              </MetroText>
             )}
           </>
         ) : (
-          <Text style={{ color: theme.textDim, fontSize: 13, lineHeight: 20 }}>
+          <MetroText variant="body" tone="muted">
             Doação PIX ainda não configurada neste build.{'\n'}
-            Defina a variável <Text style={{ color: theme.info }}>EXPO_PUBLIC_DONATION_PIX_KEY</Text> na sua
+            Defina a variável <MetroText variant="body" tone="info">EXPO_PUBLIC_DONATION_PIX_KEY</MetroText> na sua
             sessão de build (nunca no código-fonte) e esta tela gerará o BR Code automaticamente.
-          </Text>
+          </MetroText>
         )}
-      </Card>
+      </MetroSection>
 
-      <Text style={{ color: theme.mute, fontSize: 12, textAlign: 'center' }}>
-        Obrigado por usar um app livre. ❤️
-      </Text>
-    </ScrollView>
+      <MetroText variant="caption">
+        Obrigado por usar um app livre.
+      </MetroText>
+    </MetroPage>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: theme.bg },
-  title: { color: theme.text, fontSize: 24, fontWeight: '800' },
-  cardTitle: { color: theme.text, fontSize: 16, fontWeight: '700', marginBottom: 6 },
-  input: {
-    backgroundColor: theme.cardAlt,
-    color: theme.text,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    marginTop: 8,
-  },
-});

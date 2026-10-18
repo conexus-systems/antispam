@@ -2,10 +2,10 @@
   "expo": {
     "name": "AntiSpam BR",
     "slug": "antispam-br",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "scheme": "antispambr",
     "ios": {
       "supportsTablet": false,
@@ -31,7 +31,7 @@
       [
         "expo-notifications",
         {
-          "color": "#22C55E",
+          "color": "#60A917",
           "icon": "./assets/icon.png"
         }
       ],

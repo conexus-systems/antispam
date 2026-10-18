@@ -1,7 +1,17 @@
 import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { theme } from '../../src/ui/theme';
-import { Badge, Btn, Card, Row, ScoreRing } from '../../src/ui/components';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { spacing, useTheme } from '../../src/ui/theme';
+import {
+  MetroButton,
+  MetroHeader,
+  MetroPage,
+  MetroRow,
+  MetroScore,
+  MetroSection,
+  MetroTag,
+  MetroText,
+  MetroTextField,
+} from '../../src/ui/metro';
 import { useAppState, toggleList } from '../../src/app/store';
 import { getDb, ensureDb } from '../../src/app/screening';
 import { normalizePhone, formatDisplay } from '../../src/core/phone/normalize';
@@ -9,6 +19,7 @@ import { computeSpamScore, riskBand } from '../../src/core/detection/spamScore';
 import { analyzeNumber, type AiInsight } from '../../src/core/ai/openrouter';
 
 export default function Verify() {
+  const theme = useTheme();
   const ai = useAppState((s) => s.ai);
   const [number, setNumber] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
@@ -81,108 +92,86 @@ export default function Verify() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 40 }}>
-        <Text style={styles.title}>🔍 Verificar número</Text>
-        <Card>
-          <TextInput
+      <MetroPage header={<MetroHeader title="Verificar número" />}>
+        <MetroSection>
+          <MetroTextField
+            label="Número"
             value={number}
             onChangeText={setNumber}
             placeholder="(11) 99999-9999 ou +5511…"
-            placeholderTextColor={theme.mute}
             keyboardType="phone-pad"
-            style={styles.input}
+            onSubmitEditing={analyze}
+            help="A análise local nunca envia o número para a Internet."
           />
-          <Btn title="Analisar" onPress={analyze} loading={analyzing} />
-          <Text style={{ color: theme.mute, fontSize: 12, marginTop: 8 }}>
-            A análise local nunca envia o número para a Internet.
-          </Text>
-        </Card>
+          <MetroButton title="Analisar" variant="primary" onPress={analyze} loading={analyzing} />
+        </MetroSection>
 
         {result && (
           <>
-            <Card>
-              <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
-                <ScoreRing score={result.score} />
-                <View style={{ flex: 1, gap: 4 }}>
-                  <Text style={{ color: theme.text, fontSize: 17, fontWeight: '800' }}>{result.display}</Text>
-                  <Text style={{ color: theme.textDim, fontSize: 13 }}>Canônico: {result.canonical}</Text>
-                  <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
-                    <Badge text={result.band} color={result.score >= 61 ? theme.danger : result.score >= 41 ? theme.warn : theme.primary} filled />
-                    <Badge text={`tipo: ${result.kind}`} color={theme.info} />
-                    {result.ddd && <Badge text={`DDD ${result.ddd}`} color={theme.info} />}
-                  </View>
+            <View style={{ flexDirection: 'row', gap: spacing.l, alignItems: 'flex-start' }}>
+              <MetroScore score={result.score} />
+              <View style={{ flex: 1, gap: spacing.xs }}>
+                <MetroText variant="subtitle">{result.display}</MetroText>
+                <MetroText variant="caption">Canônico: {result.canonical}</MetroText>
+                <View style={{ flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap', marginTop: spacing.xs }}>
+                  <MetroTag text={result.band} color={result.score >= 61 ? theme.danger : result.score >= 41 ? theme.warn : theme.primary} filled />
+                  <MetroTag text={`tipo: ${result.kind}`} color={theme.info} />
+                  {result.ddd && <MetroTag text={`DDD ${result.ddd}`} color={theme.info} />}
                 </View>
               </View>
-            </Card>
+            </View>
 
-            <Card>
-              <Text style={styles.cardTitle}>Por que este score?</Text>
+            <MetroSection title="Por que este score?">
               {result.contributions.length === 0 && (
-                <Text style={{ color: theme.mute, fontSize: 13 }}>Nenhum sinal de risco encontrado nesta base local.</Text>
+                <MetroText variant="body" tone="mute">Nenhum sinal de risco encontrado nesta base local.</MetroText>
               )}
-              {result.contributions.map((c, i) => (
-                <Row key={i} label={c.label} value={`+${c.points}`} color={theme.warn} />
-              ))}
-              <Row label="Confiança" value={result.confidence} />
-              {result.repReports > 0 && <Row label="Denúncias na sua base" value={String(result.repReports)} />}
-            </Card>
-
-            <Card>
-              <Text style={styles.cardTitle}>Ações rápidas</Text>
-              <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
-                <Btn title="✅ Sempre permitir" small onPress={() => toggleList('allowlist', result.canonical)} />
-                <Btn title="🚫 Bloquear sempre" variant="danger" small onPress={() => toggleList('blacklist', result.canonical)} />
+              <View>
+                {result.contributions.map((c, i) => (
+                  <MetroRow key={i} label={c.label} value={`+${c.points}`} color={theme.warn} />
+                ))}
+                <MetroRow label="Confiança" value={result.confidence} />
+                {result.repReports > 0 && <MetroRow label="Denúncias na sua base" value={String(result.repReports)} />}
               </View>
-            </Card>
+            </MetroSection>
 
-            <Card>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <Text style={styles.cardTitle}>✨ Análise de IA (opcional)</Text>
-                <Badge text={ai.enabled ? 'ativada' : 'desativada'} color={ai.enabled ? theme.primary : theme.mute} />
+            <MetroSection title="Ações rápidas">
+              <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap' }}>
+                <MetroButton title="Sempre permitir" icon="check" small onPress={() => toggleList('allowlist', result.canonical)} />
+                <MetroButton title="Bloquear sempre" icon="block" variant="danger" small onPress={() => toggleList('blacklist', result.canonical)} />
               </View>
+            </MetroSection>
+
+            <MetroSection title="Análise de IA (opcional)">
+              <MetroTag text={ai.enabled ? 'ativada' : 'desativada'} color={ai.enabled ? theme.primary : theme.mute} />
               {!ai.enabled && (
-                <Text style={{ color: theme.textDim, fontSize: 13 }}>
+                <MetroText variant="body" tone="muted">
                   Ative a IA Assistente em Ajustes para pedir uma segunda opinião a um modelo via OpenRouter
                   (você fornece a própria chave; ela fica só no aparelho). A IA NUNCA decide bloqueios.
-                </Text>
+                </MetroText>
               )}
               {ai.enabled && !aiInsight && (
-                <Btn title="Pedir análise à IA" variant="ghost" onPress={askAi} loading={aiLoading} />
+                <MetroButton title="Pedir análise à IA" onPress={askAi} loading={aiLoading} />
               )}
-              {aiError && <Text style={{ color: theme.danger, fontSize: 13, marginTop: 6 }}>{aiError}</Text>}
+              {aiError && <MetroText variant="body" tone="danger" accessibilityLiveRegion="polite">{aiError}</MetroText>}
               {aiInsight && (
-                <View style={{ gap: 6, marginTop: 4 }}>
-                  <Badge text={`IA: ${aiInsight.riskLevel}`} color={aiInsight.riskLevel === 'alto' ? theme.danger : aiInsight.riskLevel === 'médio' ? theme.warn : theme.primary} filled />
-                  <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600' }}>{aiInsight.verdict}</Text>
+                <View style={{ gap: spacing.s, marginTop: spacing.xs }}>
+                  <MetroTag text={`IA: ${aiInsight.riskLevel}`} color={aiInsight.riskLevel === 'alto' ? theme.danger : aiInsight.riskLevel === 'médio' ? theme.warn : theme.primary} filled />
+                  <MetroText variant="subtitle">{aiInsight.verdict}</MetroText>
                   {aiInsight.reasoning.map((r, i) => (
-                    <Text key={`r${i}`} style={{ color: theme.textDim, fontSize: 13 }}>• {r}</Text>
+                    <MetroText key={`r${i}`} variant="body" tone="muted">• {r}</MetroText>
                   ))}
                   {aiInsight.advice.map((a, i) => (
-                    <Text key={`a${i}`} style={{ color: theme.info, fontSize: 13 }}>→ {a}</Text>
+                    <MetroText key={`a${i}`} variant="body" tone="info">→ {a}</MetroText>
                   ))}
-                  <Text style={{ color: theme.mute, fontSize: 11, marginTop: 4 }}>
+                  <MetroText variant="caption">
                     Opinião gerada por IA — use como apoio, não como verdade.
-                  </Text>
+                  </MetroText>
                 </View>
               )}
-            </Card>
+            </MetroSection>
           </>
         )}
-      </ScrollView>
+      </MetroPage>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  title: { color: theme.text, fontSize: 24, fontWeight: '800' },
-  cardTitle: { color: theme.text, fontSize: 16, fontWeight: '700', marginBottom: 6 },
-  input: {
-    backgroundColor: theme.cardAlt,
-    color: theme.text,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 10,
-  },
-});

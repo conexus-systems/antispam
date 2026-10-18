@@ -1,6 +1,6 @@
 {
   "name": "antispam-br",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -44,6 +44,10 @@
     "setupFiles": [
       "./jest.setup.js"
     ],
+    "moduleNameMapper": {
+      "^@react-native/assets-registry/registry$": "<rootDir>/jest/assets-registry-stub.js",
+      "^expo-modules-core(/.*)?$": "<rootDir>/node_modules/expo/node_modules/expo-modules-core$1"
+    },
     "testMatch": [
       "**/__tests__/**/*.test.ts"
     ],
