@@ -16,7 +16,7 @@ const STEPS = [
   {
     icon: 'lock' as GlyphName,
     title: 'Seus dados ficam no seu celular',
-    body: 'Sem cadastro, sem anúncios, sem envio de contatos ou histórico. A análise de cada chamada acontece no aparelho.',
+    body: 'Sem anúncios, sem envio de contatos ou histórico e sem cadastro obrigatório. A análise de cada chamada acontece no aparelho; a conta é opcional.',
   },
   {
     icon: 'shield' as GlyphName,

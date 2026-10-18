@@ -28,6 +28,9 @@ jobs:
     timeout-minutes: 60
     env:
       NODE_OPTIONS: --max-old-space-size=4096
+      # client_id PÚBLICO do OAuthClient "AntiSpam BR" no Auth BFF (Settings → Variables → CONEXUS_CLIENT_ID).
+      # Vazio ou ausente = login com a Conta Conexus desligado no APK (o app mostra "Em breve").
+      EXPO_PUBLIC_CONEXUS_CLIENT_ID: ${{ vars.CONEXUS_CLIENT_ID || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

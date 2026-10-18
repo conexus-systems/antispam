@@ -33,6 +33,7 @@ import { getDb } from '../../src/app/screening';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, openCallScreeningSettings, requestCallScreeningRole } from '../../src/app/nativeBridge';
 import { HANDLE_0303_LABELS, type Handle0303 } from '../../src/core/phone/brazilRules';
 import type { ProtectionMode } from '../../src/core/types';
+import { useAccount } from '../../src/account';
 
 const MODES: Array<{ id: ProtectionMode; label: string; desc: string }> = [
   { id: 'OFF', label: 'Desativado', desc: 'Não analisa nem bloqueia nada.' },
@@ -53,6 +54,7 @@ export default function Settings() {
   const blacklist = useAppState((s) => s.blacklist);
   const ai = useAppState((s) => s.ai);
   const history = useAppState((s) => s.history);
+  const account = useAccount();
 
   const [newRule, setNewRule] = useState({ name: '', prefix: '' });
   const [listInput, setListInput] = useState({ allow: '', block: '' });
@@ -201,6 +203,22 @@ export default function Settings() {
 
   const generalPage = (
     <>
+      <MetroSection title="Conta Conexus (opcional)">
+        <MetroListItem
+          icon="lock"
+          title="Conta"
+          subtitle={
+            account.status === 'signedIn'
+              ? account.profile?.email ?? account.profile?.name ?? 'Conectado'
+              : account.status === 'disabled'
+                ? 'Em breve · o app funciona sem conta'
+                : 'Backup na nuvem, denúncias identificadas e doações'
+          }
+          onPress={() => router.push('/account')}
+          accessibilityHint="Abre a tela da Conta Conexus"
+        />
+      </MetroSection>
+
       <MetroSection title="IA Assistente (OpenRouter)">
         <MetroToggle
           label="IA Assistente"
@@ -222,7 +240,7 @@ export default function Settings() {
 
       <MetroSection title="Backup">
         <MetroText variant="body" tone="muted">
-          Exporta modo, regras e listas em JSON validado. Import rejeita payloads maliciosos.
+          Exporta modo, regras e listas em JSON validado. Import rejeita payloads maliciosos. Backup na nuvem: tela Conta.
         </MetroText>
         <View style={{ flexDirection: 'row', gap: spacing.s }}>
           <View style={{ flex: 1 }}>
@@ -238,13 +256,13 @@ export default function Settings() {
         <View>
           <MetroRow label="Registros de reputação" value={String(getDb().size)} />
           <MetroRow label="Chamadas no histórico" value={String(history.length)} />
-          <MetroRow label="Armazenamento" value="somente no aparelho" color={theme.primary} />
+          <MetroRow label="Armazenamento" value={account.status === 'signedIn' ? 'aparelho + backup manual na conta' : 'somente no aparelho'} color={theme.primary} />
         </View>
       </MetroSection>
 
       <MetroSection title="Sobre">
         <View>
-          <MetroRow label="Versão" value="0.2.0 (MVP)" />
+          <MetroRow label="Versão" value="0.3.0" />
           <MetroRow label="Licença" value="MIT (open source)" />
           <MetroRow label="Telemetria" value="nenhuma" color={theme.primary} />
           <MetroRow label="Anúncios" value="nenhum" color={theme.primary} />
