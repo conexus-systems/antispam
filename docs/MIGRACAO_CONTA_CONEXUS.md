@@ -8,16 +8,17 @@ mantendo as mesmas chaves do `expo-secure-store` (quem já estava logado continu
 
 ## (a) bff-auth — registrar o client mobile (uma vez)
 
-Console de um pod `platform-auth-web` (nunca colar segredos no Git):
+Num pod `platform-auth-web`, com o comando idempotente do bff-auth (`lib/tasks/oauth_clients_upsert.rake`;
+rodar de novo não duplica o client nem remove URIs):
 
-```ruby
-c = OAuthClient.find_by(name: "AntiSpam BR") ||
-    OAuthClient.create!(name: "AntiSpam BR", public_client: true,
-                        redirect_uris: ["antispambr://oauth/callback"])   # público, PKCE S256, sem segredo
-puts c.client_id
+```bash
+bin/rails oauth_clients:upsert NAME="AntiSpam BR" PUBLIC=true REDIRECT_URIS=antispambr://oauth/callback
+# público, PKCE S256, sem segredo; o client_id impresso → CONEXUS_CLIENT_ID (b)
 ```
 
-- Sem client web (não há `web/`), sem `post_logout_redirect_uris` e sem `WebhookEndpoint`: o app não guarda
+- O scheme `antispambr` não é DNS reverso (RFC 8252 §7.1) e é aceito pela lista exata do bff-auth
+  (`OAuthClient::ALLOWED_CUSTOM_SCHEMES`).
+- Sem client web (não há `web/`), sem `POST_LOGOUT_URIS` e sem `WEBHOOK_URL`: o app não guarda
   espelho de usuário, então não há o que sincronizar por webhook.
 - Cadastro aberto (`registration_mode` padrão): qualquer pessoa pode criar a conta pelo botão "Criar conta".
 - Exclusão de conta: página do bff-auth `https://auth.conexus-systems.com.br/conta/excluir` (link no app e na Play).
