@@ -40,7 +40,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
         with:
           # The action's default list still asks for 'tools', which the SDK no longer ships.
           packages: 'platform-tools'
