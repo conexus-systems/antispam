@@ -8,6 +8,7 @@ import { getDb, ensureDb } from '../../src/app/screening';
 import { normalizePhone, formatDisplay } from '../../src/core/phone/normalize';
 import { computeSpamScore, riskBand } from '../../src/core/detection/spamScore';
 import { analyzeNumber, type AiInsight } from '../../src/core/ai/openrouter';
+import { adMobService } from '../../src/ads/adMob';
 
 export default function Verify() {
   const theme = useTheme();
@@ -53,6 +54,8 @@ export default function Verify() {
         contributions: breakdown.contributions,
         repReports: rep?.reports ?? 0,
       });
+      // Pausa natural: verificação manual concluída. Não bloqueia a análise (fire-and-forget).
+      void adMobService.recordNaturalBreak();
     } finally {
       setAnalyzing(false);
     }

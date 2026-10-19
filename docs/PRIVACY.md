@@ -22,7 +22,12 @@
 
 - **Minimização**: só o necessário para a função; nada de identidade real.
 - **Finalidade**: dados de chamada servem exclusivamente à proteção local.
-- **Sem perfilamento**: nenhuma telemetria, nenhum tracker, nenhum SDK de anúncios.
+- **Sem telemetria própria**: o app não tem analytics nem tracker.
+- **Anúncios (AdMob)**: a versão da loja usa o Google Mobile Ads SDK em telas do app (Histórico, Ajustes e, ocasionalmente,
+  um intersticial após uma verificação manual). O SDK pode coletar o ID de publicidade do Android, endereço IP e dados de
+  interação com o anúncio; personalização só com consentimento (formulário UMP do Google, revogável em
+  **Ajustes › geral › Privacidade de anúncios** quando exigido). Números de chamadas, contatos e histórico **nunca** vão para o SDK.
+  Nenhum anúncio aparece durante chamadas, em notificações ou fora do app.
 - Direitos do titular: apagar histórico/base = privacidade restaurada instantânea no aparelho. Se você usou a conta,
   **Conta › Excluir meus dados na nuvem** apaga backup e denúncias do servidor (`DELETE /api/v1/antispam/me`), e
   cada denúncia pode ser excluída em **Conta › Minhas denúncias**. A Conta Conexus inteira se exclui em
@@ -50,4 +55,5 @@
 
 - `POST_NOTIFICATIONS` — avisar sobre chamadas bloqueadas.
 - Papel de **filtragem de chamadas** via RoleManager (concedido por você nas configurações do sistema).
+- `com.google.android.gms.permission.AD_ID` — adicionada pelo SDK do AdMob (ID de publicidade, para anúncios).
 - Nada de acessibilidade, nada de SMS por padrão, nada de localização.

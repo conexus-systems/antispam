@@ -141,7 +141,7 @@ export default function Home() {
 
       <MetroSection>
         <MetroText variant="caption">
-          100% local · sem anúncios · open source{'\n'}Decisões explicáveis e fail-safe: em dúvida, permite.
+          análise 100% local · open source{'\n'}Decisões explicáveis e fail-safe: em dúvida, permite.
         </MetroText>
       </MetroSection>
     </AppScreen>

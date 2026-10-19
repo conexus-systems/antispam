@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Alert, Clipboard, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
@@ -18,6 +18,8 @@ import {
 } from '@conexus/metro-ui';
 import { useConexusAccount } from '@conexus/account-expo';
 import { AppScreen, Flush, MetroRow } from '../../src/ui/app';
+import { AdBanner } from '../../src/ui/AdBanner';
+import { adMobService } from '../../src/ads/adMob';
 import {
   useAppState,
   setMode,
@@ -70,6 +72,26 @@ export default function Settings() {
   const [listInput, setListInput] = useState({ allow: '', block: '' });
   const [aiKeyInput, setAiKeyInput] = useState(ai.apiKey);
   const [roleHeld, setRoleHeld] = useState<boolean | null>(null);
+  const [adPrivacyRequired, setAdPrivacyRequired] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!adMobService.isEnabled()) return;
+    void adMobService.whenReady().then(() => {
+      if (!cancelled) setAdPrivacyRequired(adMobService.isPrivacyOptionsRequired());
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function openAdPrivacy() {
+    try {
+      await adMobService.showPrivacyOptions();
+    } catch {
+      Alert.alert('Privacidade de anúncios', 'Não foi possível abrir as opções agora. Tente de novo mais tarde.');
+    }
+  }
 
   async function refreshRole() {
     if (isNativeScreeningAvailable()) setRoleHeld(await isCallScreeningRoleHeld());
@@ -271,8 +293,11 @@ export default function Settings() {
           <MetroRow label="Versão" value={APP_VERSION} />
           <MetroRow label="Licença" value="MIT (open source)" />
           <MetroRow label="Telemetria" value="nenhuma" color={theme.primary} />
-          <MetroRow label="Anúncios" value="nenhum" color={theme.primary} />
+          <MetroRow label="Anúncios" value="banner e intersticial ocasional (nunca durante chamadas)" />
         </View>
+        {adPrivacyRequired && (
+          <MetroButton block label="Privacidade de anúncios" icon={GLYPHS.lock} size="small" onPress={openAdPrivacy} />
+        )}
         <MetroButton block label="Apoiar o projeto" icon={GLYPHS.heart} onPress={() => router.push('/donate')} />
       </MetroSection>
 
@@ -298,6 +323,7 @@ export default function Settings() {
           { key: 'general', title: 'geral', render: () => pivotPage(generalPage) },
         ]}
       />
+      <AdBanner />
       <MetroDialog
         visible={confirmReset}
         title="Confirmar"

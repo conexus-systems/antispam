@@ -1,6 +1,6 @@
 # AntiSpam BR 🛡️
 
-**Bloqueio inteligente de chamadas de spam — 100% open source, sem anúncios, cadastro opcional, privacy-first.**
+**Bloqueio inteligente de chamadas de spam — 100% open source, cadastro opcional, privacy-first.**
 
 Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003`, emergências (que **nunca** são bloqueadas), e toma decisões **explicáveis** em **< 100 ms**, totalmente **offline**.
 
@@ -83,7 +83,7 @@ npm run typecheck # TypeScript estrito
 
 ## 🔐 Privacidade por design
 
-- Processamento **100% local** por padrão; conta opcional, sem telemetria, sem anúncios.
+- Processamento **100% local** por padrão; conta opcional, sem telemetria. A versão da loja exibe anúncios AdMob só dentro do app (nunca durante chamadas), com consentimento UMP — ver [docs/PRIVACY.md](docs/PRIVACY.md).
 - Contatos/histórico **nunca** saem do aparelho.
 - Rede só no que você escolhe: **IA Assistente** (sua chave OpenRouter; envia só o número que você pediu para analisar) e a **Conta Conexus** opcional (backup que você manda fazer, denúncias que você marca para enviar, doações) — ver [docs/ACCOUNT.md](docs/ACCOUNT.md).
 - Base comunitária (futuro) usará **hash-prefix / k-anonymity** — ver `docs/PRIVACY.md` e `docs/THREAT_MODEL.md`.

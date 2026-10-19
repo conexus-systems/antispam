@@ -1,6 +1,6 @@
 # ❤️ Donate — AntiSpam BR
 
-O AntiSpam BR é **100% gratuito, open source, sem anúncios e sem venda de dados**.
+O AntiSpam BR é **100% gratuito, open source e sem venda de dados**. A versão da loja exibe anúncios só dentro do app, nunca durante chamadas.
 
 Doações são **sempre opcionais** e **nunca desbloqueiam recursos** — não existe versão premium, não existe popup insistente, e quem não doa tem exatamente a mesma experiência.
 
