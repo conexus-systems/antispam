@@ -12,7 +12,7 @@
       "bundleIdentifier": "br.antispam.app"
     },
     "android": {
-      "package": "br.antispam.app",
+      "package": "com.conexus.antispam",
       "adaptiveIcon": {
         "backgroundColor": "#0B1220",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -24,7 +24,8 @@
         "android.permission.READ_PHONE_STATE",
         "android.permission.CALL_PHONE"
       ],
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 5
     },
     "plugins": [
       [
