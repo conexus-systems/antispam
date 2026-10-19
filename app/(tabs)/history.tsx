@@ -17,6 +17,7 @@ import { REPORT_CATEGORY_LABELS, type HistoryEntry, type ReportCategory } from '
 import { useConexusAccount } from '@conexus/account-expo';
 import { antispamApi, antispamErrorMessage, isE164 } from '../../src/account';
 import { AppScreen } from '../../src/ui/app';
+import { AdBanner } from '../../src/ui/AdBanner';
 
 const CATEGORIES = Object.keys(REPORT_CATEGORY_LABELS) as ReportCategory[];
 
@@ -113,6 +114,8 @@ export default function History() {
           );
         }}
       />
+
+      <AdBanner />
 
       <MetroDialog
         visible={!!reporting}

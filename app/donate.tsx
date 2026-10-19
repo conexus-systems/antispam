@@ -159,7 +159,7 @@ export default function Donate() {
     <AppScreen title="Apoie o projeto">
       <MetroSection>
         <MetroText variant="body">
-          O AntiSpam BR é gratuito, open source, sem anúncios e sem venda de dados. Se ele estiver sendo útil,
+          O AntiSpam BR é gratuito, open source e sem venda de dados; os anúncios dentro do app ajudam a pagar a conta. Se ele estiver sendo útil,
           você pode ajudar voluntariamente a manter o desenvolvimento e a base de spam comunitária.
         </MetroText>
         <View style={{ flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap' }}>
