@@ -1,0 +1,6 @@
+# Gerado por conexus-platform/bin/conexus-vendor. Não edite esta cópia: mude na conexus-platform e revendorize.
+package=@conexus/account-expo
+version=0.1.0
+source=conexus-systems/conexus-platform
+commit=f339afaadf830cd2f2a4273fad92e78bc9120f73
+content=9079f39097204dba

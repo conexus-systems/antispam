@@ -1,25 +1,65 @@
 {
   "name": "antispam-br",
-  "private": true,
-  "description": "AntiSpam BR — monorepo (pacotes TS compartilhados). Apps nativos em apps/android e apps/ios.",
-  "license": "MIT",
-  "type": "module",
-  "engines": {
-    "node": ">=22.18"
-  },
-  "workspaces": [
-    "packages/*",
-    "services/api"
-  ],
+  "version": "0.4.0",
+  "main": "expo-router/entry",
   "scripts": {
-    "test": "npm test -w @antispam-br/phone-normalizer -w @antispam-br/datasets -w @antispam-br/reputation",
-    "typecheck": "npm run typecheck --workspaces",
-    "vectors:generate": "node packages/datasets/scripts/gen-test-vectors.ts",
-    "vectors:check": "npm run vectors:generate && git diff --exit-code -- data/test-vectors",
-    "test:api": "npm test -w @antispam-br/api"
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@conexus/account-expo": "file:./vendor/conexus/account-expo",
+    "@conexus/metro-ui": "file:./vendor/conexus/metro-ui",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "3.1.1",
+    "expo": "~58.0.7",
+    "expo-application": "^57.0.3",
+    "expo-constants": "~57.0.21",
+    "expo-crypto": "^58.0.6",
+    "expo-haptics": "^57.0.3",
+    "expo-linear-gradient": "^57.0.2",
+    "expo-linking": "^57.0.11",
+    "expo-notifications": "^57.0.21",
+    "expo-router": "^58.0.17",
+    "expo-secure-store": "~58.0.2",
+    "expo-status-bar": "~57.0.1",
+    "expo-web-browser": "~58.0.6",
+    "qrcode-generator": "2.0.4",
+    "react": "19.3.0",
+    "react-native": "0.87.1",
+    "react-native-google-mobile-ads": "17.3.1",
+    "react-native-qrcode-svg": "6.3.26",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-screens": "~4.29.0",
+    "react-native-svg": "15.15.5"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
-    "typescript": "^5.7.2"
+    "@react-native/jest-preset": "^0.87.1",
+    "@types/jest": "~29.5.14",
+    "@types/react": "~19.3.0",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.1",
+    "typescript": "~7.0.2"
+  },
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^@expo/vector-icons(/.*)?$": "<rootDir>/jest/vector-icons-stub.js",
+      "^@react-native/assets-registry/registry$": "<rootDir>/jest/assets-registry-stub.js",
+      "^expo-modules-core(/.*)?$": "<rootDir>/node_modules/expo/node_modules/expo-modules-core$1"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|qrcode-generator)"
+    ]
   }
 }

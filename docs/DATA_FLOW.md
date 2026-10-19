@@ -42,3 +42,14 @@ Importar: JSON → schema estrito + limites → setState
 ```
 Env de build (EXPO_PUBLIC_DONATION_PIX_KEY) → buildPixPayload (EMV+CRC16 local) → QR/copiar
 ```
+
+## Conta Conexus (opcional, 0.3.0)
+
+```
+[Você toca "Fazer backup agora"] → listas/regras/ajustes (JSON) → PUT api.conexus-systems.com.br/api/v1/antispam/backup
+[Você toca "Restaurar"]          → GET  …/backup → validação estrita → confirmação com resumo → aplica no aparelho
+[Denúncia com "Enviar com minha conta"] → POST …/reports {número E.164, categoria, data}
+[Doar pela conta]                → POST payments.conexus-systems.com.br/v1/me/donations → checkout HTTPS no navegador
+```
+
+Histórico, contatos, reputação e chave da IA não entram em nenhum desses fluxos. Ver [ACCOUNT.md](ACCOUNT.md).

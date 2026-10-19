@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "AntiSpam BR",
+    "slug": "antispam-br",
+    "version": "0.4.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "antispambr",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "br.antispam.app"
+    },
+    "android": {
+      "package": "com.conexus.antispam",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1220",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.CALL_PHONE"
+      ],
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 5
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./app"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#60A917",
+          "icon": "./assets/icon.png"
+        }
+      ],
+      "expo-font",
+      "expo-web-browser",
+      "expo-secure-store"
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "82eabd0b-93cd-44d8-966b-3553fec0f285"
+      }
+    },
+    "owner": "tantoniazi"
+  }
+}

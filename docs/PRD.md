@@ -18,7 +18,7 @@ O Brasil está entre os países com mais chamadas de telemarketing/golpe por hab
 | Apps comerciais | AntiSpam BR |
 |---|---|
 | Vendem seus dados | Nada sai do aparelho (por padrão) |
-| Anúncios | Nenhum |
+| Anúncios | Só dentro do app (banner + intersticial limitado), nunca no fluxo de chamada |
 | Assinatura/paywall | Grátis, MIT |
 | Caixa-preta | Decisão 100% explicável |
 | Nuvem decide | Local decide; nuvem nunca decide |
@@ -54,7 +54,8 @@ O Brasil está entre os países com mais chamadas de telemarketing/golpe por hab
 
 ## 7. Fora de escopo (por princípio)
 
-- Venda de dados, anúncios, perfilamento do usuário.
+- Venda de dados, perfilamento do usuário além do que o AdMob faz com consentimento.
+- Anúncio em tela de chamada, overlay, notificação ou fora do app.
 - Cloud ML decidindo bloqueios.
 - Rastrear/publishing de dados pessoais de terceiros (ver §10).
 

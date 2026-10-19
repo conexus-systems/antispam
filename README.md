@@ -1,92 +1,120 @@
 # AntiSpam BR 🛡️
 
-**Bloqueio de ligações de spam, robocalls e golpes — gratuito, open source, privacy-first e feito para o Brasil.**
+**Bloqueio inteligente de chamadas de spam — 100% open source, cadastro opcional, privacy-first.**
 
-- Decide **no aparelho**, sem depender de internet durante a ligação.
-- Entende `+55`, DDD, nono dígito, `0303`, `0800`, `4004`; emergência e utilidade pública (1XX, 112, 911) **nunca** são bloqueadas.
-- Toda decisão é **explicável** ("por que bloqueou?") e reversível com um toque ("Não é spam").
-- Base comunitária transparente, publicada em datasets **assinados**; uma denúncia sozinha nunca bloqueia ninguém.
-- Sem anúncios, sem conta, sem venda de dados, sem upload da agenda.
+Feito para o Brasil: entende `+55`, DDD, 9º dígito, `0800`, `0303`, `4004/3003`, emergências (que **nunca** são bloqueadas), e toma decisões **explicáveis** em **< 100 ms**, totalmente **offline**.
 
-> Nome provisório. Doação opcional via PIX ([DONATE.md](DONATE.md)).
+> ⚠️ Nome provisório. Monetização: **nenhuma** — doação opcional via PIX (chave via env de build, nunca no código).
 
-## Estado
+---
 
-| Marco | Status |
+## ✨ O que já funciona (MVP)
+
+| Funcionalidade | Status |
 |---|---|
-| M0 — pesquisa, ADRs, arquitetura, threat model | ✅ |
-| M1 — Android nativo offline | 🟡 núcleo pronto e validado em emulador (78 testes JVM + 3 instrumentados) |
-| M2 — comunidade + API PostgreSQL | ✅ API (envio pelo Android pendente) |
-| M6 — iOS | 🔜 |
+| Motor de decisão local (`ALLOW / WARN / SILENCE / BLOCK`) com fail-safe | ✅ 42 testes |
+| Normalização BR (`(11) 99999-9999` ≡ `11999999999` ≡ `+5511999999999`) | ✅ |
+| SpamScore 0–100 auditável (reputação + campanha + padrão + STIR/SHAKEN + histórico) | ✅ |
+| Modos: Desativado / Básico / Equilibrado / Agressivo / Personalizado | ✅ |
+| Whitelist, blacklist, regras por prefixo/regex/ocultos/internacionais | ✅ |
+| Emergências (190, 192, 193…) e contatos: **nunca bloqueados** | ✅ |
+| Denúncias locais com anti-abuse (denunciantes únicos, recência, falso-positivos) | ✅ |
+| Detecção de campanhas (dezenas de números similares em 10 min) | ✅ |
+| Histórico explicável ("por que bloqueou?") + tempo poupado (estimativa) | ✅ |
+| Verificar número (antes de retornar ligação suspeita) | ✅ |
+| IA Assistente opcional via **OpenRouter** (off por padrão, **nunca** decide bloqueio) | ✅ |
+| Backup JSON validado (anti-payload-malicioso) | ✅ |
+| Doação PIX com BR Code gerado no aparelho (CRC16/EMV) | ✅ |
+| Conta Conexus **opcional**: backup manual na nuvem, denúncias identificadas, doação pela conta ([docs/ACCOUNT.md](docs/ACCOUNT.md)) | ✅ 0.3.0 (padrão Conexus na 0.4.0) |
+| Simulador de chamadas (funciona no Expo Go, iOS e Android) | ✅ |
+| Módulo nativo Kotlin de referência (CallScreeningService + RoleManager) | ✅ código de referência |
+| Bloqueio real em device | 🔜 dev build (ver [Roadmap](docs/ROADMAP.md)) |
 
-Detalhes em [docs/ROADMAP.md](docs/ROADMAP.md).
-
-## Estrutura
-
-```
-apps/android/      app nativo (Kotlin, Compose, CallScreeningService) + :engine (motor puro)
-apps/ios/          extensões iOS (Message Filter hoje; Call Directory em M6)
-apps/web/          portal comunitário
-apps/legacy-expo/  protótipo React Native anterior — congelado (ADR 0001)
-packages/          phone-normalizer, datasets (formato binário assinado), reputation — TypeScript
-services/api/      API comunitária (PostgreSQL) — ver services/api/README.md
-data/              regras BR, schemas, vetores de teste normativos, corpus SMS anonimizado
-docs/              ARCHITECTURE, THREAT_MODEL, ROADMAP, adr/, specs/, research/
-agents/            papéis da equipe de agentes (ROLE / TASKS / DECISIONS)
-```
-
-## Rodando
-
-Requisitos: JDK 17, Android SDK (API 36), Node ≥ 22.18.
+## 🚀 Rodando
 
 ```bash
-# pacotes TS e vetores compartilhados
-npm ci && npm test && npm run typecheck
-
-# API comunitária + portal (Postgres em 127.0.0.1:5544, API em http://127.0.0.1:17887)
-docker compose -f infra/docker/docker-compose.yml up -d --build
-TEST_DATABASE_URL=postgres://antispam:antispam-dev-only@127.0.0.1:5544/antispam npm run test:api
-
-# Android
-cd apps/android
-./gradlew :engine:test            # motor + vetores compartilhados
-./gradlew :app:installDebug       # instala com.conexus.antispam.debug
-adb shell cmd role add-role-holder android.app.role.CALL_SCREENING com.conexus.antispam.debug
+npm install --legacy-peer-deps   # expo-router × expo-constants têm conflito de peer no SDK 58
+npx expo start          # escaneie o QR com Expo Go (iOS/Android)
 ```
 
-O build debug baixa datasets de `http://10.0.2.2:17887/datasets/br-calls/` e confia na chave de
-**teste** (`data/test-vectors/datasets/TEST_KEY.json`). Para servir os vetores localmente:
+- **Expo Go**: tudo funciona em **modo demonstração** — use o **Simulador de chamadas** na aba Início para ver o pipeline completo (normalização → regras → base → score → decisão → histórico → denúncia).
+- **Bloqueio real**: exige *development build* Android com o módulo nativo (`native/android/` — CallScreeningService não existe no Expo Go nem no iOS via Expo Go; no iOS o equivalente é a Call Directory Extension, planejada no M2 do roadmap).
 
 ```bash
-mkdir -p /tmp/www/datasets && cp -r data/test-vectors/datasets/v2 /tmp/www/datasets/br-calls
-python3 -m http.server 17887 --bind 127.0.0.1 --directory /tmp/www
+# dev build (quando integrar o módulo nativo ao prebuild)
+npx expo prebuild --platform android
+npx expo run:android
 ```
 
-Builds release só aceitam chaves passadas em `-Pantispam.datasetKeys=id:base64` e recusam `test-*`.
+## 👤 Conta Conexus (opcional)
 
-### Publicação na Google Play
+O app funciona inteiro sem conta. Com ela: backup manual na nuvem, denúncias identificadas e doações pela conta
+(detalhes em [docs/ACCOUNT.md](docs/ACCOUNT.md)). Login, sessão e o kit visual W10M vêm dos pacotes compartilhados
+da Conexus, vendorizados em `vendor/conexus/`:
 
-A chave de upload e a conta de serviço ficam fora do repositório (`~/secrets/`).
+| Pacote | Uso aqui |
+|---|---|
+| `@conexus/account-expo` | login PKCE no navegador (bff-auth), sessão no `expo-secure-store`, refresh, `authorizedRequest`, `<ConexusLoginScreen/>` |
+| `@conexus/metro-ui` | tema e componentes W10M (destaque verde `#60A917`) |
+
+Não edite `vendor/conexus/**`: para atualizar, rode `bin/conexus-vendor <caminho deste repo>` na
+`conexus-platform` e commite (o CI pode conferir com `--check`).
+
+**Rodando local com login:** as variáveis são públicas (vão no bundle) e opcionais:
 
 ```bash
-cd apps/android
-./gradlew :engine:test :app:lintRelease :app:bundleRelease \
-  -Pantispam.signingProperties=$HOME/secrets/antispam-br-upload.properties \
-  -Pantispam.versionCode=3 -Pantispam.versionName=0.1.2
-cd ../..
-GOOGLE_PLAY_SERVICE_ACCOUNT=$HOME/secrets/google-play-service-account.json \
-  node apps/android/scripts/play-upload.ts --aab apps/android/app/build/outputs/bundle/release/app-release.aab --track internal
+EXPO_PUBLIC_CONEXUS_CLIENT_ID=<client_id público do "AntiSpam BR" no bff-auth> \
+EXPO_PUBLIC_CONEXUS_AUTH_URL=https://auth.conexus-systems.com.br \
+EXPO_PUBLIC_CONEXUS_API_URL=https://api.conexus-systems.com.br \
+npx expo start
 ```
 
-Enquanto o app estiver em rascunho na Console, só releases `draft` são aceitas. Ficha da loja: `apps/android/play/listing-pt-BR.md`;
-ícone 512 e feature graphic: `apps/android/play/graphics/`. Visual e identidade: [docs/DESIGN.md](docs/DESIGN.md).
+Sem `EXPO_PUBLIC_CONEXUS_CLIENT_ID` o login fica desligado ("Em breve") e o app não chama a rede da Conta.
+`EXPO_PUBLIC_CONEXUS_AUTH_URL` vazio = produção. Redirect registrado no bff-auth: `antispambr://oauth/callback`
+(o Expo Go usa outro scheme; teste o login num build de desenvolvimento ou no APK). Excluir a conta:
+<https://auth.conexus-systems.com.br/conta/excluir>. Roteiro de produção: [docs/MIGRACAO_CONTA_CONEXUS.md](docs/MIGRACAO_CONTA_CONEXUS.md).
 
-## Privacidade
+## 🧪 Testes
 
-Nada da agenda, do histórico ou de conteúdo de SMS sai do aparelho. O app não pede permissão de
-contatos — assim o Android nem envia ligações de contatos para triagem. Telemetria é opt-in.
-Ver [docs/PRIVACY.md](docs/PRIVACY.md) e [docs/adr/0004-number-privacy.md](docs/adr/0004-number-privacy.md).
+```bash
+npm test          # 42 testes do motor crítico
+npm run typecheck # TypeScript estrito
+```
 
-## Licença
+## 🔐 Privacidade por design
 
-MIT — [LICENSE](LICENSE). Contribua: [CONTRIBUTING.md](CONTRIBUTING.md) · Segurança: [SECURITY.md](SECURITY.md)
+- Processamento **100% local** por padrão; conta opcional, sem telemetria. A versão da loja exibe anúncios AdMob só dentro do app (nunca durante chamadas), com consentimento UMP — ver [docs/PRIVACY.md](docs/PRIVACY.md).
+- Contatos/histórico **nunca** saem do aparelho.
+- Rede só no que você escolhe: **IA Assistente** (sua chave OpenRouter; envia só o número que você pediu para analisar) e a **Conta Conexus** opcional (backup que você manda fazer, denúncias que você marca para enviar, doações) — ver [docs/ACCOUNT.md](docs/ACCOUNT.md).
+- Base comunitária (futuro) usará **hash-prefix / k-anonymity** — ver `docs/PRIVACY.md` e `docs/THREAT_MODEL.md`.
+
+## 🗂️ Estrutura
+
+```
+app/                  # Telas (expo-router): onboarding, (tabs), donate, account, login
+src/core/             # Motor puro e testável
+  phone/              #   normalização BR + emergências + regras 0303
+  detection/          #   SpamScore + CampaignDetector
+  decision/           #   SpamDecisionEngine (pipeline §4)
+  rules/              #   motor de regras do usuário
+  reputation/         #   reputação local com anti-abuse
+  database/           #   banco de spam (formato aberto) + seed
+  security/           #   SHA-256 (hash-prefix privacy)
+  donation/           #   PIX BR Code (EMV + CRC16)
+  ai/                 #   cliente OpenRouter (opcional, off por padrão)
+src/app/              # Store global, screening service, backup, ponte nativa
+src/account/          # Conta Conexus do app (APIs do AntiSpam/Payments, backup na nuvem) sobre @conexus/account-expo
+src/ui/               # Tokens do app (score, ações) + peças próprias sobre @conexus/metro-ui
+vendor/conexus/       # Pacotes compartilhados vendorizados (não editar)
+native/android/       # Kotlin de referência (CallScreeningService)
+docs/                 # RESEARCH, PRD, ARCHITECTURE, THREAT_MODEL, PRIVACY, ROADMAP…
+__tests__/            # Testes do motor crítico (Jest)
+```
+
+## 🗺️ Próximos passos
+
+Ver **[docs/ROADMAP.md](docs/ROADMAP.md)** — inclui a avaliação de viabilidade (técnica e legal) dos recursos avançados pedidos: SMS spam, "modo troll", gravação de áudio, geolocalização de originadores, cruzamento com dados públicos, integração OLX/Mercado Livre, e-mails/WhatsApp vinculados.
+
+## 📄 Licença
+
+MIT — veja [LICENSE](LICENSE). Contribua: [CONTRIBUTING.md](CONTRIBUTING.md) · Segurança: [SECURITY.md](SECURITY.md) · Doar: [DONATE.md](DONATE.md)
