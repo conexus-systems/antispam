@@ -12,7 +12,7 @@
     <!-- Superfície acrílica para diálogos do sistema: 8 dp, translúcida; values-v31 liga o desfoque. -->
     <style name="AntiSpamDialogBase" parent="android:style/Theme.Material.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_surface</item>
-        <item name="android:colorAccent">@color/as_accent_light</item>
+        <item name="android:colorAccent">@color/as_accent</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
