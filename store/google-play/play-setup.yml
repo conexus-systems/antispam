@@ -1,0 +1,23 @@
+# Google Play — ficha da loja (pt-BR). Aplicar com play-console-app-setup/scripts/play_setup.py.
+package: com.conexus.antispam
+default_language: pt-BR
+
+contact:
+  email: tantoniazi@conexus-systems.com.br
+
+listings:
+  pt-BR:
+    title: AntiSpam BR – Bloqueia golpes
+    short_description: Bloqueia spam, robocalls e golpes no celular. Grátis e sem ler sua agenda.
+    full_description_file: listing-pt-BR-full.txt
+
+images:
+  pt-BR:
+    icon: icon-512.png
+    featureGraphic: feature-graphic.png
+    phoneScreenshots:
+      - screenshots/01-onboarding.png
+      - screenshots/02-home.png
+      - screenshots/03-history.png
+      - screenshots/04-verify.png
+      - screenshots/05-settings.png

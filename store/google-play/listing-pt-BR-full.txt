@@ -1,0 +1,22 @@
+O AntiSpam BR identifica e bloqueia ligações de telemarketing, robôs, chamadas mudas e golpes (falso banco, falso PIX, falsa central, falsa entrega) direto no seu celular.
+
+• Decide no aparelho, sem depender de internet durante a ligação.
+• Entende números brasileiros: DDD, nono dígito, 0303, 0800, 4004.
+• Emergência e serviços públicos (190, 192, 193, 199, 112…) nunca são bloqueados.
+• Cada decisão vem explicada: você vê por que a ligação foi bloqueada, silenciada ou só sinalizada.
+• Verifique um número antes de retornar uma ligação suspeita.
+• Errou? Um toque em "Não é spam" libera o número para sempre.
+• Suas regras: bloqueie números, prefixos ou padrões; libere quem quiser.
+• Modos Básico, Equilibrado, Agressivo ou Personalizado.
+
+Privacidade de verdade:
+• Não pede acesso à sua agenda.
+• Não envia seu histórico de ligações para lugar nenhum.
+• Sem venda de dados. Conta opcional, só para backup na nuvem e doações.
+• Código aberto: github.com/conexus-systems/antispam-br
+
+Gratuito, mantido por anúncios discretos e doações opcionais.
+
+Como ativar: abra o app e aceite o papel de "App de identificação de chamadas e spam".
+
+Requer Android 10 ou superior.
