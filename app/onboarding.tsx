@@ -3,23 +3,25 @@ import { Alert, Platform, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { spacing, useTheme } from '../src/ui/theme';
-import { Glyph, GLYPHS, MetroButton, MetroScreen, MetroText, type GlyphName } from '@conexus/metro-ui';
+import { MetroButton, MetroScreen, MetroText } from '@conexus/metro-ui';
+import { FluentIcon } from '../src/ui/metro/icons';
+import type { FluentName } from '../src/ui/metro/fluentPaths';
 import { setState } from '../src/app/store';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, requestCallScreeningRole } from '../src/app/nativeBridge';
 
 const STEPS = [
   {
-    icon: 'phoneOff' as GlyphName,
+    icon: 'phoneOff' as FluentName,
     title: 'Chega de chamadas indesejadas',
     body: 'Bloqueie telemarketing, golpes e robocalls antes do telefone tocar. 100% local, explicável e gratuito.',
   },
   {
-    icon: 'lock' as GlyphName,
+    icon: 'lock' as FluentName,
     title: 'Seus dados ficam no seu celular',
     body: 'Sem envio de contatos ou histórico e sem cadastro obrigatório. A análise de cada chamada acontece no aparelho; a conta é opcional. Há anúncios só dentro do app, nunca durante uma chamada.',
   },
   {
-    icon: 'shield' as GlyphName,
+    icon: 'shield' as FluentName,
     title: 'Ative a proteção',
     body: 'O Android pede que o AntiSpam BR seja definido como app de identificação e filtragem de chamadas. É assim que ele consegue proteger você.',
   },
@@ -63,7 +65,7 @@ export default function Onboarding() {
     <MetroScreen padded>
       <View style={{ flex: 1, justifyContent: 'center', gap: spacing.xl }}>
         <MetroText variant="kicker">AntiSpam BR</MetroText>
-        <Glyph name={s.icon} size={72} color={theme.primary} />
+        <FluentIcon name={s.icon} size={72} color={theme.primary} />
         <MetroText variant="header" accessibilityRole="header">{s.title}</MetroText>
         <MetroText variant="body" tone="muted">{s.body}</MetroText>
         <View
@@ -84,7 +86,7 @@ export default function Onboarding() {
           </>
         ) : (
           <>
-            <MetroButton block label={activating ? 'Ativando…' : 'Ativar proteção'} icon={GLYPHS.shield} variant="primary" onPress={activate} loading={activating} />
+            <MetroButton block label={activating ? 'Ativando…' : 'Ativar proteção'} icon={<FluentIcon name="shield" />} variant="primary" onPress={activate} loading={activating} />
             <MetroButton
               label="Ativar depois — explorar em modo demonstração"
               variant="text"

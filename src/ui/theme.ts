@@ -5,34 +5,25 @@
  * Telas e componentes NÃO definem cores, tamanhos de fonte, raios ou durações próprias:
  * usam `useTheme()` (tema do sistema, escuro por padrão) e os componentes de `@conexus/metro-ui` (vendor/conexus/metro-ui).
  *
- * Cor de destaque: a marca era verde (#22C55E = proteção); a essencial W10M mais próxima é
- * Verde #60A917. Vermelho = bloqueio, laranja/âmbar = suspeito (cores do próprio W10M).
+ * Cor de destaque: `brand.primary` (#DC2626, fleet.yml) por padrão; o usuário escolhe outra em
+ * Ajustes › Aparência (`appearance.accent` no store). Tokens puros em `src/ui/metro/tokens.ts`.
+ * Vermelho = bloqueio (danger), laranja/âmbar = suspeito (cores do próprio W10M).
  */
 import { useColorScheme, type TextStyle } from 'react-native';
+import { useAppState } from '../app/store';
+import { BRAND_PRIMARY, ESSENTIALS } from './metro/tokens';
+
+export { BRAND_PRIMARY, ESSENTIALS };
 
 // ---------------------------------------------------------------------------
 // Cor de destaque (Accent.kt)
 // ---------------------------------------------------------------------------
 
-/** As 10 cores essenciais do W10M (Personalização › Cores). */
-export const ESSENTIALS = {
-  azul: '#0050EF',
-  ciano: '#1BA1E2',
-  verde: '#60A917',
-  lima: '#A4C400',
-  laranja: '#FA6800',
-  amarelo: '#E3C800',
-  vermelho: '#E51400',
-  magenta: '#D80073',
-  roxo: '#AA00FF',
-  cinza: '#647687',
-} as const;
-
 /** Extras da paleta W10M usados aqui (faixas de score). */
 const AMBAR = '#F0A30A';
 
-/** Destaque do app (verde = proteção). */
-export const ACCENT = ESSENTIALS.verde;
+/** Destaque padrão do app (brand.primary). */
+export const ACCENT = BRAND_PRIMARY;
 
 type RGB = [number, number, number];
 
@@ -137,7 +128,7 @@ export type Palette = {
   fieldFocusPlaceholder: string;
 };
 
-function build(dark: boolean): Palette {
+function build(dark: boolean, accent: string = ACCENT): Palette {
   const bg = dark ? '#000000' : '#FFFFFF';
   const on = (c: string) => forBackground(c, bg);
   return {
@@ -149,9 +140,9 @@ function build(dark: boolean): Palette {
     textDim: dark ? '#CCCCCC' : '#505050',
     border: dark ? '#333333' : '#CCCCCC',
     disabled: dark ? '#666666' : '#999999',
-    accent: ACCENT,
-    primary: on(ACCENT),
-    accentFill: forWhiteText(ACCENT),
+    accent,
+    primary: on(accent),
+    accentFill: forWhiteText(accent),
     onAccent: '#FFFFFF',
     danger: on(ESSENTIALS.vermelho),
     warn: on(ESSENTIALS.laranja),
@@ -168,6 +159,19 @@ function build(dark: boolean): Palette {
 
 export const darkPalette = build(true);
 export const lightPalette = build(false);
+
+/** Paleta do tema para um esquema e uma cor de destaque (cacheada: `useTheme` roda a cada render). */
+const themeCache = new Map<string, Palette>();
+export function paletteFor(dark: boolean, accent: string = ACCENT): Palette {
+  if (accent === ACCENT) return dark ? darkPalette : lightPalette;
+  const key = `${dark ? 'dark' : 'light'}|${accent}`;
+  let p = themeCache.get(key);
+  if (!p) {
+    p = build(dark, accent);
+    themeCache.set(key, p);
+  }
+  return p;
+}
 
 // ---------------------------------------------------------------------------
 // Tipografia (Type.kt) — fonte do sistema; Segoe UI não pode ser embarcada.
@@ -221,16 +225,19 @@ function withTokens(p: Palette): Theme {
   return { ...p, type, spacing, gutter, radius: 0, space: (n: number) => n * 8 };
 }
 
-const darkTheme = withTokens(darkPalette);
-const lightTheme = withTokens(lightPalette);
+/** Tema estático (escuro, destaque da marca) para código fora de componentes. Componentes usam `useTheme()`. */
+export const theme: Theme = withTokens(darkPalette);
 
-/** Tema estático (escuro) para código fora de componentes. Componentes usam `useTheme()`. */
-export const theme: Theme = darkTheme;
-
-/** Tema do sistema; escuro quando indefinido. */
+/**
+ * Tema efetivo: a preferência do usuário (`appearance.theme`) ou, em "system", o do aparelho
+ * (escuro quando indefinido). O destaque vem de `appearance.accent`.
+ */
 export function useTheme(): Theme {
-  const scheme = useColorScheme();
-  return scheme === 'light' ? lightTheme : darkTheme;
+  const system = useColorScheme();
+  const pref = useAppState((s) => s.appearance.theme);
+  const accent = useAppState((s) => s.appearance.accent);
+  const dark = pref === 'system' ? system !== 'light' : pref === 'dark';
+  return withTokens(paletteFor(dark, accent));
 }
 
 // ---------------------------------------------------------------------------

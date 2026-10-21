@@ -4,13 +4,13 @@ import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { spacing, useTheme } from '../../src/ui/theme';
 import {
-  GLYPHS,
   MetroButton,
   MetroDialog,
   MetroListItem,
   MetroPage,
   MetroPivotPager,
   MetroRadio,
+  MetroRadioGroup,
   MetroSection,
   MetroText,
   MetroTextField,
@@ -29,12 +29,16 @@ import {
   toggleList,
   getState,
   setState,
+  setAppearance,
 } from '../../src/app/store';
+import { AccentSwatch } from '../../src/ui/metro/AccentSwatch';
+import { ACCENT_CHOICES, BRAND_PRIMARY, normalizeHex } from '../../src/ui/metro/tokens';
 import { importBackup, exportBackup } from '../../src/app/backup';
 import { getDb } from '../../src/app/screening';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable, openCallScreeningSettings, requestCallScreeningRole } from '../../src/app/nativeBridge';
 import { HANDLE_0303_LABELS, type Handle0303 } from '../../src/core/phone/brazilRules';
 import type { ProtectionMode } from '../../src/core/types';
+import { FluentIcon } from '../../src/ui/metro/icons';
 
 const APP_VERSION: string = Constants.expoConfig?.version ?? '';
 
@@ -65,6 +69,7 @@ export default function Settings() {
   const allowlist = useAppState((s) => s.allowlist);
   const blacklist = useAppState((s) => s.blacklist);
   const ai = useAppState((s) => s.ai);
+  const appearance = useAppState((s) => s.appearance);
   const history = useAppState((s) => s.history);
   const account = useConexusAccount();
 
@@ -73,6 +78,8 @@ export default function Settings() {
   const [aiKeyInput, setAiKeyInput] = useState(ai.apiKey);
   const [roleHeld, setRoleHeld] = useState<boolean | null>(null);
   const [adPrivacyRequired, setAdPrivacyRequired] = useState(false);
+  const [customHex, setCustomHex] = useState('');
+  const [hexError, setHexError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -194,7 +201,7 @@ export default function Settings() {
         <MetroTextField containerStyle={{ flex: 1 }} placeholder="Nome da regra" value={newRule.name} onChangeText={(v) => setNewRule((p) => ({ ...p, name: v }))} />
         <MetroTextField containerStyle={{ flex: 1 }} placeholder="+55114002…" value={newRule.prefix} onChangeText={(v) => setNewRule((p) => ({ ...p, prefix: v }))} keyboardType="phone-pad" />
       </View>
-      <MetroButton block label="Adicionar regra de prefixo (bloquear)" icon={GLYPHS.add} variant="primary" onPress={addPrefixRule} />
+      <MetroButton block label="Adicionar regra de prefixo (bloquear)" icon={<FluentIcon name="add" />} variant="primary" onPress={addPrefixRule} />
     </MetroSection>
   );
 
@@ -230,7 +237,7 @@ export default function Settings() {
       <MetroSection title="Conta Conexus (opcional)">
         <Flush>
         <MetroListItem
-          icon={GLYPHS.lock}
+          icon={<FluentIcon name="lock" />}
           title="Conta"
           subtitle={
             account.isSignedIn
@@ -296,9 +303,9 @@ export default function Settings() {
           <MetroRow label="Anúncios" value="banner e intersticial ocasional (nunca durante chamadas)" />
         </View>
         {adPrivacyRequired && (
-          <MetroButton block label="Privacidade de anúncios" icon={GLYPHS.lock} size="small" onPress={openAdPrivacy} />
+          <MetroButton block label="Privacidade de anúncios" icon={<FluentIcon name="lock" />} size="small" onPress={openAdPrivacy} />
         )}
-        <MetroButton block label="Apoiar o projeto" icon={GLYPHS.heart} onPress={() => router.push('/donate')} />
+        <MetroButton block label="Apoiar o projeto" icon={<FluentIcon name="heart" />} onPress={() => router.push('/donate')} />
       </MetroSection>
 
       <MetroSection title="Reset">
@@ -313,6 +320,70 @@ export default function Settings() {
     </>
   );
 
+  const appearancePage = (
+    <>
+      <MetroSection title="Tema">
+        <MetroRadioGroup
+          accessibilityLabel="Tema"
+          options={[
+            { value: 'system', label: 'Usar do sistema' },
+            { value: 'dark', label: 'Escuro' },
+            { value: 'light', label: 'Claro' },
+          ]}
+          value={appearance.theme}
+          onChange={(v) => setAppearance({ theme: v })}
+        />
+      </MetroSection>
+      <MetroSection title="Cor de destaque">
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          {ACCENT_CHOICES.map((c) => (
+            <AccentSwatch
+              key={c.id}
+              label={c.label}
+              hex={c.hex}
+              selected={appearance.accent === c.hex}
+              onSelect={() => setAppearance({ accent: c.hex })}
+            />
+          ))}
+        </View>
+        <MetroTextField
+          label="Cor personalizada"
+          placeholder="#RRGGBB"
+          value={customHex}
+          onChangeText={(v) => {
+            setCustomHex(v);
+            setHexError(false);
+          }}
+          autoCapitalize="characters"
+          autoCorrect={false}
+          error={hexError ? 'Use o formato #RRGGBB, por exemplo #1BA1E2.' : undefined}
+        />
+        <MetroButton
+          label="Aplicar cor"
+          size="small"
+          onPress={() => {
+            const hex = normalizeHex(customHex);
+            if (!hex) {
+              setHexError(true);
+              return;
+            }
+            setAppearance({ accent: hex });
+            setCustomHex('');
+          }}
+        />
+        <MetroButton label="Restaurar cor padrão" size="small" onPress={() => setAppearance({ accent: BRAND_PRIMARY })} />
+      </MetroSection>
+      <MetroSection title="Movimento">
+        <MetroToggle
+          label="Reduzir animações"
+          description="Desliga o movimento das telas e dos controles."
+          value={appearance.reduceMotion}
+          onValueChange={(v) => setAppearance({ reduceMotion: v })}
+        />
+      </MetroSection>
+    </>
+  );
+
   return (
     <AppScreen scroll={false} title="Ajustes">
       <MetroPivotPager
@@ -321,6 +392,7 @@ export default function Settings() {
           { key: 'rules', title: 'regras', render: () => pivotPage(rulesPage) },
           { key: 'lists', title: 'listas', render: () => pivotPage(listsPage) },
           { key: 'general', title: 'geral', render: () => pivotPage(generalPage) },
+          { key: 'appearance', title: 'aparência', render: () => pivotPage(appearancePage) },
         ]}
       />
       <AdBanner />

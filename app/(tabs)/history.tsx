@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { actionColor, actionLabel, spacing, useTheme } from '../../src/ui/theme';
 import {
-  GLYPHS,
   MetroButton,
   MetroDialog,
   MetroEmpty,
@@ -18,6 +17,7 @@ import { useConexusAccount } from '@conexus/account-expo';
 import { antispamApi, antispamErrorMessage, isE164 } from '../../src/account';
 import { AppScreen } from '../../src/ui/app';
 import { AdBanner } from '../../src/ui/AdBanner';
+import { FluentIcon } from '../../src/ui/metro/icons';
 
 const CATEGORIES = Object.keys(REPORT_CATEGORY_LABELS) as ReportCategory[];
 
@@ -104,9 +104,9 @@ export default function History() {
                   ))}
                   {item.simulated && <MetroTag text="simulada" color={theme.info} />}
                   <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap', marginTop: spacing.xs }}>
-                    <MetroButton label="Denunciar" icon={GLYPHS.flag} variant="danger" size="small" onPress={() => openReport(item)} />
-                    <MetroButton label="Sempre permitir" icon={GLYPHS.check} size="small" onPress={() => quickAction(item, 'allow')} />
-                    <MetroButton label="Bloquear nº" icon={GLYPHS.block} variant="danger" size="small" onPress={() => quickAction(item, 'block')} />
+                    <MetroButton label="Denunciar" icon={<FluentIcon name="flag" />} variant="danger" size="small" onPress={() => openReport(item)} />
+                    <MetroButton label="Sempre permitir" icon={<FluentIcon name="check" />} size="small" onPress={() => quickAction(item, 'allow')} />
+                    <MetroButton label="Bloquear nº" icon={<FluentIcon name="block" />} variant="danger" size="small" onPress={() => quickAction(item, 'block')} />
                   </View>
                 </View>
               )}

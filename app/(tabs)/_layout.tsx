@@ -1,9 +1,11 @@
 import { Tabs, useRouter } from 'expo-router';
-import { GLYPHS, MetroAppBar, type GlyphName } from '@conexus/metro-ui';
+import { MetroAppBar } from '@conexus/metro-ui';
+import { FluentIcon } from '../../src/ui/metro/icons';
+import type { FluentName } from '../../src/ui/metro/fluentPaths';
 import { useTheme } from '../../src/ui/theme';
 
 /** Ícones de traço fino da app bar W10M. */
-const ICONS: Record<string, GlyphName> = {
+const ICONS: Record<string, FluentName> = {
   index: 'shield',
   history: 'history',
   verify: 'search',
@@ -26,7 +28,7 @@ export default function TabsLayout() {
             return {
               key: route.key,
               label,
-              icon: GLYPHS[ICONS[route.name] ?? 'more'],
+              icon: <FluentIcon name={ICONS[route.name] ?? 'search'} size={24} color={focused ? theme.primary : theme.text} />,
               active: focused,
               accessibilityLabel: `${label}, aba ${index + 1} de ${state.routes.length}`,
               onPress: () => {
