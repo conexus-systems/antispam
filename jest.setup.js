@@ -2,9 +2,23 @@
  * Setup global do Jest: mocks de módulos nativos para rodar os testes do
  * motor crítico em ambiente Node (sem device).
  */
-jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest'),
-);
+// AsyncStorage em memória: o mock oficial do pacote não é aplicado sob o preset jest-expo.
+jest.mock('@react-native-async-storage/async-storage', () => {
+  const mem = new Map();
+  return {
+    __esModule: true,
+    default: {
+      getItem: jest.fn(async (k) => (mem.has(k) ? mem.get(k) : null)),
+      setItem: jest.fn(async (k, v) => { mem.set(k, v); }),
+      removeItem: jest.fn(async (k) => { mem.delete(k); }),
+      multiGet: jest.fn(async (ks) => ks.map((k) => [k, mem.has(k) ? mem.get(k) : null])),
+      multiSet: jest.fn(async (kvs) => { kvs.forEach(([k, v]) => mem.set(k, v)); }),
+      multiRemove: jest.fn(async (ks) => { ks.forEach((k) => mem.delete(k)); }),
+      getAllKeys: jest.fn(async () => [...mem.keys()]),
+      clear: jest.fn(async () => { mem.clear(); }),
+    },
+  };
+});
 
 jest.mock('expo-notifications', () => ({
   setNotificationHandler: jest.fn(),
