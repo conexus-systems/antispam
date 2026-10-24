@@ -29,7 +29,10 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_ADMOB_USE_TEST_IDS": "false"
+        "EXPO_PUBLIC_ADMOB_USE_TEST_IDS": "false",
+        "EXPO_PUBLIC_ADMOB_ANDROID_APP_ID": "ca-app-pub-1183451876290287~6058446694",
+        "EXPO_PUBLIC_ADMOB_BANNER_ID": "ca-app-pub-1183451876290287/2288301657",
+        "EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID": "ca-app-pub-1183451876290287/5144645268"
       },
       "environment": "production"
     }
