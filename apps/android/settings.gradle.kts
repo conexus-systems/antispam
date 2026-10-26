@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "antispam-br"
+rootProject.name = "antispam"
 include(":engine", ":app")

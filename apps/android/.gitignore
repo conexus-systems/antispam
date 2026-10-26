@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+**/build/
+*.jar
+!gradle-wrapper.jar
+
+# Local configuration
+local.properties
+signing.properties
+release.keystore
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db

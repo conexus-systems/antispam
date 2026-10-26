@@ -68,7 +68,7 @@ Consumer com AdMob. Play Billing opcional (doações).
 
 ## AAB e upload
 
-Caminho: `/home/tiagoadg/Codes/conexus-systems/antispam-br/antispam-br/apps/android/app/build/outputs/bundle/release/app-release.aab`
+Caminho: `/home/tiagoadg/Codes/conexus-systems/antispam/apps/android/app/build/outputs/bundle/release/app-release.aab`
 Track: **interna**, status **rascunho**.
 
 Depois que o pacote existir:
