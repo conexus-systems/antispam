@@ -9,7 +9,7 @@
     "scheme": "antispambr",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "br.antispam.app"
+      "bundleIdentifier": "com.conexus.antispam"
     },
     "android": {
       "package": "com.conexus.antispam",
