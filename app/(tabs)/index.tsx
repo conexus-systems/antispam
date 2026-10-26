@@ -3,12 +3,13 @@ import { View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import * as Notifications from 'expo-notifications';
 import { spacing, useTheme } from '../../src/ui/theme';
-import { GLYPHS, MetroButton, MetroListItem, MetroNotice, MetroSection, MetroTag, MetroText } from '@conexus/metro-ui';
+import { MetroButton, MetroListItem, MetroNotice, MetroSection, MetroTag, MetroText } from '@conexus/metro-ui';
 import { AppScreen, Flush, MetroRow } from '../../src/ui/app';
 import { getState, setState, useAppState } from '../../src/app/store';
 import { simulateCall } from '../../src/app/screening';
 import { isCallScreeningRoleHeld, isNativeScreeningAvailable } from '../../src/app/nativeBridge';
 import { requestNotificationPermission } from '../../src/app/notifications';
+import { FluentIcon } from '../../src/ui/metro/icons';
 
 function isToday(iso: string): boolean {
   const d = new Date(iso);
@@ -117,7 +118,7 @@ export default function Home() {
       </MetroSection>
 
       <MetroListItem
-        icon={GLYPHS.search}
+        icon={<FluentIcon name="search" />}
         large
         title="Verificar número"
         subtitle="Consulte score local, explicabilidade e (opcional) análise de IA antes de retornar uma ligação."
@@ -126,16 +127,16 @@ export default function Home() {
 
       <MetroSection title="Atalhos">
         <Flush>
-          <MetroListItem icon={GLYPHS.settings} title="Configurações e regras" onPress={() => router.push('/(tabs)/settings')} />
+          <MetroListItem icon={<FluentIcon name="settings" />} title="Configurações e regras" onPress={() => router.push('/(tabs)/settings')} />
           <MetroListItem
-            icon={GLYPHS.bell}
+            icon={<FluentIcon name="alert" />}
             title="Permissão de notificações"
             onPress={async () => {
               await requestNotificationPermission();
               void Notifications.getPermissionsAsync();
             }}
           />
-          <MetroListItem icon={GLYPHS.delete} title="Limpar histórico" onPress={() => setState({ history: [] })} />
+          <MetroListItem icon={<FluentIcon name="delete" />} title="Limpar histórico" onPress={() => setState({ history: [] })} />
         </Flush>
       </MetroSection>
 

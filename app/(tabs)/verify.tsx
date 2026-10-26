@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { spacing, useTheme } from '../../src/ui/theme';
-import { GLYPHS, MetroButton, MetroSection, MetroTag, MetroText, MetroTextField } from '@conexus/metro-ui';
+import { MetroButton, MetroSection, MetroTag, MetroText, MetroTextField } from '@conexus/metro-ui';
 import { AppScreen, MetroRow, MetroScore } from '../../src/ui/app';
 import { useAppState, toggleList } from '../../src/app/store';
 import { getDb, ensureDb } from '../../src/app/screening';
@@ -9,6 +9,7 @@ import { normalizePhone, formatDisplay } from '../../src/core/phone/normalize';
 import { computeSpamScore, riskBand } from '../../src/core/detection/spamScore';
 import { analyzeNumber, type AiInsight } from '../../src/core/ai/openrouter';
 import { adMobService } from '../../src/ads/adMob';
+import { FluentIcon } from '../../src/ui/metro/icons';
 
 export default function Verify() {
   const theme = useTheme();
@@ -130,8 +131,8 @@ export default function Verify() {
 
             <MetroSection title="Ações rápidas">
               <View style={{ flexDirection: 'row', gap: spacing.s, flexWrap: 'wrap' }}>
-                <MetroButton label="Sempre permitir" icon={GLYPHS.check} size="small" onPress={() => toggleList('allowlist', result.canonical)} />
-                <MetroButton label="Bloquear sempre" icon={GLYPHS.block} variant="danger" size="small" onPress={() => toggleList('blacklist', result.canonical)} />
+                <MetroButton label="Sempre permitir" icon={<FluentIcon name="check" />} size="small" onPress={() => toggleList('allowlist', result.canonical)} />
+                <MetroButton label="Bloquear sempre" icon={<FluentIcon name="block" />} variant="danger" size="small" onPress={() => toggleList('blacklist', result.canonical)} />
               </View>
             </MetroSection>
 

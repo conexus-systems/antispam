@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  GLYPHS,
   MetroButton,
   MetroDialog,
   MetroEmpty,
@@ -26,6 +25,7 @@ import {
   summaryText,
   type CloudReport,
 } from '../src/account';
+import { FluentIcon } from '../src/ui/metro/icons';
 
 type Confirm = {
   title: string;
@@ -226,7 +226,7 @@ export default function Account() {
           <MetroText variant="body">
             Entre ou crie a sua Conta Conexus para fazer backup das listas, enviar denúncias identificadas e doar pela conta.
           </MetroText>
-          <MetroButton block label="Entrar ou criar conta" icon={GLYPHS.lock} variant="primary" onPress={signIn} />
+          <MetroButton block label="Entrar ou criar conta" icon={<FluentIcon name="lock" />} variant="primary" onPress={signIn} />
           <MetroText variant="caption">
             A mesma conta de todos os apps Conexus. O login acontece na página segura da Conta Conexus, no navegador: sua senha nunca passa pelo app.
           </MetroText>
@@ -239,7 +239,7 @@ export default function Account() {
       <>
         <MetroSection title="Conta Conexus">
           <Flush>
-            <MetroListItem icon={GLYPHS.lock} large title={user?.name || 'Conta Conexus'} subtitle={user?.email ?? undefined} />
+            <MetroListItem icon={<FluentIcon name="lock" />} large title={user?.name || 'Conta Conexus'} subtitle={user?.email ?? undefined} />
           </Flush>
           <MetroButton label="Sair" size="small" loading={busy === 'signout'} onPress={signOut} />
         </MetroSection>
@@ -254,8 +254,8 @@ export default function Account() {
               {!!backupInfo.deviceName && <MetroRow label="Aparelho" value={backupInfo.deviceName} />}
             </View>
           )}
-          <MetroButton block label="Fazer backup agora" icon={GLYPHS.copy} variant="primary" onPress={askBackup} />
-          <MetroButton block label="Restaurar deste backup" icon={GLYPHS.history} loading={busy === 'restore'} onPress={askRestore} disabled={backupInfo.state === 'none'} />
+          <MetroButton block label="Fazer backup agora" icon={<FluentIcon name="copy" />} variant="primary" onPress={askBackup} />
+          <MetroButton block label="Restaurar deste backup" icon={<FluentIcon name="history" />} loading={busy === 'restore'} onPress={askRestore} disabled={backupInfo.state === 'none'} />
           {backupInfo.state === 'ok' && <MetroButton label="Apagar backup da nuvem" variant="text" onPress={askDeleteBackup} />}
         </MetroSection>
 
@@ -273,7 +273,7 @@ export default function Account() {
                 title={r.number}
                 subtitle={`${CLOUD_REPORT_CATEGORY_LABELS[r.category]} · ${when(r.createdAt)}${r.note ? ` · ${r.note}` : ''}`}
                 trailing={
-                  <MetroIconButton icon={GLYPHS.delete} accessibilityLabel={`Excluir denúncia de ${r.number}`} onPress={() => askDeleteReport(r)} />
+                  <MetroIconButton icon={<FluentIcon name="delete" />} accessibilityLabel={`Excluir denúncia de ${r.number}`} onPress={() => askDeleteReport(r)} />
                 }
               />
             ))}
@@ -288,13 +288,13 @@ export default function Account() {
         </MetroSection>
 
         <MetroSection title="Doações">
-          <MetroButton block label="Doar e ver minhas doações" icon={GLYPHS.heart} onPress={() => router.push('/donate')} />
+          <MetroButton block label="Doar e ver minhas doações" icon={<FluentIcon name="heart" />} onPress={() => router.push('/donate')} />
         </MetroSection>
 
         {whatGoes}
 
         <MetroSection title="Seus dados">
-          <MetroButton block label="Excluir meus dados na nuvem" icon={GLYPHS.delete} variant="danger" onPress={askDeleteMyData} />
+          <MetroButton block label="Excluir meus dados na nuvem" icon={<FluentIcon name="delete" />} variant="danger" onPress={askDeleteMyData} />
           <MetroText variant="caption">Apaga backup e denúncias desta conta no servidor do AntiSpam BR.</MetroText>
           <MetroButton label="Excluir a Conta Conexus" variant="text" accessibilityRole="link" onPress={() => void account.openDeleteAccount()} />
           <MetroText variant="caption">{account.deleteAccountUrl}</MetroText>

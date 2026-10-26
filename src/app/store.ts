@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { HistoryEntry, ProtectionMode, Rule } from '../core/types';
 import type { Handle0303 } from '../core/phone/brazilRules';
 import { MODE_DEFAULTS, type DecisionEngineConfig } from '../core/decision/decisionEngine';
+import { DEFAULT_APPEARANCE, sanitizeAppearance, type Appearance } from '../ui/metro/tokens';
 
 const KEY_STATE = 'antispam-br/app-state/v1';
 
@@ -24,6 +25,8 @@ export interface AppState {
   ai: { enabled: boolean; apiKey: string; model: string };
   donation: { pixKey?: string };
   settings: { notifications: boolean; haptics: boolean };
+  /** Aparência: tema, cor de destaque e reduzir animações (Ajustes › Aparência). */
+  appearance: Appearance;
 }
 
 const initialState: AppState = {
@@ -38,6 +41,7 @@ const initialState: AppState = {
   ai: { enabled: false, apiKey: '', model: '' },
   donation: {},
   settings: { notifications: true, haptics: true },
+  appearance: DEFAULT_APPEARANCE,
 };
 
 let state: AppState = initialState;
@@ -80,6 +84,7 @@ export async function hydrate(): Promise<void> {
         ...initialState,
         ...saved,
         hydrated: true,
+        appearance: sanitizeAppearance(saved.appearance),
         // Config derivada do modo salvo (ou custom preservada)
         config:
           saved.config && mode === 'CUSTOM'
@@ -93,6 +98,11 @@ export async function hydrate(): Promise<void> {
     state = { ...initialState, hydrated: true };
   }
   for (const l of listeners) l();
+}
+
+/** Atualiza parte da aparência (tema, cor de destaque, reduzir animações). */
+export function setAppearance(patch: Partial<Appearance>): void {
+  setState({ appearance: sanitizeAppearance({ ...state.appearance, ...patch }) });
 }
 
 /** Troca o modo de proteção e deriva a config. */

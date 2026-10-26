@@ -1,4 +1,4 @@
-package br.antispam.app.screening
+package com.conexus.antispam.screening
 
 import android.view.View
 import com.facebook.react.ReactPackage

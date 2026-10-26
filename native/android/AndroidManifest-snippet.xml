@@ -5,7 +5,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <application>
     <service
-      android:name="br.antispam.app.screening.AntiSpamCallScreeningService"
+      android:name="com.conexus.antispam.screening.AntiSpamCallScreeningService"
       android:permission="android.permission.BIND_SCREENING_SERVICE"
       android:exported="true">
       <intent-filter>

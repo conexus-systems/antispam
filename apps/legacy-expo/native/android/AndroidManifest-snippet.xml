@@ -1,0 +1,17 @@
+<!--
+  Referência — o manifest REAL agora vive em
+  modules/antispam-screening/android/src/main/AndroidManifest.xml
+  e é mesclado automaticamente pelo autolinking do Expo (M2 concluído).
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <service
+      android:name="com.conexus.antispam.screening.AntiSpamCallScreeningService"
+      android:permission="android.permission.BIND_SCREENING_SERVICE"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.telecom.CallScreeningService" />
+      </intent-filter>
+    </service>
+  </application>
+</manifest>

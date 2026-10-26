@@ -4,7 +4,6 @@ import QRCode from 'react-native-qrcode-svg';
 import { useRouter } from 'expo-router';
 import { spacing, useTheme } from '../src/ui/theme';
 import {
-  GLYPHS,
   MetroButton,
   MetroEmpty,
   MetroListItem,
@@ -26,6 +25,7 @@ import {
   paymentsApi,
   type Donation,
 } from '../src/account';
+import { FluentIcon } from '../src/ui/metro/icons';
 
 const AMOUNTS = [5, 10, 20];
 
@@ -114,7 +114,7 @@ export default function Donate() {
           />
           <MetroButton block
             label={cents ? `Doar ${formatReais(cents)} pela conta` : 'Doar pela conta'}
-            icon={GLYPHS.heart}
+            icon={<FluentIcon name="heart" />}
             variant="primary"
             loading={donating}
             disabled={!cents}
@@ -151,7 +151,7 @@ export default function Donate() {
         <MetroText variant="body" tone="muted">
           Opcional: entre com a Conta Conexus para doar pelo serviço de pagamentos e acompanhar suas doações.
         </MetroText>
-        <MetroButton label="Entrar na conta" icon={GLYPHS.lock} size="small" onPress={() => router.push('/login')} />
+        <MetroButton label="Entrar na conta" icon={<FluentIcon name="lock" />} size="small" onPress={() => router.push('/login')} />
       </MetroSection>
     ) : null;
 
@@ -199,7 +199,7 @@ export default function Donate() {
                 <QRCode value={payload} size={220} color={theme.fieldFocusText} backgroundColor={theme.fieldFocusBg} />
               </View>
             )}
-            <MetroButton block label="Copiar código PIX" icon={GLYPHS.copy} variant="primary" onPress={copy} />
+            <MetroButton block label="Copiar código PIX" icon={<FluentIcon name="copy" />} variant="primary" onPress={copy} />
             {payload && (
               <MetroText variant="caption" numberOfLines={2}>
                 {payload}

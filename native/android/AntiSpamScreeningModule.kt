@@ -1,4 +1,4 @@
-package br.antispam.app.screening
+package com.conexus.antispam.screening
 
 import android.app.Activity
 import android.content.Context

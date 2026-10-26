@@ -3,6 +3,7 @@
  * cores semânticas nos dois temas (equivalente ao ThemeTest do Conexus Launcher).
  */
 import {
+  BRAND_PRIMARY,
   ESSENTIALS,
   contrast,
   darkPalette,
@@ -16,7 +17,7 @@ describe('W10M theme tokens', () => {
   it('usa as paletas do Windows 10 Mobile', () => {
     expect(darkPalette).toMatchObject({ bg: '#000000', chrome: '#1A1A1A', text: '#FFFFFF', textDim: '#CCCCCC', border: '#333333' });
     expect(lightPalette).toMatchObject({ bg: '#FFFFFF', chrome: '#F2F2F2', text: '#000000', textDim: '#505050', border: '#CCCCCC' });
-    expect(darkPalette.accent).toBe(ESSENTIALS.verde);
+    expect(darkPalette.accent).toBe(BRAND_PRIMARY);
   });
 
   it.each([darkPalette, lightPalette])('texto e cores semânticas passam 4,5:1 (dark=%#)', (p) => {
