@@ -34,6 +34,9 @@ android {
         buildConfigField("String", "DATASET_BASE_URL", "\"https://datasets.antispam-br.org/br-calls/\"")
         buildConfigField("String", "DATASET_KEYS", "\"$releaseKeys\"")
         buildConfigField("boolean", "ALLOW_TEST_KEYS", "false")
+        ndk {
+            abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))
+        }
     }
 
     signingConfigs {
@@ -77,6 +80,11 @@ android {
         abortOnError = true
         warningsAsErrors = false
         checkReleaseBuilds = true
+    }
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDir("src/main/jniLibs")
+        }
     }
 }
 

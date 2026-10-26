@@ -1,0 +1,32 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:1:1-12:12
+	package
+		INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:1:11-69
+application
+ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:2:3-11:17
+service#br.antispam.app.screening.AntiSpamCallScreeningService
+ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:3:5-10:15
+	android:exported
+		ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:6:7-30
+	android:permission
+		ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:5:7-69
+	android:name
+		ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:4:7-76
+intent-filter#action:name:android.telecom.CallScreeningService
+ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:7:7-9:23
+action#android.telecom.CallScreeningService
+ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:8:9-71
+	android:name
+		ADDED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:8:17-68
+uses-sdk
+INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml
+INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml

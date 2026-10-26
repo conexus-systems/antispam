@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="as_accent">#FECACA</color>
+    <color name="as_primary">#DC2626</color>
+    <color name="as_primary_dark">#7F1D1D</color>
+    <color name="as_splash">#0B0F14</color>
+    <color name="ic_launcher_background">#00838F</color>
+    <string name="app_name">Conexus AntiSpam</string>
+    <string name="channel_warn_description">Aviso quando uma ligação recebida parece spam ou golpe.</string>
+    <string name="channel_warn_name">Avisos de possível spam</string>
+    <style name="AntiSpamDialog" parent="AntiSpamDialogBase"/>
+    <style name="AntiSpamDialogBase" parent="android:style/Theme.Material.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_surface</item>
+        <item name="android:colorAccent">@color/as_accent</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+    <style name="Theme.AntiSpam" parent="android:Theme.Material.NoActionBar">
+        <item name="android:colorAccent">@color/as_accent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:alertDialogTheme">@style/AntiSpamDialog</item>
+    </style>
+</resources>

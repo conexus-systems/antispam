@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.conexus.antispam.app-mergeReleaseResources-56:/values-v31/values-v31.xml",
+            "map": [
+                {
+                    "source": "/home/tiagoadg/Codes/conexus-systems/antispam-br/apps/android/app/src/main/res/values-v31/themes.xml",
+                    "from": {
+                        "startLines": "12,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "677,55",
+                        "endLines": "15,10",
+                        "endColumns": "12,12",
+                        "endOffsets": "876,671"
+                    },
+                    "to": {
+                        "startLines": "2,6",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,259",
+                        "endLines": "5,14",
+                        "endColumns": "12,12",
+                        "endOffsets": "254,875"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@antispam-br/api",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/main.ts",
+    "migrate": "node src/cli.ts migrate",
+    "publish-dataset": "node src/cli.ts publish",
+    "test": "node --test --test-concurrency=1 test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@antispam-br/datasets": "*",
+    "@antispam-br/phone-normalizer": "*",
+    "@antispam-br/reputation": "*",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.10"
+  }
+}

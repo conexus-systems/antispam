@@ -1,0 +1,671 @@
+Marking id:tag_window_insets_animation_callback:2131099728 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:tag_compat_insets_dispatch:2131099718 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:tag_on_apply_window_listener:2131099719 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:view_tree_lifecycle_owner:2131099734 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:view_tree_view_model_store_owner:2131099737 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:consume_window_insets_tag:2131099691 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:wrapped_composition_tag:2131099738 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:androidx_compose_ui_view_composition_context:2131099686 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:inspection_slot_table_set:2131099701 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:channel_warn_name:2131361802 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:channel_warn_description:2131361801 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:default_popup_window_title:2131361806 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:view_tree_saved_state_registry_owner:2131099736 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:compose_view_saveable_id_tag:2131099690 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:hide_in_inspector_tag:2131099697 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:view_tree_on_back_pressed_dispatcher_owner:2131099735 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:report_drawn:2131099711 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:default_error_message:2131361805 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_0:2131099649 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_1:2131099650 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_2:2131099661 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_3:2131099672 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_4:2131099675 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_5:2131099676 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_6:2131099677 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_7:2131099678 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_8:2131099679 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_9:2131099680 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_10:2131099651 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_11:2131099652 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_12:2131099653 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_13:2131099654 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_14:2131099655 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_15:2131099656 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_16:2131099657 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_17:2131099658 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_18:2131099659 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_19:2131099660 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_20:2131099662 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_21:2131099663 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_22:2131099664 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_23:2131099665 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_24:2131099666 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_25:2131099667 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_26:2131099668 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_27:2131099669 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_28:2131099670 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_29:2131099671 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_30:2131099673 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_custom_action_31:2131099674 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:indeterminate:2131361809 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:state_off:2131361873 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:state_on:2131361874 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:selected:2131361871 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:not_selected:2131361868 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:template_percent:2131361878 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:in_progress:2131361808 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:state_empty:2131361872 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:is_pooling_container_tag:2131099702 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking bool:workmanager_test_configuration:2130837507 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking style:DialogWindowTheme:2131427330 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:tag_state_description:2131099723 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:tag_accessibility_actions:2131099714 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:accessibility_action_clickable_span:2131099648 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:tag_accessibility_clickable_spans:2131099715 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:tab:2131361877 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:switch_role:2131361876 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking string:androidx_startup:2131361792 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:view_tree_disjoint_parent:2131099733 reachable: referenced from in_memory_r8_base_classes0.dex
+Marking id:pooling_container_listener_holder_tag:2131099710 reachable: referenced from in_memory_r8_base_classes0.dex
+@com.conexus.antispam:attr/alpha : reachable=false
+@com.conexus.antispam:attr/font : reachable=false
+@com.conexus.antispam:attr/fontProviderAuthority : reachable=false
+@com.conexus.antispam:attr/fontProviderCerts : reachable=false
+@com.conexus.antispam:attr/fontProviderFallbackQuery : reachable=false
+@com.conexus.antispam:attr/fontProviderFetchStrategy : reachable=false
+@com.conexus.antispam:attr/fontProviderFetchTimeout : reachable=false
+@com.conexus.antispam:attr/fontProviderPackage : reachable=false
+@com.conexus.antispam:attr/fontProviderQuery : reachable=false
+@com.conexus.antispam:attr/fontProviderSystemFontFamily : reachable=false
+@com.conexus.antispam:attr/fontStyle : reachable=false
+@com.conexus.antispam:attr/fontVariationSettings : reachable=false
+@com.conexus.antispam:attr/fontWeight : reachable=false
+@com.conexus.antispam:attr/lStar : reachable=false
+@com.conexus.antispam:attr/nestedScrollViewStyle : reachable=false
+@com.conexus.antispam:attr/queryPatterns : reachable=false
+@com.conexus.antispam:attr/shortcutMatchRequired : reachable=false
+@com.conexus.antispam:attr/ttcIndex : reachable=false
+@com.conexus.antispam:bool/enable_system_alarm_service_default : reachable=true
+@com.conexus.antispam:bool/enable_system_foreground_service_default : reachable=true
+@com.conexus.antispam:bool/enable_system_job_service_default : reachable=true
+@com.conexus.antispam:bool/workmanager_test_configuration : reachable=true
+@com.conexus.antispam:color/androidx_core_ripple_material_light : reachable=false
+@com.conexus.antispam:color/androidx_core_secondary_text_default_material_light : reachable=false
+@com.conexus.antispam:color/as_accent : reachable=false
+@com.conexus.antispam:color/as_primary : reachable=false
+@com.conexus.antispam:color/as_primary_dark : reachable=false
+@com.conexus.antispam:color/as_splash : reachable=false
+@com.conexus.antispam:color/call_notification_answer_color : reachable=false
+@com.conexus.antispam:color/call_notification_decline_color : reachable=false
+@com.conexus.antispam:color/ic_launcher_background : reachable=false
+@com.conexus.antispam:color/notification_action_color_filter : reachable=false
+    @com.conexus.antispam:color/androidx_core_secondary_text_default_material_light
+@com.conexus.antispam:color/notification_icon_bg_color : reachable=false
+@com.conexus.antispam:color/vector_tint_color : reachable=false
+@com.conexus.antispam:color/vector_tint_theme_color : reachable=false
+@com.conexus.antispam:dimen/compat_button_inset_horizontal_material : reachable=false
+@com.conexus.antispam:dimen/compat_button_inset_vertical_material : reachable=false
+@com.conexus.antispam:dimen/compat_button_padding_horizontal_material : reachable=false
+@com.conexus.antispam:dimen/compat_button_padding_vertical_material : reachable=false
+@com.conexus.antispam:dimen/compat_control_corner_material : reachable=false
+@com.conexus.antispam:dimen/compat_notification_large_icon_max_height : reachable=false
+@com.conexus.antispam:dimen/compat_notification_large_icon_max_width : reachable=false
+@com.conexus.antispam:dimen/notification_action_icon_size : reachable=false
+@com.conexus.antispam:dimen/notification_action_text_size : reachable=false
+@com.conexus.antispam:dimen/notification_big_circle_margin : reachable=false
+@com.conexus.antispam:dimen/notification_content_margin_start : reachable=false
+@com.conexus.antispam:dimen/notification_large_icon_height : reachable=false
+@com.conexus.antispam:dimen/notification_large_icon_width : reachable=false
+@com.conexus.antispam:dimen/notification_main_column_padding_top : reachable=false
+@com.conexus.antispam:dimen/notification_media_narrow_margin : reachable=false
+@com.conexus.antispam:dimen/notification_right_icon_size : reachable=false
+@com.conexus.antispam:dimen/notification_right_side_padding_top : reachable=false
+@com.conexus.antispam:dimen/notification_small_icon_background_padding : reachable=false
+@com.conexus.antispam:dimen/notification_small_icon_size_as_large : reachable=false
+@com.conexus.antispam:dimen/notification_subtext_size : reachable=false
+@com.conexus.antispam:dimen/notification_top_pad : reachable=false
+@com.conexus.antispam:dimen/notification_top_pad_large_text : reachable=false
+@com.conexus.antispam:drawable/dialog_surface : reachable=false
+@com.conexus.antispam:drawable/ic_call_answer : reachable=false
+@com.conexus.antispam:drawable/ic_call_answer_low : reachable=false
+@com.conexus.antispam:drawable/ic_call_answer_video : reachable=false
+@com.conexus.antispam:drawable/ic_call_answer_video_low : reachable=false
+@com.conexus.antispam:drawable/ic_call_decline : reachable=false
+@com.conexus.antispam:drawable/ic_call_decline_low : reachable=false
+@com.conexus.antispam:drawable/ic_launcher_foreground : reachable=false
+@com.conexus.antispam:drawable/notification_action_background : reachable=false
+    @com.conexus.antispam:color/androidx_core_ripple_material_light
+    @com.conexus.antispam:dimen/compat_button_inset_horizontal_material
+    @com.conexus.antispam:dimen/compat_button_inset_vertical_material
+    @com.conexus.antispam:dimen/compat_control_corner_material
+    @com.conexus.antispam:dimen/compat_button_padding_vertical_material
+    @com.conexus.antispam:dimen/compat_button_padding_horizontal_material
+@com.conexus.antispam:drawable/notification_bg : reachable=false
+    @com.conexus.antispam:drawable/notification_bg_normal_pressed
+    @com.conexus.antispam:drawable/notification_bg_normal
+@com.conexus.antispam:drawable/notification_bg_low : reachable=false
+    @com.conexus.antispam:drawable/notification_bg_low_pressed
+    @com.conexus.antispam:drawable/notification_bg_low_normal
+@com.conexus.antispam:drawable/notification_bg_low_normal : reachable=false
+@com.conexus.antispam:drawable/notification_bg_low_pressed : reachable=false
+@com.conexus.antispam:drawable/notification_bg_normal : reachable=false
+@com.conexus.antispam:drawable/notification_bg_normal_pressed : reachable=false
+@com.conexus.antispam:drawable/notification_icon_background : reachable=false
+    @com.conexus.antispam:color/notification_icon_bg_color
+@com.conexus.antispam:drawable/notification_oversize_large_icon_bg : reachable=false
+@com.conexus.antispam:drawable/notification_template_icon_bg : reachable=false
+@com.conexus.antispam:drawable/notification_template_icon_low_bg : reachable=false
+@com.conexus.antispam:drawable/notification_tile_bg : reachable=false
+    @com.conexus.antispam:drawable/notify_panel_notification_icon_bg
+@com.conexus.antispam:drawable/notify_panel_notification_icon_bg : reachable=false
+@com.conexus.antispam:id/accessibility_action_clickable_span : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_0 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_1 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_10 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_11 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_12 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_13 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_14 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_15 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_16 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_17 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_18 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_19 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_2 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_20 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_21 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_22 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_23 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_24 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_25 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_26 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_27 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_28 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_29 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_3 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_30 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_31 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_4 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_5 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_6 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_7 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_8 : reachable=true
+@com.conexus.antispam:id/accessibility_custom_action_9 : reachable=true
+@com.conexus.antispam:id/action_container : reachable=false
+@com.conexus.antispam:id/action_divider : reachable=false
+@com.conexus.antispam:id/action_image : reachable=false
+@com.conexus.antispam:id/action_text : reachable=false
+@com.conexus.antispam:id/actions : reachable=false
+@com.conexus.antispam:id/androidx_compose_ui_view_composition_context : reachable=true
+@com.conexus.antispam:id/async : reachable=false
+@com.conexus.antispam:id/blocking : reachable=false
+@com.conexus.antispam:id/chronometer : reachable=false
+@com.conexus.antispam:id/compose_view_saveable_id_tag : reachable=true
+@com.conexus.antispam:id/consume_window_insets_tag : reachable=true
+@com.conexus.antispam:id/dialog_button : reachable=false
+@com.conexus.antispam:id/edit_text_id : reachable=false
+@com.conexus.antispam:id/forever : reachable=false
+@com.conexus.antispam:id/hide_graphics_layer_in_inspector_tag : reachable=false
+@com.conexus.antispam:id/hide_ime_id : reachable=false
+@com.conexus.antispam:id/hide_in_inspector_tag : reachable=true
+@com.conexus.antispam:id/icon : reachable=false
+@com.conexus.antispam:id/icon_group : reachable=false
+@com.conexus.antispam:id/info : reachable=false
+@com.conexus.antispam:id/inspection_slot_table_set : reachable=true
+@com.conexus.antispam:id/is_pooling_container_tag : reachable=true
+@com.conexus.antispam:id/italic : reachable=false
+@com.conexus.antispam:id/line1 : reachable=false
+@com.conexus.antispam:id/line3 : reachable=false
+@com.conexus.antispam:id/normal : reachable=false
+@com.conexus.antispam:id/notification_background : reachable=false
+@com.conexus.antispam:id/notification_main_column : reachable=false
+@com.conexus.antispam:id/notification_main_column_container : reachable=false
+@com.conexus.antispam:id/pooling_container_listener_holder_tag : reachable=true
+@com.conexus.antispam:id/report_drawn : reachable=true
+@com.conexus.antispam:id/right_icon : reachable=false
+@com.conexus.antispam:id/right_side : reachable=false
+@com.conexus.antispam:id/tag_accessibility_actions : reachable=true
+@com.conexus.antispam:id/tag_accessibility_clickable_spans : reachable=true
+@com.conexus.antispam:id/tag_accessibility_heading : reachable=false
+@com.conexus.antispam:id/tag_accessibility_pane_title : reachable=false
+@com.conexus.antispam:id/tag_compat_insets_dispatch : reachable=true
+@com.conexus.antispam:id/tag_on_apply_window_listener : reachable=true
+@com.conexus.antispam:id/tag_on_receive_content_listener : reachable=false
+@com.conexus.antispam:id/tag_on_receive_content_mime_types : reachable=false
+@com.conexus.antispam:id/tag_screen_reader_focusable : reachable=false
+@com.conexus.antispam:id/tag_state_description : reachable=true
+@com.conexus.antispam:id/tag_system_bar_state_monitor : reachable=false
+@com.conexus.antispam:id/tag_transition_group : reachable=false
+@com.conexus.antispam:id/tag_unhandled_key_event_manager : reachable=false
+@com.conexus.antispam:id/tag_unhandled_key_listeners : reachable=false
+@com.conexus.antispam:id/tag_window_insets_animation_callback : reachable=true
+@com.conexus.antispam:id/text : reachable=false
+@com.conexus.antispam:id/text2 : reachable=false
+@com.conexus.antispam:id/time : reachable=false
+@com.conexus.antispam:id/title : reachable=false
+@com.conexus.antispam:id/view_tree_disjoint_parent : reachable=true
+@com.conexus.antispam:id/view_tree_lifecycle_owner : reachable=true
+@com.conexus.antispam:id/view_tree_on_back_pressed_dispatcher_owner : reachable=true
+@com.conexus.antispam:id/view_tree_saved_state_registry_owner : reachable=true
+@com.conexus.antispam:id/view_tree_view_model_store_owner : reachable=true
+@com.conexus.antispam:id/wrapped_composition_tag : reachable=true
+@com.conexus.antispam:integer/m3c_window_layout_in_display_cutout_mode : reachable=false
+@com.conexus.antispam:integer/status_bar_notification_info_maxnum : reachable=false
+@com.conexus.antispam:layout/custom_dialog : reachable=false
+@com.conexus.antispam:layout/ime_base_split_test_activity : reachable=false
+@com.conexus.antispam:layout/ime_secondary_split_test_activity : reachable=false
+@com.conexus.antispam:layout/notification_action : reachable=false
+    @com.conexus.antispam:style/Widget_Compat_NotificationActionContainer
+    @com.conexus.antispam:dimen/notification_action_icon_size
+    @com.conexus.antispam:style/Widget_Compat_NotificationActionText
+@com.conexus.antispam:layout/notification_action_tombstone : reachable=false
+    @com.conexus.antispam:style/Widget_Compat_NotificationActionContainer
+    @com.conexus.antispam:dimen/notification_action_icon_size
+    @com.conexus.antispam:style/Widget_Compat_NotificationActionText
+@com.conexus.antispam:layout/notification_template_custom_big : reachable=false
+    @com.conexus.antispam:layout/notification_template_icon_group
+    @com.conexus.antispam:dimen/notification_large_icon_width
+    @com.conexus.antispam:dimen/notification_large_icon_height
+    @com.conexus.antispam:dimen/notification_right_side_padding_top
+    @com.conexus.antispam:layout/notification_template_part_time
+    @com.conexus.antispam:layout/notification_template_part_chronometer
+    @com.conexus.antispam:style/TextAppearance_Compat_Notification_Info
+@com.conexus.antispam:layout/notification_template_icon_group : reachable=false
+    @com.conexus.antispam:dimen/notification_large_icon_width
+    @com.conexus.antispam:dimen/notification_large_icon_height
+    @com.conexus.antispam:dimen/notification_big_circle_margin
+    @com.conexus.antispam:dimen/notification_right_icon_size
+@com.conexus.antispam:layout/notification_template_part_chronometer : reachable=false
+    @com.conexus.antispam:style/TextAppearance_Compat_Notification_Time
+@com.conexus.antispam:layout/notification_template_part_time : reachable=false
+    @com.conexus.antispam:style/TextAppearance_Compat_Notification_Time
+@com.conexus.antispam:mipmap/ic_launcher : reachable=true
+    @com.conexus.antispam:color/as_primary
+    @com.conexus.antispam:drawable/ic_launcher_foreground
+@com.conexus.antispam:mipmap/ic_launcher_foreground : reachable=false
+@com.conexus.antispam:string/androidx_startup : reachable=true
+@com.conexus.antispam:string/app_name : reachable=true
+@com.conexus.antispam:string/call_notification_answer_action : reachable=false
+@com.conexus.antispam:string/call_notification_answer_video_action : reachable=false
+@com.conexus.antispam:string/call_notification_decline_action : reachable=false
+@com.conexus.antispam:string/call_notification_hang_up_action : reachable=false
+@com.conexus.antispam:string/call_notification_incoming_text : reachable=false
+@com.conexus.antispam:string/call_notification_ongoing_text : reachable=false
+@com.conexus.antispam:string/call_notification_screening_text : reachable=false
+@com.conexus.antispam:string/channel_warn_description : reachable=true
+@com.conexus.antispam:string/channel_warn_name : reachable=true
+@com.conexus.antispam:string/close_drawer : reachable=false
+@com.conexus.antispam:string/close_sheet : reachable=false
+@com.conexus.antispam:string/default_error_message : reachable=true
+@com.conexus.antispam:string/default_popup_window_title : reachable=true
+@com.conexus.antispam:string/dropdown_menu : reachable=false
+@com.conexus.antispam:string/in_progress : reachable=true
+@com.conexus.antispam:string/indeterminate : reachable=true
+@com.conexus.antispam:string/m3c_bottom_sheet_collapse_description : reachable=false
+@com.conexus.antispam:string/m3c_bottom_sheet_dismiss_description : reachable=false
+@com.conexus.antispam:string/m3c_bottom_sheet_drag_handle_description : reachable=false
+@com.conexus.antispam:string/m3c_bottom_sheet_expand_description : reachable=false
+@com.conexus.antispam:string/m3c_bottom_sheet_pane_title : reachable=false
+@com.conexus.antispam:string/m3c_date_input_headline : reachable=false
+@com.conexus.antispam:string/m3c_date_input_headline_description : reachable=false
+@com.conexus.antispam:string/m3c_date_input_invalid_for_pattern : reachable=false
+@com.conexus.antispam:string/m3c_date_input_invalid_not_allowed : reachable=false
+@com.conexus.antispam:string/m3c_date_input_invalid_year_range : reachable=false
+@com.conexus.antispam:string/m3c_date_input_label : reachable=false
+@com.conexus.antispam:string/m3c_date_input_no_input_description : reachable=false
+@com.conexus.antispam:string/m3c_date_input_title : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_headline : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_headline_description : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_navigate_to_year_description : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_no_selection_description : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_scroll_to_earlier_years : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_scroll_to_later_years : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_calendar_mode : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_day_selection : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_input_mode : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_next_month : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_previous_month : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_switch_to_year_selection : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_title : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_today_description : reachable=false
+@com.conexus.antispam:string/m3c_date_picker_year_picker_pane_title : reachable=false
+@com.conexus.antispam:string/m3c_date_range_input_invalid_range_input : reachable=false
+@com.conexus.antispam:string/m3c_date_range_input_title : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_day_in_range : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_end_headline : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_scroll_to_next_month : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_scroll_to_previous_month : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_start_headline : reachable=false
+@com.conexus.antispam:string/m3c_date_range_picker_title : reachable=false
+@com.conexus.antispam:string/m3c_dialog : reachable=false
+@com.conexus.antispam:string/m3c_dropdown_menu_collapsed : reachable=false
+@com.conexus.antispam:string/m3c_dropdown_menu_expanded : reachable=false
+@com.conexus.antispam:string/m3c_dropdown_menu_toggle : reachable=false
+@com.conexus.antispam:string/m3c_search_bar_search : reachable=false
+@com.conexus.antispam:string/m3c_snackbar_dismiss : reachable=false
+@com.conexus.antispam:string/m3c_suggestions_available : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_am : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_hour : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_hour_24h_suffix : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_hour_selection : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_hour_suffix : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_hour_text_field : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_minute : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_minute_selection : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_minute_suffix : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_minute_text_field : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_period_toggle_description : reachable=false
+@com.conexus.antispam:string/m3c_time_picker_pm : reachable=false
+@com.conexus.antispam:string/m3c_tooltip_long_press_label : reachable=false
+@com.conexus.antispam:string/m3c_tooltip_pane_description : reachable=false
+@com.conexus.antispam:string/navigation_menu : reachable=false
+@com.conexus.antispam:string/not_selected : reachable=true
+@com.conexus.antispam:string/range_end : reachable=false
+@com.conexus.antispam:string/range_start : reachable=false
+@com.conexus.antispam:string/selected : reachable=true
+@com.conexus.antispam:string/state_empty : reachable=true
+@com.conexus.antispam:string/state_off : reachable=true
+@com.conexus.antispam:string/state_on : reachable=true
+@com.conexus.antispam:string/status_bar_notification_info_overflow : reachable=false
+@com.conexus.antispam:string/switch_role : reachable=true
+@com.conexus.antispam:string/tab : reachable=true
+@com.conexus.antispam:string/template_percent : reachable=true
+@com.conexus.antispam:string/tooltip_description : reachable=false
+@com.conexus.antispam:string/tooltip_label : reachable=false
+@com.conexus.antispam:style/AntiSpamDialog : reachable=false
+    @com.conexus.antispam:style/AntiSpamDialogBase
+@com.conexus.antispam:style/AntiSpamDialogBase : reachable=false
+    @com.conexus.antispam:drawable/dialog_surface
+    @com.conexus.antispam:color/as_accent
+@com.conexus.antispam:style/DialogWindowTheme : reachable=true
+@com.conexus.antispam:style/EdgeToEdgeFloatingDialogTheme : reachable=false
+    @com.conexus.antispam:integer/m3c_window_layout_in_display_cutout_mode
+@com.conexus.antispam:style/EdgeToEdgeFloatingDialogWindowTheme : reachable=false
+    @com.conexus.antispam:style/EdgeToEdgeFloatingDialogTheme
+@com.conexus.antispam:style/FloatingDialogTheme : reachable=false
+@com.conexus.antispam:style/FloatingDialogWindowTheme : reachable=false
+    @com.conexus.antispam:style/FloatingDialogTheme
+@com.conexus.antispam:style/TextAppearance_Compat_Notification : reachable=false
+@com.conexus.antispam:style/TextAppearance_Compat_Notification_Info : reachable=false
+@com.conexus.antispam:style/TextAppearance_Compat_Notification_Line2 : reachable=false
+    @com.conexus.antispam:style/TextAppearance_Compat_Notification_Info
+@com.conexus.antispam:style/TextAppearance_Compat_Notification_Time : reachable=false
+@com.conexus.antispam:style/TextAppearance_Compat_Notification_Title : reachable=false
+@com.conexus.antispam:style/Theme_AntiSpam : reachable=true
+    @com.conexus.antispam:style/AntiSpamDialog
+    @com.conexus.antispam:color/as_accent
+    @com.conexus.antispam:color/as_splash
+    @com.conexus.antispam:color/ic_launcher_background
+@com.conexus.antispam:style/Widget_Compat_NotificationActionContainer : reachable=false
+    @com.conexus.antispam:drawable/notification_action_background
+@com.conexus.antispam:style/Widget_Compat_NotificationActionText : reachable=false
+    @com.conexus.antispam:color/androidx_core_secondary_text_default_material_light
+    @com.conexus.antispam:dimen/notification_action_text_size
+@com.conexus.antispam:xml/data_extraction_rules : reachable=true
+@com.conexus.antispam:xml/network_security_config : reachable=true
+
+The root reachable resources are:
+ bool:enable_system_alarm_service_default:2130837504
+ bool:enable_system_foreground_service_default:2130837505
+ bool:enable_system_job_service_default:2130837506
+ bool:workmanager_test_configuration:2130837507
+ id:accessibility_action_clickable_span:2131099648
+ id:accessibility_custom_action_0:2131099649
+ id:accessibility_custom_action_1:2131099650
+ id:accessibility_custom_action_10:2131099651
+ id:accessibility_custom_action_11:2131099652
+ id:accessibility_custom_action_12:2131099653
+ id:accessibility_custom_action_13:2131099654
+ id:accessibility_custom_action_14:2131099655
+ id:accessibility_custom_action_15:2131099656
+ id:accessibility_custom_action_16:2131099657
+ id:accessibility_custom_action_17:2131099658
+ id:accessibility_custom_action_18:2131099659
+ id:accessibility_custom_action_19:2131099660
+ id:accessibility_custom_action_2:2131099661
+ id:accessibility_custom_action_20:2131099662
+ id:accessibility_custom_action_21:2131099663
+ id:accessibility_custom_action_22:2131099664
+ id:accessibility_custom_action_23:2131099665
+ id:accessibility_custom_action_24:2131099666
+ id:accessibility_custom_action_25:2131099667
+ id:accessibility_custom_action_26:2131099668
+ id:accessibility_custom_action_27:2131099669
+ id:accessibility_custom_action_28:2131099670
+ id:accessibility_custom_action_29:2131099671
+ id:accessibility_custom_action_3:2131099672
+ id:accessibility_custom_action_30:2131099673
+ id:accessibility_custom_action_31:2131099674
+ id:accessibility_custom_action_4:2131099675
+ id:accessibility_custom_action_5:2131099676
+ id:accessibility_custom_action_6:2131099677
+ id:accessibility_custom_action_7:2131099678
+ id:accessibility_custom_action_8:2131099679
+ id:accessibility_custom_action_9:2131099680
+ id:androidx_compose_ui_view_composition_context:2131099686
+ id:compose_view_saveable_id_tag:2131099690
+ id:consume_window_insets_tag:2131099691
+ id:hide_in_inspector_tag:2131099697
+ id:inspection_slot_table_set:2131099701
+ id:is_pooling_container_tag:2131099702
+ id:pooling_container_listener_holder_tag:2131099710
+ id:report_drawn:2131099711
+ id:tag_accessibility_actions:2131099714
+ id:tag_accessibility_clickable_spans:2131099715
+ id:tag_compat_insets_dispatch:2131099718
+ id:tag_on_apply_window_listener:2131099719
+ id:tag_state_description:2131099723
+ id:tag_window_insets_animation_callback:2131099728
+ id:view_tree_disjoint_parent:2131099733
+ id:view_tree_lifecycle_owner:2131099734
+ id:view_tree_on_back_pressed_dispatcher_owner:2131099735
+ id:view_tree_saved_state_registry_owner:2131099736
+ id:view_tree_view_model_store_owner:2131099737
+ id:wrapped_composition_tag:2131099738
+ mipmap:ic_launcher:2131296256
+ string:androidx_startup:2131361792
+ string:app_name:2131361793
+ string:channel_warn_description:2131361801
+ string:channel_warn_name:2131361802
+ string:default_error_message:2131361805
+ string:default_popup_window_title:2131361806
+ string:in_progress:2131361808
+ string:indeterminate:2131361809
+ string:not_selected:2131361868
+ string:selected:2131361871
+ string:state_empty:2131361872
+ string:state_off:2131361873
+ string:state_on:2131361874
+ string:switch_role:2131361876
+ string:tab:2131361877
+ string:template_percent:2131361878
+ style:DialogWindowTheme:2131427330
+ style:Theme_AntiSpam:2131427340
+ xml:data_extraction_rules:2131558400
+ xml:network_security_config:2131558401
+Unused resources are: 
+ color:androidx_core_ripple_material_light:2130903040
+ color:androidx_core_secondary_text_default_material_light:2130903041
+ color:as_primary_dark:2130903044
+ color:call_notification_answer_color:2130903046
+ color:call_notification_decline_color:2130903047
+ color:notification_action_color_filter:2130903049
+ color:notification_icon_bg_color:2130903050
+ color:vector_tint_color:2130903051
+ color:vector_tint_theme_color:2130903052
+ dimen:compat_button_inset_horizontal_material:2130968576
+ dimen:compat_button_inset_vertical_material:2130968577
+ dimen:compat_button_padding_horizontal_material:2130968578
+ dimen:compat_button_padding_vertical_material:2130968579
+ dimen:compat_control_corner_material:2130968580
+ dimen:compat_notification_large_icon_max_height:2130968581
+ dimen:compat_notification_large_icon_max_width:2130968582
+ dimen:notification_action_icon_size:2130968583
+ dimen:notification_action_text_size:2130968584
+ dimen:notification_big_circle_margin:2130968585
+ dimen:notification_content_margin_start:2130968586
+ dimen:notification_large_icon_height:2130968587
+ dimen:notification_large_icon_width:2130968588
+ dimen:notification_main_column_padding_top:2130968589
+ dimen:notification_media_narrow_margin:2130968590
+ dimen:notification_right_icon_size:2130968591
+ dimen:notification_right_side_padding_top:2130968592
+ dimen:notification_small_icon_background_padding:2130968593
+ dimen:notification_small_icon_size_as_large:2130968594
+ dimen:notification_subtext_size:2130968595
+ dimen:notification_top_pad:2130968596
+ dimen:notification_top_pad_large_text:2130968597
+ drawable:ic_call_answer:2131034113
+ drawable:ic_call_answer_low:2131034114
+ drawable:ic_call_answer_video:2131034115
+ drawable:ic_call_answer_video_low:2131034116
+ drawable:ic_call_decline:2131034117
+ drawable:ic_call_decline_low:2131034118
+ drawable:notification_action_background:2131034120
+ drawable:notification_bg:2131034121
+ drawable:notification_bg_low:2131034122
+ drawable:notification_bg_low_normal:2131034123
+ drawable:notification_bg_low_pressed:2131034124
+ drawable:notification_bg_normal:2131034125
+ drawable:notification_bg_normal_pressed:2131034126
+ drawable:notification_icon_background:2131034127
+ drawable:notification_oversize_large_icon_bg:2131034128
+ drawable:notification_template_icon_bg:2131034129
+ drawable:notification_template_icon_low_bg:2131034130
+ drawable:notification_tile_bg:2131034131
+ drawable:notify_panel_notification_icon_bg:2131034132
+ id:action_container:2131099681
+ id:action_divider:2131099682
+ id:action_image:2131099683
+ id:action_text:2131099684
+ id:actions:2131099685
+ id:async:2131099687
+ id:blocking:2131099688
+ id:chronometer:2131099689
+ id:dialog_button:2131099692
+ id:edit_text_id:2131099693
+ id:forever:2131099694
+ id:hide_graphics_layer_in_inspector_tag:2131099695
+ id:hide_ime_id:2131099696
+ id:icon:2131099698
+ id:icon_group:2131099699
+ id:info:2131099700
+ id:italic:2131099703
+ id:line1:2131099704
+ id:line3:2131099705
+ id:normal:2131099706
+ id:notification_background:2131099707
+ id:notification_main_column:2131099708
+ id:notification_main_column_container:2131099709
+ id:right_icon:2131099712
+ id:right_side:2131099713
+ id:tag_accessibility_heading:2131099716
+ id:tag_accessibility_pane_title:2131099717
+ id:tag_on_receive_content_listener:2131099720
+ id:tag_on_receive_content_mime_types:2131099721
+ id:tag_screen_reader_focusable:2131099722
+ id:tag_system_bar_state_monitor:2131099724
+ id:tag_transition_group:2131099725
+ id:tag_unhandled_key_event_manager:2131099726
+ id:tag_unhandled_key_listeners:2131099727
+ id:text:2131099729
+ id:text2:2131099730
+ id:time:2131099731
+ id:title:2131099732
+ integer:m3c_window_layout_in_display_cutout_mode:2131165184
+ integer:status_bar_notification_info_maxnum:2131165185
+ layout:custom_dialog:2131230720
+ layout:ime_base_split_test_activity:2131230721
+ layout:ime_secondary_split_test_activity:2131230722
+ layout:notification_action:2131230723
+ layout:notification_action_tombstone:2131230724
+ layout:notification_template_custom_big:2131230725
+ layout:notification_template_icon_group:2131230726
+ layout:notification_template_part_chronometer:2131230727
+ layout:notification_template_part_time:2131230728
+ mipmap:ic_launcher_foreground:2131296257
+ string:call_notification_answer_action:2131361794
+ string:call_notification_answer_video_action:2131361795
+ string:call_notification_decline_action:2131361796
+ string:call_notification_hang_up_action:2131361797
+ string:call_notification_incoming_text:2131361798
+ string:call_notification_ongoing_text:2131361799
+ string:call_notification_screening_text:2131361800
+ string:close_drawer:2131361803
+ string:close_sheet:2131361804
+ string:dropdown_menu:2131361807
+ string:m3c_bottom_sheet_collapse_description:2131361810
+ string:m3c_bottom_sheet_dismiss_description:2131361811
+ string:m3c_bottom_sheet_drag_handle_description:2131361812
+ string:m3c_bottom_sheet_expand_description:2131361813
+ string:m3c_bottom_sheet_pane_title:2131361814
+ string:m3c_date_input_headline:2131361815
+ string:m3c_date_input_headline_description:2131361816
+ string:m3c_date_input_invalid_for_pattern:2131361817
+ string:m3c_date_input_invalid_not_allowed:2131361818
+ string:m3c_date_input_invalid_year_range:2131361819
+ string:m3c_date_input_label:2131361820
+ string:m3c_date_input_no_input_description:2131361821
+ string:m3c_date_input_title:2131361822
+ string:m3c_date_picker_headline:2131361823
+ string:m3c_date_picker_headline_description:2131361824
+ string:m3c_date_picker_navigate_to_year_description:2131361825
+ string:m3c_date_picker_no_selection_description:2131361826
+ string:m3c_date_picker_scroll_to_earlier_years:2131361827
+ string:m3c_date_picker_scroll_to_later_years:2131361828
+ string:m3c_date_picker_switch_to_calendar_mode:2131361829
+ string:m3c_date_picker_switch_to_day_selection:2131361830
+ string:m3c_date_picker_switch_to_input_mode:2131361831
+ string:m3c_date_picker_switch_to_next_month:2131361832
+ string:m3c_date_picker_switch_to_previous_month:2131361833
+ string:m3c_date_picker_switch_to_year_selection:2131361834
+ string:m3c_date_picker_title:2131361835
+ string:m3c_date_picker_today_description:2131361836
+ string:m3c_date_picker_year_picker_pane_title:2131361837
+ string:m3c_date_range_input_invalid_range_input:2131361838
+ string:m3c_date_range_input_title:2131361839
+ string:m3c_date_range_picker_day_in_range:2131361840
+ string:m3c_date_range_picker_end_headline:2131361841
+ string:m3c_date_range_picker_scroll_to_next_month:2131361842
+ string:m3c_date_range_picker_scroll_to_previous_month:2131361843
+ string:m3c_date_range_picker_start_headline:2131361844
+ string:m3c_date_range_picker_title:2131361845
+ string:m3c_dialog:2131361846
+ string:m3c_dropdown_menu_collapsed:2131361847
+ string:m3c_dropdown_menu_expanded:2131361848
+ string:m3c_dropdown_menu_toggle:2131361849
+ string:m3c_search_bar_search:2131361850
+ string:m3c_snackbar_dismiss:2131361851
+ string:m3c_suggestions_available:2131361852
+ string:m3c_time_picker_am:2131361853
+ string:m3c_time_picker_hour:2131361854
+ string:m3c_time_picker_hour_24h_suffix:2131361855
+ string:m3c_time_picker_hour_selection:2131361856
+ string:m3c_time_picker_hour_suffix:2131361857
+ string:m3c_time_picker_hour_text_field:2131361858
+ string:m3c_time_picker_minute:2131361859
+ string:m3c_time_picker_minute_selection:2131361860
+ string:m3c_time_picker_minute_suffix:2131361861
+ string:m3c_time_picker_minute_text_field:2131361862
+ string:m3c_time_picker_period_toggle_description:2131361863
+ string:m3c_time_picker_pm:2131361864
+ string:m3c_tooltip_long_press_label:2131361865
+ string:m3c_tooltip_pane_description:2131361866
+ string:navigation_menu:2131361867
+ string:range_end:2131361869
+ string:range_start:2131361870
+ string:status_bar_notification_info_overflow:2131361875
+ string:tooltip_description:2131361879
+ string:tooltip_label:2131361880
+ style:EdgeToEdgeFloatingDialogTheme:2131427331
+ style:EdgeToEdgeFloatingDialogWindowTheme:2131427332
+ style:FloatingDialogTheme:2131427333
+ style:FloatingDialogWindowTheme:2131427334
+ style:TextAppearance_Compat_Notification:2131427335
+ style:TextAppearance_Compat_Notification_Info:2131427336
+ style:TextAppearance_Compat_Notification_Line2:2131427337
+ style:TextAppearance_Compat_Notification_Time:2131427338
+ style:TextAppearance_Compat_Notification_Title:2131427339
+ style:Widget_Compat_NotificationActionContainer:2131427341
+ style:Widget_Compat_NotificationActionText:2131427342

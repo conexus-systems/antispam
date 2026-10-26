@@ -1,0 +1,159 @@
+<resources>
+    <string name="app_name">AntiSpam BR</string>
+    <string name="home_subtitle">Identifique e bloqueie chamadas de spam</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step1_title">Chega de chamadas indesejadas</string>
+    <string name="onboarding_step1_body">Bloqueie telemarketing, golpes e robocalls antes do telefone tocar. 100% local, explicável e gratuito.</string>
+
+    <string name="onboarding_step2_title">Seus dados ficam no seu celular</string>
+    <string name="onboarding_step2_body">Sem envio de contatos ou histórico e sem cadastro obrigatório. A análise de cada chamada acontece no aparelho; a conta é opcional. Há anúncios só dentro do app, nunca durante uma chamada.</string>
+
+    <string name="onboarding_step3_title">Ative a proteção</string>
+    <string name="onboarding_step3_body">O Android pede que o AntiSpam BR seja definido como app de identificação e filtragem de chamadas. É assim que ele consegue proteger você.</string>
+
+    <string name="onboarding_continue">Continuar</string>
+    <string name="onboarding_skip">Pular</string>
+    <string name="onboarding_activate">Ativar proteção</string>
+    <string name="onboarding_activating">Ativando…</string>
+    <string name="onboarding_demo_mode">Ativar depois — explorar em modo demonstração</string>
+
+    <!-- Home / Simulador -->
+    <string name="home_simulator_title">Simular chamada</string>
+    <string name="home_simulator_hint">Número para testar</string>
+    <string name="home_simulator_placeholder">Ex: +55 11 99999-9999</string>
+    <string name="home_simulate_button">Simular</string>
+
+    <string name="home_history">Histórico</string>
+    <string name="home_history_desc">Veja chamadas bloqueadas, permitidas e denuncie</string>
+
+    <string name="home_settings">Ajustes</string>
+    <string name="home_settings_desc">Modo de proteção, regras, listas, backup e aparência</string>
+
+    <string name="home_lookup">Pesquisar número</string>
+    <string name="home_lookup_desc">Consulte reputação de qualquer número (k-anônimo)</string>
+
+    <!-- Ações -->
+    <string name="action_allow">Permitir</string>
+    <string name="action_warn">Suspeito</string>
+    <string name="action_silence">Silenciar</string>
+    <string name="action_block">Bloquear</string>
+
+    <!-- Configurações -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_protection">Proteção</string>
+    <string name="settings_rules">Regras</string>
+    <string name="settings_lists">Listas</string>
+    <string name="settings_general">Geral</string>
+    <string name="settings_appearance">Aparência</string>
+
+    <string name="mode_off">Desativado</string>
+    <string name="mode_off_desc">Não analisa nem bloqueia nada.</string>
+    <string name="mode_basic">Básico</string>
+    <string name="mode_basic_desc">Bloqueia só spam de altíssima confiança.</string>
+    <string name="mode_balanced">Equilibrado</string>
+    <string name="mode_balanced_desc">Bloqueia spam conhecido e campanhas suspeitas. Recomendado.</string>
+    <string name="mode_aggressive">Agressivo</string>
+    <string name="mode_aggressive_desc">Mais restritivo. Maior risco de bloquear algo legítimo.</string>
+    <string name="mode_custom">Personalizado</string>
+    <string name="mode_custom_desc">Você define limiares e o tratamento do 0303.</string>
+
+    <!-- Notificações -->
+    <string name="notification_spam_blocked">Chamada de spam bloqueada</string>
+    <string name="notification_spam_silenced">Chamada suspeita silenciada</string>
+    <string name="notification_spam_warn">Chamada suspeita</string>
+
+    <!-- Histórico -->
+    <string name="history_title">Histórico</string>
+    <string name="history_empty">Nenhuma chamada ainda.\nUse o simulador na aba Início para ver o app funcionando.</string>
+    <string name="history_report">Denunciar</string>
+    <string name="history_allow">Sempre permitir</string>
+    <string name="history_block">Bloquear nº</string>
+
+    <!-- Denúncias -->
+    <string name="report_title">Denunciar</string>
+    <string name="report_thanks_local">Obrigado! Denúncia registrada localmente.</string>
+    <string name="report_thanks_account">Obrigado! Denúncia registrada no aparelho e enviada com a sua Conta Conexus.</string>
+
+    <!-- Categorias de denúncia -->
+    <string name="category_spam">Spam</string>
+    <string name="category_telemarketing">Telemarketing</string>
+    <string name="category_fraud">Fraude</string>
+    <string name="category_robocall">Robocall</string>
+    <string name="category_collection">Cobrança</string>
+    <string name="category_survey">Pesquisa</string>
+    <string name="category_scam">Golpe financeiro</string>
+    <string name="category_bank">Banco</string>
+    <string name="category_carrier">Operadora</string>
+    <string name="category_delivery">Entrega</string>
+    <string name="category_other">Outro</string>
+
+    <!-- Acessibilidade -->
+    <string name="accessibility_onboarding_step">Passo %1$d de %2$d</string>
+    <string name="accessibility_collapse_details">Recolher detalhes</string>
+    <string name="accessibility_expand_details">Mostrar motivos e ações</string>
+
+    <!-- Erros -->
+    <string name="error_generic">Ocorreu um erro. Tente novamente.</string>
+    <string name="error_network">Sem conexão. Funcionando no modo offline.</string>
+    <string name="error_permission">Permissão necessária para identificar chamadas.</string>
+
+    <!-- Verify -->
+    <string name="verify_title">Verificar número</string>
+    <string name="verify_hint">Número para verificar</string>
+    <string name="verify_placeholder">Ex: +55 11 99999-9999</string>
+    <string name="verify_button">Verificar</string>
+    <string name="verify_result_title">Resultado da verificação</string>
+    <string name="verify_score_title">Score</string>
+    <string name="verify_reasons_title">Por que este score?</string>
+    <string name="verify_actions_title">Ações rápidas</string>
+    <string name="verify_report">Denunciar como spam</string>
+    <string name="verify_allow">Sempre permitir</string>
+    <string name="verify_block">Bloquear número</string>
+
+    <!-- Settings extras -->
+    <string name="settings_call_screening_role">Identificação de chamadas</string>
+    <string name="settings_grant_role">Conceder papel</string>
+    <string name="settings_open_role_settings">Abrir configurações</string>
+    <string name="settings_mode_title">Modo de proteção</string>
+    <string name="settings_custom_title">Personalizado</string>
+    <string name="settings_block_threshold">Bloquear a partir do score:</string>
+    <string name="settings_0303_title">Chamadas 0303 (telemarketing):</string>
+    <string name="settings_rules_title">Regras</string>
+    <string name="settings_rule_name_hint">Nome da regra</string>
+    <string name="settings_rule_prefix_hint">Prefixo +55114002…</string>
+    <string name="settings_add_prefix_rule">Adicionar regra de prefixo (bloquear)</string>
+    <string name="settings_allowlist_title">Permitidos</string>
+    <string name="settings_blocklist_title">Bloqueados</string>
+    <string name="settings_add_number">Adicionar</string>
+    <string name="settings_number_hint">+5511999999999</string>
+    <string name="settings_account_title">Conta Conexus</string>
+    <string name="settings_account_subtitle">Em breve · o app funciona sem conta</string>
+    <string name="settings_ai_title">IA Assistente (OpenRouter)</string>
+    <string name="settings_ai_label">IA Assistente</string>
+    <string name="settings_ai_desc">Off por padrão · nunca decide bloqueios</string>
+    <string name="settings_backup_title">Backup</string>
+    <string name="settings_backup_desc">Exporta modo, regras e listas em JSON validado. Import rejeita payloads maliciosos.</string>
+    <string name="settings_export">Exportar (copiar)</string>
+    <string name="settings_import">Importar (colar)</string>
+    <string name="settings_localdb_title">Base local</string>
+    <string name="settings_reputation_count">Registros de reputação</string>
+    <string name="settings_history_count">Chamadas no histórico</string>
+    <string name="settings_storage">Armazenamento</string>
+    <string name="settings_about_title">Sobre</string>
+    <string name="settings_version">Versão</string>
+    <string name="settings_license">Licença</string>
+    <string name="settings_telemetry">Telemetria</string>
+    <string name="settings_ads">Anúncios</string>
+    <string name="settings_reset_title">Reset</string>
+    <string name="settings_clear_history">Limpar histórico</string>
+    <string name="settings_footer">AntiSpam BR · fail-safe: em caso de dúvida, a chamada é permitida.</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_accent_title">Cor de destaque</string>
+    <string name="settings_custom_accent">Cor personalizada</string>
+    <string name="settings_accent_placeholder">#RRGGBB</string>
+    <string name="settings_restore_accent">Restaurar cor padrão</string>
+    <string name="settings_motion_title">Movimento</string>
+    <string name="settings_reduce_motion">Reduzir animações</string>
+    <string name="settings_reduce_motion_desc">Desliga o movimento das telas e dos controles.</string>
+</resources>

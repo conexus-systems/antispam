@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: conexus-caller-id-postgres
+    environment:
+      POSTGRES_DB: conexus_caller_id
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: conexus-caller-id-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: conexus-caller-id-backend
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/conexus_caller_id
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev-secret-change-in-production
+      - HMAC_SECRET=dev-hmac-secret-change-in-production
+      - POW_DIFFICULTY=4
+      - CORS_ORIGINS=["*"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../backend/app:/app/app:ro
+      - ../../backend/alembic:/app/alembic:ro
+
+  # Worker para tarefas assíncronas (Celery)
+  worker:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: conexus-caller-id-worker
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/conexus_caller_id
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev-secret-change-in-production
+      - HMAC_SECRET=dev-hmac-secret-change-in-production
+    command: celery -A app.workers.celery_app worker --loglevel=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../backend/app:/app/app:ro
+      - ../../backend/alembic:/app/alembic:ro
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: conexus-caller-id-network

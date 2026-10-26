@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.antispam.engine.PhoneNormalizerVectorTest" tests="45" skipped="0" failures="0" errors="0" timestamp="2026-10-26T11:18:29.240Z" hostname="tiago-asusvivobooks14s5406sas5406sa" time="0.013">
+  <properties/>
+  <testcase name="normalize '+55 11 98765-4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '(11) 98765-4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '011987654321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0 21 11 98765 4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '5511987654321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '1187654321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '987654321' ddd=21" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '87654321' ddd=21" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '987654321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '5599998888' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '555599998888' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '1133334444' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+55 (61) 3333-4444' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '11 6123-4567' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0800 123 4567' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+55 800 123 4567' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0303 123 4567' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+55 303 123 4567' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0304 765 4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0500 123 4510' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0300 111 2222' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '4004 1234' ddd=11" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+5540041234' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '190' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '192' ddd=11" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '29102' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize 'anonymous' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+1 202 555 0123' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0021 1 202 555 0123' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '+55 20 98765 4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+55 11 88765 4321' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+55 11 1234 5678' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '12' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '112' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '911' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '135' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '10331' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+190' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '+55 190' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '55190' ddd=11" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '0190' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '+112' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <testcase name="normalize '+911' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.0"/>
+  <testcase name="normalize '0800' ddd=null" classname="br.antispam.engine.PhoneNormalizerVectorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

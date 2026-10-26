@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.antispam.engine.DatasetVectorTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-26T11:18:29.039Z" hostname="tiago-asusvivobooks14s5406sas5406sa" time="0.041">
+  <properties/>
+  <testcase name="restos de instalação interrompida são limpos()" classname="br.antispam.engine.DatasetVectorTest" time="0.007"/>
+  <testcase name="reload não mistura leitores de versões diferentes()" classname="br.antispam.engine.DatasetVectorTest" time="0.009"/>
+  <testcase name="manifests adulterados são recusados()" classname="br.antispam.engine.DatasetVectorTest" time="0.002"/>
+  <testcase name="chave de teste é recusada em build release()" classname="br.antispam.engine.DatasetVectorTest" time="0.0"/>
+  <testcase name="instala v1 completo, depois v2 via delta, e lookups conferem()" classname="br.antispam.engine.DatasetVectorTest" time="0.005"/>
+  <testcase name="manifests válidos e rollback()" classname="br.antispam.engine.DatasetVectorTest" time="0.001"/>
+  <testcase name="anti-rollback sobrevive a estado local corrompido()" classname="br.antispam.engine.DatasetVectorTest" time="0.004"/>
+  <testcase name="sem nada instalado e fetch falhando não lança()" classname="br.antispam.engine.DatasetVectorTest" time="0.001"/>
+  <testcase name="shard corrompido mantém a versão anterior()" classname="br.antispam.engine.DatasetVectorTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

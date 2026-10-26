@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AntiSpam BR — Portal Comunitário</title>
+<style>
+  :root {
+    --bg: #0B1220; --card: #131C2E; --border: #243352; --text: #EAF0FA;
+    --dim: #8FA3C4; --primary: #22C55E; --warn: #F59E0B; --danger: #EF4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; }
+  header { border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 18px; font-weight: 800; }
+  header .shield { color: var(--primary); font-size: 22px; }
+  nav { display: flex; gap: 4px; padding: 8px 24px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  nav button {
+    background: transparent; border: none; color: var(--dim); font-weight: 600; font-size: 14px;
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  }
+  nav button.active, nav button:hover { color: var(--text); background: var(--card); }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 16px; }
+  h2 { font-size: 17px; margin-bottom: 6px; }
+  p.muted { color: var(--dim); font-size: 13px; }
+  input, select, textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: 10px 12px; font-size: 14px; margin-top: 6px;
+  }
+  textarea { min-height: 70px; resize: vertical; }
+  label { font-size: 12px; color: var(--dim); font-weight: 600; display: block; margin-top: 12px; }
+  .btn {
+    display: inline-block; background: var(--primary); color: #052e12; border: none; border-radius: 10px;
+    padding: 10px 18px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px;
+  }
+  .btn.ghost { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .verdict { display: inline-block; border-radius: 999px; padding: 6px 16px; font-weight: 800; border: 2px solid; margin: 8px 0; }
+  .verdict.CLEAN, .verdict.LOW_RISK { color: var(--primary); }
+  .verdict.SUSPICIOUS { color: var(--warn); }
+  .verdict.SPAM, .verdict.HIGH_RISK { color: var(--danger); }
+  .score { font-size: 34px; font-weight: 800; }
+  ul.clean { list-style: none; margin-top: 8px; }
+  ul.clean li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--dim); }
+  ul.clean li:last-child { border-bottom: none; }
+  ul.clean li b { color: var(--text); }
+  .ok { color: var(--primary); font-weight: 600; }
+  .err { color: var(--danger); font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  code, pre { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  pre { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; overflow-x: auto; margin-top: 10px; }
+  .privacy-note { font-size: 11px; color: var(--dim); margin-top: 10px; }
+  .hidden { display: none; }
+  footer { text-align: center; color: var(--dim); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+<header>
+  <span class="shield">🛡️</span>
+  <h1>AntiSpam BR — Portal Comunitário</h1>
+</header>
+
+<nav id="nav">
+  <button data-view="consultar" class="active">Consultar número</button>
+  <button data-view="denunciar">Denunciar / Contestar</button>
+  <button data-view="campanhas">Campanhas</button>
+  <button data-view="categorias">Categorias</button>
+  <button data-view="datasets">Datasets</button>
+  <button data-view="api">API</button>
+</nav>
+
+<main>
+  <section id="view-consultar">
+    <div class="card">
+      <h2>Consultar reputação de um número</h2>
+      <p class="muted">Digite o número com DDD (ex.: <code>11 99999-9999</code>). Por padrão o navegador calcula o SHA-256 do número e envia ao servidor <b>só os 5 primeiros caracteres do hash</b>; a comparação final acontece aqui. O servidor não fica sabendo qual número você consultou.</p>
+      <label for="q-number">Número</label>
+      <input id="q-number" placeholder="11 99999 9999" inputmode="tel" autocomplete="off" />
+      <button class="btn" id="q-btn">Consultar (privado)</button>
+      <button class="btn ghost" id="q-detail">Ver detalhes no servidor</button>
+      <div id="q-result"></div>
+      <p class="privacy-note">"Ver detalhes" envia o número ao servidor para mostrar também números ainda não publicados e os fatores do score. O servidor não grava consultas.</p>
+    </div>
+  </section>
+
+  <section id="view-denunciar" class="hidden">
+    <div class="card">
+      <h2>Denunciar um número</h2>
+      <p class="muted">Sem conta e sem e-mail: o navegador resolve uma pequena prova de trabalho e recebe um identificador pseudônimo. Uma denúncia isolada <b>nunca</b> bloqueia um número; é preciso que vários denunciantes independentes concordem por pelo menos 48 horas.</p>
+      <label for="d-number">Número</label>
+      <input id="d-number" placeholder="11 99999 9999" inputmode="tel" autocomplete="off" />
+      <label for="d-category">Categoria</label>
+      <select id="d-category"></select>
+      <label for="d-comment">Comentário (opcional, sem dados pessoais; só a moderação lê)</label>
+      <textarea id="d-comment" maxlength="280" placeholder="Ex.: dizem ser do meu banco e pedem código"></textarea>
+      <button class="btn" id="d-btn">Enviar denúncia</button>
+      <div id="d-result"></div>
+    </div>
+
+    <div class="card">
+      <h2>Contestar (falso positivo)</h2>
+      <p class="muted">Número seu ou de uma empresa legítima marcado como spam? A contestação vai para a moderação; vinda de dispositivo com histórico confiável, suspende a publicação até a decisão.</p>
+      <label for="c-number">Número</label>
+      <input id="c-number" placeholder="11 3333 4444" inputmode="tel" autocomplete="off" />
+      <label for="c-comment">Explique (opcional; só a moderação lê)</label>
+      <textarea id="c-comment" maxlength="280"></textarea>
+      <button class="btn ghost" id="c-btn">Contestar como legítimo</button>
+      <div id="c-result"></div>
+    </div>
+  </section>
+
+  <section id="view-campanhas" class="hidden">
+    <div class="card">
+      <h2>Campanhas ativas</h2>
+      <p class="muted">Blocos de numeração com 3 ou mais números suspeitos nos últimos 14 dias. Os 4 últimos dígitos ficam mascarados.</p>
+      <button class="btn" id="camp-btn">Atualizar</button>
+      <table id="camp-table"><thead><tr><th>Bloco</th><th>Números</th><th>Categoria</th><th>Última denúncia</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="view-categorias" class="hidden">
+    <div class="card">
+      <h2>Categorias e faixas de score</h2>
+      <p class="muted">O score (0–100) cresce com denunciantes independentes, confiáveis e recentes, e cai com contestações e com o tempo (meia-vida de 30 dias).</p>
+      <table><thead><tr><th>Faixa</th><th>Score</th></tr></thead><tbody>
+        <tr><td>CLEAN</td><td>0–19</td></tr><tr><td>LOW_RISK</td><td>20–39</td></tr><tr><td>SUSPICIOUS</td><td>40–59</td></tr>
+        <tr><td>SPAM</td><td>60–79</td></tr><tr><td>HIGH_RISK</td><td>80–100</td></tr></tbody></table>
+      <table id="cat-table"><thead><tr><th>Categoria</th><th>Descrição</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section id="view-datasets" class="hidden">
+    <div class="card">
+      <h2>Datasets públicos</h2>
+      <p class="muted">Versões assinadas (Ed25519) com deltas. Os apps recusam dataset com assinatura inválida, expirado ou mais antigo que o instalado.</p>
+      <button class="btn" id="ds-btn">Ver manifest atual</button>
+      <div id="ds-result"></div>
+    </div>
+  </section>
+
+  <section id="view-api" class="hidden">
+    <div class="card">
+      <h2>API v1</h2>
+      <pre>GET  /v1/devices/challenge                 → desafio de prova de trabalho
+POST /v1/devices                           { challenge, solution } → { device_token }
+GET  /v1/numbers/{número}/reputation       → score, faixa, fatores (sem dados de denunciantes)
+GET  /v1/reputation/hash-prefix/{5 hex}    → números publicados cujo SHA-256(E.164) começa assim
+POST /v1/reports                           Device token · { number, category, nonce, timestamp, comment? }
+POST /v1/reports/{id}/vote                 Device token · { vote: confirm | dispute, nonce, timestamp }
+POST /v1/numbers/{número}/legitimate       Device token · { nonce, timestamp, comment? }
+GET  /v1/campaigns                         → blocos com campanha ativa (mascarados)
+GET  /v1/datasets/manifest(.sig)           → manifest assinado mais recente
+GET  /v1/datasets/{versão}                 → arquivos da versão</pre>
+      <p class="privacy-note">Limites: 3 ações/min e 20/dia por dispositivo; 200/dia por rede. Emergência e utilidade pública (190, 192, 193…) nunca recebem denúncia.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  AntiSpam BR — gratuito, open source, privacy-first · dados comunitários são probabilísticos, nunca verdade absoluta
+</footer>
+
+<script src="/normalize.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

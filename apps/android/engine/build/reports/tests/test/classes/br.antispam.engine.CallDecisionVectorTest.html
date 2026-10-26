@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - CallDecisionVectorTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>CallDecisionVectorTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/br.antispam.engine.html">br.antispam.engine</a> &gt; CallDecisionVectorTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">33</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.131s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">allowlist vence reputação</td>
+<td class="success">vectors()[10]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">allowlist vence regra de bloqueio por prefixo</td>
+<td class="success">vectors()[11]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">regra de prefixo do usuário bloqueia</td>
+<td class="success">vectors()[12]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">regra de prefixo nacional 0303 do usuário bloqueia</td>
+<td class="success">vectors()[13]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">regex do usuário silencia</td>
+<td class="success">vectors()[14]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">número oculto sem política: só sinal fraco</td>
+<td class="success">vectors()[15]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">número oculto com política de bloqueio</td>
+<td class="success">vectors()[16]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">internacional com política de silêncio</td>
+<td class="success">vectors()[17]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">internacional sem política: só sinal fraco</td>
+<td class="success">vectors()[18]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">STIR/SHAKEN falhou avisa, mas não bloqueia sozinho</td>
+<td class="success">vectors()[19]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">golpe de banco publicado com evidência forte bloqueia</td>
+<td class="success">vectors()[1]</td>
+<td class="success">0.099s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">número desconhecido limpo passa</td>
+<td class="success">vectors()[20]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">formato inválido é suspeito mas passa</td>
+<td class="success">vectors()[21]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">denúncia própria de golpe bloqueia</td>
+<td class="success">vectors()[22]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">o próprio usuário marcou como legítimo: passa</td>
+<td class="success">vectors()[23]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">modo agressivo bloqueia 0303 com score 70 publicado</td>
+<td class="success">vectors()[24]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">modo conservador só silencia score 88</td>
+<td class="success">vectors()[25]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">número local sem DDD usa DDD do usuário</td>
+<td class="success">vectors()[26]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">emergência com +, 0 ou 55 também nunca é bloqueada por regra .*</td>
+<td class="success">vectors()[27]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">emergência 0190 nunca é bloqueada por prefixo</td>
+<td class="success">vectors()[28]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">emergência +55 190 nunca é bloqueada por prefixo 19</td>
+<td class="success">vectors()[29]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">robocall 64 silencia (abaixo do limiar de bloqueio)</td>
+<td class="success">vectors()[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">prefixo 55 é o DDD de Santa Maria, não o Brasil inteiro</td>
+<td class="success">vectors()[30]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">prefixo 55 bloqueia números do DDD 55</td>
+<td class="success">vectors()[31]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">regex ^55 não casa o código do país</td>
+<td class="success">vectors()[32]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">prefixo internacional exige +</td>
+<td class="success">vectors()[33]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">falso suporte 88 bloqueia</td>
+<td class="success">vectors()[3]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">organização verificada é limitada a WARN</td>
+<td class="success">vectors()[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">número contestado é limitado a WARN</td>
+<td class="success">vectors()[5]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">0303 no dataset com score 70 não tem evidência forte: silencia, não bloqueia</td>
+<td class="success">vectors()[6]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">0303 desconhecido só avisa</td>
+<td class="success">vectors()[7]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">emergência nunca é bloqueada, mesmo com regra</td>
+<td class="success">vectors()[8]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">contato sempre passa</td>
+<td class="success">vectors()[9]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.14.3</a> at 26 de out. de 2026 08:18:29</p>
+</div>
+</div>
+</body>
+</html>

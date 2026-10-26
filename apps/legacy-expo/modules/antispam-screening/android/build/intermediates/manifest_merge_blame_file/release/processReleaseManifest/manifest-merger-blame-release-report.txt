@@ -1,0 +1,26 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="br.antispam.app.screening" >
+4
+5    <uses-sdk android:minSdkVersion="24" />
+6
+7    <application>
+7-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:2:3-11:17
+8        <service
+8-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:3:5-10:15
+9            android:name="br.antispam.app.screening.AntiSpamCallScreeningService"
+9-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:4:7-76
+10            android:exported="true"
+10-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:6:7-30
+11            android:permission="android.permission.BIND_SCREENING_SERVICE" >
+11-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:5:7-69
+12            <intent-filter>
+12-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:7:7-9:23
+13                <action android:name="android.telecom.CallScreeningService" />
+13-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:8:9-71
+13-->/home/tiagoadg/Codes/tantoniazi/antispam-br/antispam-br/modules/antispam-screening/android/src/main/AndroidManifest.xml:8:17-68
+14            </intent-filter>
+15        </service>
+16    </application>
+17
+18</manifest>

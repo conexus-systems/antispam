@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.antispam.engine.EngineBehaviourTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-26T11:18:29.081Z" hostname="tiago-asusvivobooks14s5406sas5406sa" time="0.158">
+  <properties/>
+  <testcase name="campanha exige números distintos dentro da janela()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <testcase name="exceção na fonte de reputação vira ALLOW fail-safe()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <testcase name="comunidade sozinha nunca alcança o limiar de bloqueio()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <testcase name="shard rejeita header, tamanho e ordem inválidos()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <testcase name="heurísticas acumuladas nunca bloqueiam sem evidência forte()" classname="br.antispam.engine.EngineBehaviourTest" time="0.002"/>
+  <testcase name="número cru gigante não é oferecido às regex do usuário()" classname="br.antispam.engine.EngineBehaviourTest" time="0.0"/>
+  <testcase name="modelo local é limitado()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <testcase name="decisão com 1 milhão de registros fica bem abaixo do orçamento()" classname="br.antispam.engine.EngineBehaviourTest" time="0.149"/>
+  <testcase name="regras inválidas são recusadas sem derrubar o conjunto()" classname="br.antispam.engine.EngineBehaviourTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

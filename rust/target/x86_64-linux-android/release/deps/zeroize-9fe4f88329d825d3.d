@@ -1,0 +1,11 @@
+/home/tiagoadg/Codes/conexus-systems/antispam-br/rust/target/x86_64-linux-android/release/deps/zeroize-9fe4f88329d825d3.d: /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/lib.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/x86.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/barrier.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/stack.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/../README.md
+
+/home/tiagoadg/Codes/conexus-systems/antispam-br/rust/target/x86_64-linux-android/release/deps/libzeroize-9fe4f88329d825d3.rlib: /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/lib.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/x86.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/barrier.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/stack.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/../README.md
+
+/home/tiagoadg/Codes/conexus-systems/antispam-br/rust/target/x86_64-linux-android/release/deps/libzeroize-9fe4f88329d825d3.rmeta: /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/lib.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/x86.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/barrier.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/stack.rs /home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/../README.md
+
+/home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/lib.rs:
+/home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/x86.rs:
+/home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/barrier.rs:
+/home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/stack.rs:
+/home/tiagoadg/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.9.1/src/../README.md:

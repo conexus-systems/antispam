@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.antispam.engine.CallDecisionVectorTest" tests="33" skipped="0" failures="0" errors="0" timestamp="2026-10-26T11:18:28.889Z" hostname="tiago-asusvivobooks14s5406sas5406sa" time="0.143">
+  <properties/>
+  <testcase name="golpe de banco publicado com evidência forte bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.099"/>
+  <testcase name="robocall 64 silencia (abaixo do limiar de bloqueio)" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="falso suporte 88 bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="organização verificada é limitada a WARN" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="número contestado é limitado a WARN" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="0303 no dataset com score 70 não tem evidência forte: silencia, não bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="0303 desconhecido só avisa" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="emergência nunca é bloqueada, mesmo com regra" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="contato sempre passa" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="allowlist vence reputação" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="allowlist vence regra de bloqueio por prefixo" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="regra de prefixo do usuário bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="regra de prefixo nacional 0303 do usuário bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="regex do usuário silencia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="número oculto sem política: só sinal fraco" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="número oculto com política de bloqueio" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="internacional com política de silêncio" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="internacional sem política: só sinal fraco" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <testcase name="STIR/SHAKEN falhou avisa, mas não bloqueia sozinho" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="número desconhecido limpo passa" classname="br.antispam.engine.CallDecisionVectorTest" time="0.002"/>
+  <testcase name="formato inválido é suspeito mas passa" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="denúncia própria de golpe bloqueia" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="o próprio usuário marcou como legítimo: passa" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="modo agressivo bloqueia 0303 com score 70 publicado" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="modo conservador só silencia score 88" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="número local sem DDD usa DDD do usuário" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="emergência com +, 0 ou 55 também nunca é bloqueada por regra .*" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <testcase name="emergência 0190 nunca é bloqueada por prefixo" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <testcase name="emergência +55 190 nunca é bloqueada por prefixo 19" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <testcase name="prefixo 55 é o DDD de Santa Maria, não o Brasil inteiro" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="prefixo 55 bloqueia números do DDD 55" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <testcase name="regex ^55 não casa o código do país" classname="br.antispam.engine.CallDecisionVectorTest" time="0.001"/>
+  <testcase name="prefixo internacional exige +" classname="br.antispam.engine.CallDecisionVectorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
