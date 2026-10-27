@@ -1,0 +1,15 @@
+[package]
+name = "antispam-app"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+description = "AntiSpam BR UI em Slint (substitui o app Expo)"
+
+[dependencies]
+antispam-core = { path = "../antispam-core" }
+slint = "1.8"
+
+[build-dependencies]
+slint-build = "1.8"

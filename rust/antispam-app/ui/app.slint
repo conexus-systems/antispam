@@ -1,0 +1,34 @@
+import { TabWidget, VerticalBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: "AntiSpam BR";
+    preferred-width: 360px;
+    preferred-height: 720px;
+
+    TabWidget {
+        Tab {
+            title: "Início";
+            VerticalBox {
+                Text { text: "Proteção de chamadas ativa"; font-size: 20px; }
+            }
+        }
+        Tab {
+            title: "Histórico";
+            VerticalBox {
+                Text { text: "Chamadas recentes"; }
+            }
+        }
+        Tab {
+            title: "Verificar";
+            VerticalBox {
+                Text { text: "Análise manual de número"; }
+            }
+        }
+        Tab {
+            title: "Ajustes";
+            VerticalBox {
+                Text { text: "Preferências"; }
+            }
+        }
+    }
+}
