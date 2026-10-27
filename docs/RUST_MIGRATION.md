@@ -4,7 +4,12 @@ Decisão do Tiago: reescrever o app inteiro em Rust e abandonar o Expo. Toolkit 
 
 ## Estado
 
-- `rust/antispam-app`: casca Slint com as quatro abas (Início, Histórico, Verificar, Ajustes). Compila no host (`cargo check -p antispam-app`). Ainda não empacotada para Android.
+- `rust/antispam-app`: Slint com as quatro abas ligadas ao `antispam-core`:
+  - **Verificar**: normaliza o número e roda o `DecisionEngine` (sem agenda nem listas ainda).
+  - **Histórico**: verificações feitas na sessão (sem persistência ainda).
+  - **Ajustes**: seletor de modo (Desligado, Básico, Equilibrado, Agressivo).
+  - **Início**: mostra o modo atual.
+  Testes: `cargo test -p antispam-app` (3 passando). Ainda não empacotada para Android.
 - `rust/antispam-core`: já cobre normalização, reputação, decisão, dataset e assinatura. Não é reescrito.
 - Expo (`app/`, `src/`, `vendor/`) segue como está até paridade. Removê-lo é destrutivo e exige aprovação.
 
@@ -22,6 +27,7 @@ Decisão do Tiago: reescrever o app inteiro em Rust e abandonar o Expo. Toolkit 
 | Verificar | `app/(tabs)/verify.tsx` | aba Verificar |
 | Ajustes | `app/(tabs)/settings.tsx` | aba Ajustes |
 | Onboarding | `app/onboarding.tsx` | a implementar |
+| Verificação com agenda/listas | `src/core/*` | parcial: sem contatos, allowlist ou reputação local |
 | Conta | `app/account.tsx`, `vendor/conexus/account-expo` | a decidir (login e BFF) |
 | Doação | `app/donate.tsx` | a implementar |
 
