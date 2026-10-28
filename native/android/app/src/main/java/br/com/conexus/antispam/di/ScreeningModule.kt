@@ -1,7 +1,6 @@
 package br.com.conexus.antispam.di
 
 import android.content.Context
-import br.com.conexus.antispam.database.AppDatabase
 import br.com.conexus.antispam.screening.ScreeningCallback
 import br.com.conexus.antispam.screening.ScreeningCallbackImpl
 import dagger.Binds
@@ -17,8 +16,4 @@ abstract class ScreeningModule {
     @Binds
     @Singleton
     abstract fun bindScreeningCallback(impl: ScreeningCallbackImpl): ScreeningCallback
-
-    @Binds
-    @Singleton
-    abstract fun bindDatabase(impl: AppDatabase): AppDatabase
 }

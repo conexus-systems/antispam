@@ -5,15 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.spacer
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,20 +25,23 @@ import br.com.conexus.antispam.ui.w10m.W10MButtonSize
 import br.com.conexus.antispam.ui.w10m.W10MButtonVariant
 import br.com.conexus.antispam.ui.w10m.W10MIcon
 import br.com.conexus.antispam.ui.w10m.W10MIcons
+import br.com.conexus.antispam.ui.w10m.W10MRow
+import br.com.conexus.antispam.ui.w10m.W10MScore
 import br.com.conexus.antispam.ui.w10m.W10MScreen
 import br.com.conexus.antispam.ui.w10m.W10MSection
 import br.com.conexus.antispam.ui.w10m.W10MText
 import br.com.conexus.antispam.ui.w10m.W10MTextField
 import br.com.conexus.antispam.ui.w10m.W10MTextTone
 import br.com.conexus.antispam.ui.w10m.W10MType
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun VerifyScreen(
     onNavigate: (String) -> Unit = {},
 ) {
-    val phoneNumber by remember { mutableStateOf("") }
-    val result by remember { mutableStateOf<VerifyResult?>(null) }
+    var phoneNumber by remember { mutableStateOf("") }
+    var result by remember { mutableStateOf<VerifyResult?>(null) }
     val scope = rememberCoroutineScope()
 
     W10MScreen {
@@ -46,7 +51,7 @@ fun VerifyScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header
-            W10MSection(modifier = Modifier.padding(horizontal = 16.dp, top = 16.dp)) {
+            W10MSection(modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
                 W10MText(text = "Verificar número", variant = W10MType::header, tone = W10MTextTone.Text)
             }
 
@@ -57,8 +62,8 @@ fun VerifyScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                elevation = 0.dp,
-                shape = androidx.compose.foundation.shape.RectangleShape,
+                elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 0.dp),
+                shape = RectangleShape,
                 colors = androidx.compose.material3.CardDefaults.cardColors(
                     containerColor = useW10MTheme().palette.chrome
                 )
@@ -84,7 +89,7 @@ fun VerifyScreen(
                         onClick = {
                             if (phoneNumber.isNotBlank()) {
                                 scope.launch {
-                                    result.value = verifyNumber(phoneNumber)
+                                    result = verifyNumber(phoneNumber)
                                 }
                             }
                         }
@@ -99,8 +104,8 @@ fun VerifyScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    elevation = 0.dp,
-                    shape = androidx.compose.foundation.shape.RectangleShape,
+                    elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    shape = RectangleShape,
                     colors = androidx.compose.material3.CardDefaults.cardColors(
                         containerColor = when (res.action) {
                             "BLOCK" -> useW10MTheme().palette.dangerFill.copy(alpha = 0.1f)

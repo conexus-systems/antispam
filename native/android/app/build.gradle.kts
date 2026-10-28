@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
@@ -17,6 +19,15 @@ android {
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("../keystore/release.keystore")
+            storePassword = providers.gradleProperty("keystore.password").orNull
+            keyAlias = providers.gradleProperty("keystore.alias").orNull
+            keyPassword = providers.gradleProperty("keystore.key.password").orNull
+        }
     }
 
     buildTypes {
@@ -43,33 +54,12 @@ android {
         freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
-    }
-
     buildFeatures {
         compose = true
-        viewBinding = true
-        dataBinding = true
     }
 
     packagingOptions {
         resources.excludes += "META-INF/*.kotlin_module"
-    }
-
-    signingConfigs {
-        create("debug") {
-            storeFile = file("debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-        create("release") {
-            storeFile = file("../keystore/release.keystore")
-            storePassword = providers.gradleProperty("keystore.password")
-            keyAlias = providers.gradleProperty("keystore.alias")
-            keyPassword = providers.gradleProperty("keystore.key.password")
-        }
     }
 }
 
@@ -116,6 +106,7 @@ dependencies {
 
     // Hilt DI
     implementation("com.google.dagger:hilt-android:$hilt_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp("com.google.dagger:hilt-compiler:$hilt_version")
 
     // Navigation
@@ -124,8 +115,6 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:$datastore_version")
-    implementation("androidx.datastore:datastore-core:$datastore_version")
-    implementation("androidx.datastore:datastore-preferences-rxjava3:$datastore_version")
 
     // Retrofit / OkHttp
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -151,8 +140,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     // RxJava3 para DataStore
-    implementation("io.reactivex.rxjava3:rxandroid:3.1.8")
-    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
 
     // Testes
     testImplementation("junit:junit:4.13.2")

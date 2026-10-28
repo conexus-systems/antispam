@@ -1,11 +1,16 @@
 package br.com.conexus.antispam.ui.settings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -16,17 +21,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.conexus.antispam.R
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import br.com.conexus.antispam.ui.w10m.W10MButton
 import br.com.conexus.antispam.ui.w10m.W10MButtonSize
 import br.com.conexus.antispam.ui.w10m.W10MButtonVariant
 import br.com.conexus.antispam.ui.w10m.W10MIcon
 import br.com.conexus.antispam.ui.w10m.W10MIcons
+import br.com.conexus.antispam.ui.w10m.W10MListItem
+import br.com.conexus.antispam.ui.w10m.W10MListItemAction
 import br.com.conexus.antispam.ui.w10m.W10MPivotPager
 import br.com.conexus.antispam.ui.w10m.W10MPivotPage
+import br.com.conexus.antispam.ui.w10m.W10MRadio
 import br.com.conexus.antispam.ui.w10m.W10MScreen
 import br.com.conexus.antispam.ui.w10m.W10MSection
 import br.com.conexus.antispam.ui.w10m.W10MText
@@ -59,12 +70,12 @@ fun SettingsScreen(
     val rules by remember { mutableStateOf<List<Rule>>(emptyList()) }
     val allowlist by remember { mutableStateOf<List<String>>(emptyList()) }
     val blacklist by remember { mutableStateOf<List<String>>(emptyList()) }
-    val newRuleName by remember { mutableStateOf("") }
-    val newRulePrefix by remember { mutableStateOf("") }
-    val listInputAllow by remember { mutableStateOf("") }
-    val listInputBlock by remember { mutableStateOf("") }
+    var newRuleName by remember { mutableStateOf("") }
+    var newRulePrefix by remember { mutableStateOf("") }
+    var listInputAllow by remember { mutableStateOf("") }
+    var listInputBlock by remember { mutableStateOf("") }
     val themeMode by remember { mutableStateOf("system") } // system, dark, light
-    val accentHex by remember { mutableStateOf("#60A917") }
+    var accentHex by remember { mutableStateOf("#60A917") }
     val reduceMotion by remember { mutableStateOf(false) }
 
     val MODES = listOf(
@@ -87,21 +98,6 @@ fun SettingsScreen(
         ThemeModeItem("dark", "Escuro"),
         ThemeModeItem("light", "Claro"),
     )
-
-    W10MScreen {
-        W10MPivotPager(
-            pages = listOf(
-                W10MPivotPage("protection", "Proteção") { ProtectionPage() },
-                W10MPivotPage("rules", "Regras") { RulesPage() },
-                W10MPivotPage("lists", "Listas") { ListsPage() },
-                W10MPivotPage("general", "Geral") { GeneralPage() },
-                W10MPivotPage("appearance", "Aparência") { AppearancePage() },
-            ),
-            selectedKey = "protection", // TODO: estado real
-            onChange = { /* navegar */ },
-            modifier = Modifier.fillMaxSize()
-        )
-    }
 
     @Composable
     fun ProtectionPage() {
@@ -179,15 +175,15 @@ fun SettingsScreen(
     @Composable
     fun RulesPage() {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
-            W10MSection(title = "Regras (${rules.value.size})") {
-                if (rules.value.isEmpty()) {
+            W10MSection(title = "Regras (${rules.size})") {
+                if (rules.isEmpty()) {
                     W10MText(text = "Nenhuma regra criada", variant = W10MType::body, tone = W10MTextTone.Muted, modifier = Modifier.padding(vertical = 16.dp))
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
                     ) {
-                        items(rules.value) { rule ->
+                        items(rules) { rule ->
                             W10MListItem(
                                 title = rule.name,
                                 subtitle = "${rule.match}: ${rule.value} · ação ${rule.action}",
@@ -217,7 +213,7 @@ fun SettingsScreen(
                         }
                     }
                 }
-                
+
                 androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
                 androidx.compose.foundation.layout.Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -225,14 +221,14 @@ fun SettingsScreen(
                 ) {
                     W10MTextField(
                         label = "Nome da regra",
-                        value = newRuleName.value,
-                        onValueChange = { newRuleName.value = it },
+                        value = newRuleName,
+                        onValueChange = { newRuleName = it },
                         modifier = Modifier.weight(1f)
                     )
                     W10MTextField(
                         label = "Prefixo +55114002…",
-                        value = newRulePrefix.value,
-                        onValueChange = { newRulePrefix.value = it },
+                        value = newRulePrefix,
+                        onValueChange = { newRulePrefix = it },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone)
                     )
@@ -250,15 +246,15 @@ fun SettingsScreen(
     @Composable
     fun ListsPage() {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
-            W10MSection(title = "Permitidos (${allowlist.value.size})") {
-                if (allowlist.value.isEmpty()) {
+            W10MSection(title = "Permitidos (${allowlist.size})") {
+                if (allowlist.isEmpty()) {
                     W10MText(text = "Nenhum número na lista de permitidos", variant = W10MType::caption, tone = W10MTextTone.Muted, modifier = Modifier.padding(vertical = 8.dp))
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
                     ) {
-                        items(allowlist.value) { v ->
+                        items(allowlist) { v ->
                             W10MListItem(
                                 title = v,
                                 trailing = {
@@ -275,8 +271,8 @@ fun SettingsScreen(
                 ) {
                     W10MTextField(
                         label = "Número +5511999999999",
-                        value = listInputAllow.value,
-                        onValueChange = { listInputAllow.value = it },
+                        value = listInputAllow,
+                        onValueChange = { listInputAllow = it },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone)
                     )
@@ -291,15 +287,15 @@ fun SettingsScreen(
 
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 24.dp))
 
-            W10MSection(title = "Bloqueados (${blacklist.value.size})") {
-                if (blacklist.value.isEmpty()) {
+            W10MSection(title = "Bloqueados (${blacklist.size})") {
+                if (blacklist.isEmpty()) {
                     W10MText(text = "Nenhum número na lista de bloqueados", variant = W10MType::caption, tone = W10MTextTone.Muted, modifier = Modifier.padding(vertical = 8.dp))
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
                     ) {
-                        items(blacklist.value) { v ->
+                        items(blacklist) { v ->
                             W10MListItem(
                                 title = v,
                                 trailing = {
@@ -316,8 +312,8 @@ fun SettingsScreen(
                 ) {
                     W10MTextField(
                         label = "Número +5511999999999",
-                        value = listInputBlock.value,
-                        onValueChange = { listInputBlock.value = it },
+                        value = listInputBlock,
+                        onValueChange = { listInputBlock = it },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone)
                     )
@@ -431,10 +427,10 @@ fun SettingsScreen(
                         Box(
                             modifier = Modifier
                                 .size(48.dp)
-                                .border(if (selected) 3.dp else 2.dp, if (selected) useW10MTheme().palette.primary else useW10MTheme().palette.border, androidx.compose.foundation.shape.RectangleShape)
-                                .background(Color(android.graphics.Color.parseColor(hex)), androidx.compose.foundation.shape.RectangleShape)
-                                .combinedClickable(onClick = { accentHex = hex }, onLongClick = null)
-                        )
+                                .border(if (selected) 3.dp else 2.dp, if (selected) useW10MTheme().palette.primary else useW10MTheme().palette.border, RectangleShape)
+                                .background(Color(android.graphics.Color.parseColor(hex)), RectangleShape)
+                                .clickable { accentHex = hex }
+                        ) {}
                     }
                 }
                 androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
@@ -461,6 +457,21 @@ fun SettingsScreen(
                 )
             }
         }
+    }
+
+    W10MScreen {
+        W10MPivotPager(
+            pages = listOf(
+                W10MPivotPage("protection", "Proteção") { ProtectionPage() },
+                W10MPivotPage("rules", "Regras") { RulesPage() },
+                W10MPivotPage("lists", "Listas") { ListsPage() },
+                W10MPivotPage("general", "Geral") { GeneralPage() },
+                W10MPivotPage("appearance", "Aparência") { AppearancePage() },
+            ),
+            selectedKey = "protection", // TODO: estado real
+            onChange = { /* navegar */ },
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 

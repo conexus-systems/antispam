@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
@@ -14,14 +17,15 @@ import androidx.navigation.compose.rememberNavController
 import br.com.conexus.antispam.R
 import br.com.conexus.antispam.ui.onboarding.OnboardingScreen
 import br.com.conexus.antispam.ui.onboarding.OnboardingViewModel
-import br.com.conexus.antispam.ui.w10m.W10MTheme
-import br.com.conexus.antispam.ui.w10m.provideW10MTheme
+import br.com.conexus.antispam.ui.theme.W10MTheme
+import br.com.conexus.antispam.ui.theme.provideW10MTheme
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import br.com.conexus.antispam.ui.home.HomeScreen
 import br.com.conexus.antispam.ui.history.HistoryScreen
 import br.com.conexus.antispam.ui.settings.SettingsScreen
 import br.com.conexus.antispam.ui.verify.VerifyScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,7 +41,7 @@ class MainActivity : ComponentActivity() {
             provideW10MTheme(dark = true, accentHex = "#60A917") {
                 MaterialTheme {
                     Surface(
-                        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         color = useW10MTheme().palette.bg
                     ) {
                         val navController = rememberNavController()

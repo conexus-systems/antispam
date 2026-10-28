@@ -4,12 +4,16 @@ import android.app.Activity
 import android.app.role.RoleManager
 import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.spacer
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,10 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import br.com.conexus.antispam.R
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import br.com.conexus.antispam.ui.w10m.W10MButton
 import br.com.conexus.antispam.ui.w10m.W10MButtonVariant
 import br.com.conexus.antispam.ui.w10m.W10MButtonSize
@@ -37,10 +42,8 @@ import br.com.conexus.antispam.ui.w10m.W10MScreen
 import br.com.conexus.antispam.ui.w10m.W10MText
 import br.com.conexus.antispam.ui.w10m.W10MTextTone
 import br.com.conexus.antispam.ui.w10m.W10MType
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 @Composable
 fun OnboardingScreen(
     onFinish: () -> Unit,
@@ -48,6 +51,7 @@ fun OnboardingScreen(
 ) {
     val currentStep by viewModel.currentStep.collectAsStateWithLifecycle()
     val activating by viewModel.activating.collectAsStateWithLifecycle()
+    val activity = LocalContext.current as Activity
 
     val steps = remember {
         listOf(
@@ -157,7 +161,7 @@ fun OnboardingScreen(
                         block = true,
                         loading = activating,
                         icon = { W10MIcon(name = W10MIcons.Shield, size = 18.dp, color = useW10MTheme().palette.onAccent) },
-                        onClick = { viewModel.activateProtection() }
+                        onClick = { viewModel.activateProtection(activity) }
                     )
 
                     W10MButton(

@@ -84,7 +84,7 @@ class SeedWorker(
     }
 
     private fun loadAssetString(name: String): String? {
-        return applicationContext.assets.open(name).use { InputStreamReader(it) }.readText()
+        return applicationContext.assets.open(name).bufferedReader().use { it.readText() }
     }
 
     private fun loadAssetBytes(name: String): ByteArray? {

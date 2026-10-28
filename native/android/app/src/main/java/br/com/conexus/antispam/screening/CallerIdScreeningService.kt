@@ -2,7 +2,9 @@ package br.com.conexus.antispam.screening
 
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.telecom.Connection
 import android.os.Build
+import android.provider.CallLog
 import android.util.Log
 import br.com.conexus.antispam.decision.CallAction
 import br.com.conexus.antispam.decision.CallContext
@@ -22,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +53,7 @@ class CallerIdScreeningService : CallScreeningService() {
         // Hilt injeta database e screeningCallback via ScreeningModule
     }
 
-    override fun onScreenCall(call: Call) {
+    override fun onScreenCall(call: Call.Details) {
         scope.launch {
             try {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -58,24 +61,25 @@ class CallerIdScreeningService : CallScreeningService() {
                     return@launch
                 }
 
-                val details = call.details
+                val details = call
                 val number = details.handle?.schemeSpecificPart ?: ""
                 val direction = details.callDirection
 
                 // Somente chamadas recebidas são analisadas
                 if (direction == Call.Details.DIRECTION_INCOMING) {
-                    val presentation = when (details.callPresentation) {
-                        Call.Details.PRESENTATION_ALLOWED -> CallPresentation.ALLOWED
-                        Call.Details.PRESENTATION_PAYPHONE -> CallPresentation.PAYPHONE
-                        Call.Details.PRESENTATION_RESTRICTED -> CallPresentation.RESTRICTED
+                    val presentation = when (details.handlePresentation) {
+                        CallLog.Calls.PRESENTATION_ALLOWED -> CallPresentation.ALLOWED
+                        CallLog.Calls.PRESENTATION_PAYPHONE -> CallPresentation.PAYPHONE
+                        CallLog.Calls.PRESENTATION_RESTRICTED -> CallPresentation.RESTRICTED
                         else -> CallPresentation.UNKNOWN
                     }
 
+                    // callerNumberVerificationStatus existe a partir da API 30 (minSdk do app é 29)
                     val stirShaken = when {
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && details.stirShakenVerificationStatus != null -> {
-                            when (details.stirShakenVerificationStatus) {
-                                Call.Details.STIR_SHAKEN_VERIFICATION_PASSED -> StirShaken.PASS
-                                Call.Details.STIR_SHAKEN_VERIFICATION_FAILED -> StirShaken.FAIL
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                            when (details.callerNumberVerificationStatus) {
+                                Connection.VERIFICATION_STATUS_PASSED -> StirShaken.PASS
+                                Connection.VERIFICATION_STATUS_FAILED -> StirShaken.FAIL
                                 else -> StirShaken.UNKNOWN
                             }
                         }
@@ -89,20 +93,11 @@ class CallerIdScreeningService : CallScreeningService() {
                         stirShaken = stirShaken
                     )
 
-                    // 1. Decisão local síncrona (rápida, <50ms)
-                    val localDecision = runLocalDecisionPipeline(ctx)
+                    // Decisão final = motor local (DecisionEngine). Sem confirmação assíncrona:
+                    // um timeout não pode rebaixar BLOCK para ALLOW.
+                    val finalDecision = runLocalDecisionPipeline(ctx)
 
-                    // 2. Se ação não é BLOCK, responde imediatamente
-                    // Se BLOCK, pode aguardar confirmação assíncrona (opcional)
-                    val finalDecision = if (localDecision.action == CallAction.BLOCK) {
-                        // Opcional: aguardar confirmação do motor JS/Kotlin via callback
-                        // Com timeout fail-safe
-                        awaitAsyncConfirmation(number, localDecision)
-                    } else {
-                        localDecision
-                    }
-
-                    val response = android.telecom.CallResponse.Builder()
+                    val response = CallScreeningService.CallResponse.Builder()
                         .setDisallowCall(finalDecision.action == CallAction.BLOCK)
                         .setRejectCall(finalDecision.action == CallAction.BLOCK)
                         .setSkipCallLog(finalDecision.action == CallAction.BLOCK)
@@ -135,7 +130,7 @@ class CallerIdScreeningService : CallScreeningService() {
 
         val allowlist = db.blocklistDao().getAllowed().firstOrNull()?.map { it.number } ?: emptyList()
         val blacklist = db.blocklistDao().getBlocked().firstOrNull()?.map { it.number } ?: emptyList()
-        val history = db.historyDao().getRecent(50).firstOrNull() ?: emptyList()
+        val history = db.historyDao().getRecent(50)
 
         val recentCalls = history.map { CampaignSignal(it.number, java.time.Instant.parse(it.at).toEpochMilli()) }
         val contactNumbers = setOf<String>() // TODO: resolver contatos locais via ContactsContract
@@ -158,27 +153,6 @@ class CallerIdScreeningService : CallScreeningService() {
         )
 
         return DecisionEngine.decide(input)
-    }
-
-    /**
-     * Aguarda confirmação assíncrona do motor (JS/Kotlin via React Native bridge).
-     * Fail-safe: timeout → ALLOW.
-     */
-    private suspend fun awaitAsyncConfirmation(number: String, localDecision: CallDecision): CallDecision {
-        return try {
-            // Timeout menor que o do sistema (2-3s)
-            val action = screeningCallback.requestDecision(number, 1200L)
-            val confirmedAction = CallAction.valueOf(action)
-            if (confirmedAction == localDecision.action) {
-                localDecision
-            } else {
-                // Motor discordou → usar decisão confirmada (mais segura)
-                localDecision.copy(action = confirmedAction)
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Confirmação assíncrona falhou para $number → decisão local", e)
-            localDecision
-        }
     }
 
     private fun buildConfig(settings: UserSettings): DecisionEngineConfig {
@@ -222,12 +196,12 @@ class CallerIdScreeningService : CallScreeningService() {
         )
     }
 
-    private fun respondAllow(call: Call) {
+    private fun respondAllow(call: Call.Details) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 respondToCall(
                     call,
-                    android.telecom.CallResponse.Builder()
+                    CallScreeningService.CallResponse.Builder()
                         .setDisallowCall(false)
                         .setRejectCall(false)
                         .setSkipCallLog(false)

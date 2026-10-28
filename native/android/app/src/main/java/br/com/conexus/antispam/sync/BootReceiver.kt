@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
@@ -29,14 +30,12 @@ class BootReceiver : BroadcastReceiver() {
 
         // Seed worker - roda uma vez se nunca rodou
         val seedRequest = OneTimeWorkRequest.Builder(SeedWorker::class.java)
-            .setId(SeedWorker.WORK_NAME)
             .addTag("init")
             .build()
-        workManager.enqueueUniqueWork(SeedWorker.WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, seedRequest)
+        workManager.enqueueUniqueWork(SeedWorker.WORK_NAME, ExistingWorkPolicy.KEEP, seedRequest)
 
         // Delta sync - periódico (a cada 6 horas)
         val syncRequest = PeriodicWorkRequest.Builder(DeltaSyncWorker::class.java, 6, TimeUnit.HOURS)
-            .setId(DeltaSyncWorker.WORK_NAME)
             .addTag("sync")
             .build()
         workManager.enqueueUniquePeriodicWork(DeltaSyncWorker.WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, syncRequest)

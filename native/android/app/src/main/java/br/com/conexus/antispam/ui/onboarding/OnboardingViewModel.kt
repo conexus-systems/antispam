@@ -4,23 +4,25 @@ import android.app.Activity
 import android.app.role.RoleManager
 import android.content.Context
 import android.os.Build
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.rx.RxDataStore
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
-@dagger.hilt.android.lifecycle.HiltViewModel
+@HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val context: Context,
-    private val dataStore: RxDataStore
+    @ApplicationContext private val context: Context,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
     private val _currentStep = MutableStateFlow(0)
@@ -31,22 +33,21 @@ class OnboardingViewModel @Inject constructor(
 
     private val ONBOARDING_DONE_KEY = booleanPreferencesKey("onboarding_done")
 
-    val onboardingDone = dataStore.data
+    val onboardingDone: Flow<Boolean> = dataStore.data
         .map { it[ONBOARDING_DONE_KEY] ?: false }
-        .toFlowable()
 
     fun nextStep() {
-        _currentStep.update { it + 1 }
+        _currentStep.value += 1
     }
 
-    fun activateProtection() {
+    fun activateProtection(activity: Activity) {
         _activating.value = true
         viewModelScope.launch {
             try {
                 if (isNativeScreeningAvailable()) {
                     val held = isCallScreeningRoleHeld()
                     if (!held) {
-                        requestCallScreeningRole()
+                        requestCallScreeningRole(activity)
                     }
                 } else {
                     // Modo demonstração - sem módulo nativo
@@ -59,11 +60,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun completeOnboarding() {
         viewModelScope.launch {
-            dataStore.updateDataAsync { preferences ->
-                preferences.toMutablePreferences().apply {
-                    putBoolean(ONBOARDING_DONE_KEY, true)
-                }
-            }.await()
+            dataStore.edit { it[ONBOARDING_DONE_KEY] = true }
         }
     }
 
@@ -77,8 +74,7 @@ class OnboardingViewModel @Inject constructor(
         return roleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
     }
 
-    private fun requestCallScreeningRole() {
-        val activity = context as? Activity ?: return
+    private fun requestCallScreeningRole(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = activity.getSystemService(Context.ROLE_SERVICE) as RoleManager
             if (roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {

@@ -1,24 +1,39 @@
+@file:OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+
 package br.com.conexus.antispam.ui.home
 
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.spacer
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.conexus.antispam.R
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import br.com.conexus.antispam.ui.w10m.W10MButton
 import br.com.conexus.antispam.ui.w10m.W10MButtonSize
 import br.com.conexus.antispam.ui.w10m.W10MButtonVariant
@@ -35,8 +50,8 @@ fun HomeScreen(
     onNavigate: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val simulatedNumber by remember { mutableStateOf("") }
-    val lastDecision by remember { mutableStateOf<DecisionResult?>(null) }
+    var simulatedNumber by remember { mutableStateOf("") }
+    var lastDecision by remember { mutableStateOf<DecisionResult?>(null) }
 
     W10MScreen {
         Column(
@@ -71,8 +86,8 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                elevation = 0.dp,
-                shape = androidx.compose.foundation.shape.RectangleShape,
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                shape = RectangleShape,
                 colors = androidx.compose.material3.CardDefaults.cardColors(
                     containerColor = useW10MTheme().palette.chrome
                 )
@@ -98,17 +113,20 @@ fun HomeScreen(
                         placeholder = { W10MText(text = stringResource(R.string.home_simulator_placeholder), variant = W10MType::body, tone = W10MTextTone.Muted) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone
                         ),
-                        colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                            backgroundColor = useW10MTheme().palette.surface,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = useW10MTheme().palette.surface,
+                            unfocusedContainerColor = useW10MTheme().palette.surface,
                             focusedIndicatorColor = useW10MTheme().palette.accent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
                             cursorColor = useW10MTheme().palette.accent,
-                            textColor = useW10MTheme().palette.text,
-                            placeholderColor = useW10MTheme().palette.textDim,
+                            focusedTextColor = useW10MTheme().palette.text,
+                            unfocusedTextColor = useW10MTheme().palette.text,
+                            focusedPlaceholderColor = useW10MTheme().palette.textDim,
+                            unfocusedPlaceholderColor = useW10MTheme().palette.textDim,
                         )
                     )
 
@@ -137,8 +155,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    elevation = 0.dp,
-                    shape = androidx.compose.foundation.shape.RectangleShape,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    shape = RectangleShape,
                     colors = androidx.compose.material3.CardDefaults.cardColors(
                         containerColor = when (decision.action) {
                             "BLOCK" -> useW10MTheme().palette.dangerFill.copy(alpha = 0.1f)
@@ -233,7 +251,7 @@ fun QuickActionItem(
     androidx.compose.foundation.layout.Box(
         modifier = Modifier
             .fillMaxWidth()
-            .minHeight(48.dp)
+            .heightIn(min = 48.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .background(Color.Transparent)
             .combinedClickable(onClick = onClick, onLongClick = null)

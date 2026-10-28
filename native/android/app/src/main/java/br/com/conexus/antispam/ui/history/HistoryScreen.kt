@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.spacer
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -20,12 +20,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.conexus.antispam.R
+import br.com.conexus.antispam.ui.theme.useW10MTheme
 import br.com.conexus.antispam.ui.w10m.W10MButton
 import br.com.conexus.antispam.ui.w10m.W10MButtonSize
 import br.com.conexus.antispam.ui.w10m.W10MButtonVariant
+import br.com.conexus.antispam.ui.w10m.W10MEmpty
 import br.com.conexus.antispam.ui.w10m.W10MIcon
 import br.com.conexus.antispam.ui.w10m.W10MIcons
 import br.com.conexus.antispam.ui.w10m.W10MListItem
+import br.com.conexus.antispam.ui.w10m.W10MListItemAction
 import br.com.conexus.antispam.ui.w10m.W10MScreen
 import br.com.conexus.antispam.ui.w10m.W10MSection
 import br.com.conexus.antispam.ui.w10m.W10MText
@@ -47,7 +50,7 @@ fun HistoryScreen(
             // Header
             W10MSection(
                 title = null,
-                modifier = Modifier.padding(horizontal = 16.dp, top = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
             ) {
                 W10MText(text = stringResource(R.string.history_title), variant = W10MType::header, tone = W10MTextTone.Text)
             }
@@ -73,7 +76,7 @@ fun HistoryScreen(
                     items(history.value) { entry ->
                         val open = openId.value == entry.id
                         W10MListItem(
-                            title = entry.name ?: entry.display ?: stringResource(R.string.hidden_number),
+                            title = entry.name ?: entry.display ?: "Número oculto", // TODO: mover para strings.xml (hidden_number ausente)
                             subtitle = "${java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault()).format(java.util.Date(entry.at))} · Score ${entry.score}",
                             leading = { W10MIcon(name = when (entry.action) {
                                 "BLOCK" -> W10MIcons.Block

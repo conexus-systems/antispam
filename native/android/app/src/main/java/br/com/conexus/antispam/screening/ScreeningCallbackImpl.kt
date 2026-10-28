@@ -1,6 +1,7 @@
 package br.com.conexus.antispam.screening
 
 import android.util.Log
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,12 +14,12 @@ import java.util.concurrent.TimeoutException
 
 /**
  * Implementação do callback entre CallerIdScreeningService (nativo)
- * e AntiSpamScreeningModule (React Native bridge).
+ * e a camada de decisão do app.
  * 
  * Usa CompletableFuture por número para aguardar decisão do motor Kotlin/JS
  * com timeout (fail-safe: ALLOW se não responder a tempo).
  */
-class ScreeningCallbackImpl : ScreeningCallback {
+class ScreeningCallbackImpl @Inject constructor() : ScreeningCallback {
 
     private val pendingDecisions = ConcurrentHashMap<String, CompletableFuture<String>>()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -33,7 +34,7 @@ class ScreeningCallbackImpl : ScreeningCallback {
      * Solicita decisão do motor (JS/Kotlin via React Native) para um número.
      * Retorna ação (ALLOW/BLOCK/WARN/SILENCE) ou ALLOW no timeout/falha.
      */
-    fun requestDecision(number: String, timeoutMs: Long = DECISION_TIMEOUT_MS): String {
+    override fun requestDecision(number: String, timeoutMs: Long): String {
         val future = CompletableFuture<String>()
         val prev = pendingDecisions.putIfAbsent(number, future)
         if (prev != null) {
