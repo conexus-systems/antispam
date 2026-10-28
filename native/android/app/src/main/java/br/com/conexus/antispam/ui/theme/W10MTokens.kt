@@ -37,8 +37,8 @@ object W10MEssentials {
     const val MARROM = "#825A2C"        // marrom
 }
 
-// Destaque padrão do app (brand primary)
-const val DEFAULT_ACCENT = W10MEssentials.VERDE
+// Destaque padrão do app: brand primary do AntiSpam BR (fleet.yml, família Conexus)
+const val DEFAULT_ACCENT = "#DC2626"
 
 // Extras para faixas de score
 const val AMBAR = "#F0A30A"
