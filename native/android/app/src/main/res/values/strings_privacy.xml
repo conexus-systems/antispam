@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_title">Privacidade</string>
+    <string name="privacy_back">Voltar</string>
+
+    <string name="privacy_section_device">O que fica no seu aparelho</string>
+    <string name="privacy_device_body">Seus ajustes, regras, números bloqueados e permitidos, o histórico de chamadas tratadas e a base de reputação ficam guardados só neste aparelho. Cada chamada é analisada aqui, sem consultar a internet.</string>
+
+    <string name="privacy_section_sent">O que é enviado</string>
+    <string name="privacy_sent_body">Nenhum número, histórico ou lista seu é enviado a servidores. As denúncias ficam salvas só neste aparelho. O app não tem cadastro nem conta obrigatória.</string>
+
+    <string name="privacy_section_never">O que o app nunca lê</string>
+    <string name="privacy_never_body">Agenda de contatos, registro de chamadas do sistema, mensagens, microfone e localização.</string>
+
+    <string name="privacy_section_permissions">Permissões e por quê</string>
+    <string name="privacy_perm_screening">Triagem de chamadas (papel do Android): permite ao app ver o número de quem liga e decidir se a chamada toca, é silenciada ou bloqueada.</string>
+    <string name="privacy_perm_notifications">Notificações: avisam quando uma chamada é bloqueada ou suspeita. Recusar não desliga o bloqueio.</string>
+    <string name="privacy_perm_internet">Internet: atualiza a base de reputação e carrega anúncios. Nunca é usada durante uma chamada.</string>
+
+    <string name="privacy_section_ads">Anúncios</string>
+    <string name="privacy_ads_body">O app exibe anúncios do Google AdMob dentro de algumas telas, nunca durante uma chamada. Anúncios só são pedidos depois do seu consentimento, que você pode rever em Ajustes quando disponível.</string>
+
+    <string name="privacy_section_policy">Política de privacidade</string>
+    <string name="privacy_policy_label">Política de privacidade completa:</string>
+    <string name="privacy_policy_url">[URL_POLITICA_PRIVACIDADE]</string>
+
+    <string name="privacy_section_erase">Seus dados</string>
+    <string name="privacy_erase_body">Apaga histórico, listas, regras, ajustes e a base local deste aparelho. O app volta ao estado de primeiro uso.</string>
+    <string name="privacy_erase_button">Apagar todos os meus dados</string>
+    <string name="privacy_erase_title">Apagar todos os dados?</string>
+    <string name="privacy_erase_message">Histórico, números bloqueados e permitidos, regras e ajustes serão apagados deste aparelho. Isso não pode ser desfeito.</string>
+    <string name="privacy_erase_confirm">Apagar tudo</string>
+    <string name="privacy_erase_cancel">Cancelar</string>
+    <string name="privacy_erase_done">Seus dados foram apagados deste aparelho.</string>
+    <string name="privacy_erase_error">Não foi possível apagar os dados. Tente novamente.</string>
+</resources>

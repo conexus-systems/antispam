@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hist_hidden_number">Número oculto</string>
+    <string name="hist_simulated">Simulação</string>
+    <string name="hist_loading">Carregando histórico…</string>
+
+    <string name="hist_filter_all">Todas</string>
+    <string name="hist_filter_blocked">Bloqueadas</string>
+    <string name="hist_filter_silenced">Silenciadas</string>
+    <string name="hist_filter_allowed">Permitidas</string>
+    <string name="hist_filter_reported">Denunciadas</string>
+    <string name="hist_filters_desc">Filtros do histórico</string>
+    <string name="hist_filter_selected_desc">%1$s, selecionado</string>
+
+    <string name="hist_empty_all">Nenhuma chamada registrada ainda.\nQuando o app analisar uma chamada recebida, ela aparece aqui com o motivo da decisão.</string>
+    <string name="hist_empty_filtered">Nenhuma chamada neste filtro.</string>
+
+    <string name="hist_item_desc">%1$s, %2$s, %3$s. Toque para ver detalhes.</string>
+    <string name="hist_reason_more">+%1$d</string>
+    <string name="hist_no_reason">Sem sinais de risco</string>
+    <string name="hist_reported_tag">Denunciada</string>
+
+    <string name="hist_clear_action">Limpar histórico</string>
+    <string name="hist_clear_title">Limpar histórico?</string>
+    <string name="hist_clear_message">Todas as entradas serão apagadas deste aparelho. Isso não pode ser desfeito.</string>
+    <string name="hist_clear_confirm">Limpar tudo</string>
+    <string name="hist_delete_action">Apagar item</string>
+    <string name="hist_delete_title">Apagar este item?</string>
+    <string name="hist_delete_message">A entrada será removida do histórico. Isso não pode ser desfeito.</string>
+    <string name="hist_delete_confirm">Apagar</string>
+    <string name="hist_cancel">Cancelar</string>
+
+    <string name="hist_detail_back">Voltar ao histórico</string>
+    <string name="hist_detail_title">Detalhe da chamada</string>
+    <string name="hist_detail_action">Ação</string>
+    <string name="hist_detail_time">Quando</string>
+    <string name="hist_detail_score">Pontuação de risco</string>
+    <string name="hist_detail_risk">Risco: %1$s</string>
+    <string name="hist_detail_confidence">Confiança: %1$s</string>
+    <string name="hist_detail_why">Por que esta decisão?</string>
+    <string name="hist_detail_rules">Regras que dispararam</string>
+    <string name="hist_detail_list_blocked">Este número está na sua lista de bloqueados.</string>
+    <string name="hist_detail_list_allowed">Este número está na sua lista de permitidos.</string>
+    <string name="hist_detail_hidden_note">Número oculto: não é possível bloquear, permitir ou denunciar um número que não foi identificado. Use as regras de Ajustes para tratar chamadas ocultas.</string>
+    <string name="hist_detail_category">Categoria da denúncia: %1$s</string>
+    <string name="hist_detail_missing">Esta entrada não existe mais.</string>
+
+    <string name="hist_act_block">Bloquear número</string>
+    <string name="hist_act_unblock">Desbloquear</string>
+    <string name="hist_act_allow">Permitir sempre</string>
+    <string name="hist_act_report">Denunciar como spam</string>
+    <string name="hist_act_more">Mais ações</string>
+
+    <string name="hist_report_title">Denunciar como spam</string>
+    <string name="hist_report_message">Escolha a categoria. O número entra na sua lista de bloqueados e a denúncia fica somente neste aparelho.</string>
+
+    <string name="hist_notice_blocked">Número bloqueado</string>
+    <string name="hist_notice_allowed">Número permitido</string>
+    <string name="hist_notice_unblocked">Número desbloqueado e permitido</string>
+    <string name="hist_notice_reported">Denúncia registrada neste aparelho</string>
+    <string name="hist_notice_already_blocked">Já está na lista de bloqueados</string>
+    <string name="hist_notice_already_allowed">Já está na lista de permitidos</string>
+    <string name="hist_notice_already_reported">Este número já foi denunciado</string>
+    <string name="hist_notice_invalid">Número inválido</string>
+    <string name="hist_notice_emergency">Números de emergência nunca são bloqueados</string>
+    <string name="hist_notice_hidden">Número oculto não pode entrar em listas</string>
+    <string name="hist_notice_deleted">Item apagado</string>
+    <string name="hist_notice_cleared">Histórico limpo</string>
+    <string name="hist_notice_undone">Ação desfeita</string>
+    <string name="hist_notice_undo">Desfazer</string>
+    <string name="hist_notice_dismiss">Fechar aviso</string>
+
+    <string name="hist_time_now">agora</string>
+    <string name="hist_time_minutes">há %1$d min</string>
+    <string name="hist_time_hours">há %1$d h</string>
+    <string name="hist_time_yesterday">ontem %1$s</string>
+</resources>

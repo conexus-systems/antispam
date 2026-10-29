@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import br.com.conexus.antispam.database.AppDatabase
 import br.com.conexus.antispam.database.BlocklistDao
+import br.com.conexus.antispam.database.DatasetMetaDao
+import br.com.conexus.antispam.database.RuleDao
 import br.com.conexus.antispam.database.HistoryDao
 import br.com.conexus.antispam.database.ReputationDao
 import br.com.conexus.antispam.database.UserSettingsDao
@@ -34,4 +36,10 @@ object DatabaseModule {
 
     @Provides
     fun provideUserSettingsDao(database: AppDatabase): UserSettingsDao = database.userSettingsDao()
+
+    @Provides
+    fun provideRuleDao(database: AppDatabase): RuleDao = database.ruleDao()
+
+    @Provides
+    fun provideDatasetMetaDao(database: AppDatabase): DatasetMetaDao = database.datasetMetaDao()
 }

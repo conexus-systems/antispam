@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navegação -->
+    <string name="nav_home">Início</string>
+    <string name="nav_history">Histórico</string>
+    <string name="nav_verify">Verificar</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <!-- Home: estado da proteção -->
+    <string name="hm_title">Início</string>
+    <string name="hm_kicker">AntiSpam BR</string>
+    <string name="hm_protection_active">Proteção ativa</string>
+    <string name="hm_protection_active_desc">O AntiSpam BR analisa no seu aparelho as chamadas recebidas.</string>
+    <string name="hm_protection_inactive">Proteção inativa</string>
+    <string name="hm_protection_inactive_desc">O AntiSpam BR não é o seu app de triagem de chamadas, então nenhuma chamada é analisada. Verificar e o simulador continuam funcionando.</string>
+    <string name="hm_protection_paused">Proteção desligada</string>
+    <string name="hm_protection_paused_desc">O app é o seu app de triagem, mas o modo está em Desligado. Nenhuma chamada é bloqueada.</string>
+    <string name="hm_activate">Ativar proteção</string>
+    <string name="hm_open_settings">Abrir ajustes</string>
+    <string name="hm_role_unavailable">Este aparelho não oferece a opção de app de triagem de chamadas. Verifique em Configurações do Android, Apps, Apps padrão.</string>
+    <string name="hm_notif_off">Os avisos de chamadas bloqueadas estão desativados. O bloqueio continua funcionando.</string>
+    <string name="hm_notif_allow">Permitir avisos</string>
+
+    <!-- Home: modo -->
+    <string name="hm_mode_label">Modo de proteção</string>
+    <string name="hm_mode_off">Desligado</string>
+    <string name="hm_mode_basic">Básico</string>
+    <string name="hm_mode_balanced">Equilibrado</string>
+    <string name="hm_mode_aggressive">Agressivo</string>
+    <string name="hm_mode_custom">Personalizado</string>
+    <string name="hm_mode_change_hint">Toque para mudar nos Ajustes</string>
+
+    <!-- Home: contadores -->
+    <string name="hm_today">Hoje</string>
+    <string name="hm_blocked">Bloqueadas</string>
+    <string name="hm_silenced">Silenciadas</string>
+    <string name="hm_warned">Com alerta</string>
+    <string name="hm_allowed">Permitidas</string>
+    <string name="hm_total_since">%1$d chamadas analisadas no total</string>
+
+    <!-- Home: últimas decisões -->
+    <string name="hm_recent">Últimas decisões</string>
+    <string name="hm_recent_empty">Nenhuma chamada analisada ainda. Quando alguém ligar, a decisão aparece aqui.</string>
+    <string name="hm_see_all">Ver todo o histórico</string>
+
+    <!-- Home: simulador -->
+    <string name="hm_sim_title">Simulador de chamada</string>
+    <string name="hm_sim_desc">Veja o que o app faria se este número ligasse. É só uma simulação: nada é bloqueado, gravado ou enviado.</string>
+    <string name="hm_sim_field">Número para simular</string>
+    <string name="hm_sim_placeholder">Ex.: (11) 91234-5678</string>
+    <string name="hm_sim_run">Simular chamada</string>
+    <string name="hm_sim_hidden">Simular número oculto</string>
+    <string name="hm_sim_badge">SIMULAÇÃO</string>
+    <string name="hm_sim_result_action">Ação: %1$s</string>
+    <string name="hm_sim_result_risk">Risco: %1$s</string>
+    <string name="hm_sim_clear">Limpar resultado</string>
+    <string name="hm_sim_error">Não foi possível simular agora. Tente de novo.</string>
+    <string name="hm_icon_shield_ok">Proteção ativa</string>
+    <string name="hm_icon_shield_off">Proteção inativa</string>
+</resources>

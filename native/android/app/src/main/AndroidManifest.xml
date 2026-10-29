@@ -3,20 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="br.com.conexus.antispam">
 
-    <!-- Permissões obrigatórias para Call Screening -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
-    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <!--
+      Permissões mínimas (docs/sdd/app-functional-spec.md §8).
+      O papel de triagem (ROLE_CALL_SCREENING) é pedido via RoleManager; BIND_SCREENING_SERVICE vai só no <service>.
+      Sem READ_CALL_LOG, READ_CONTACTS, READ_PHONE_STATE, ANSWER_PHONE_CALLS, serviço em primeiro plano ou boot receiver
+      (o WorkManager persiste o agendamento e é reagendado em AntiSpamApplication.onCreate).
+    -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE" />
+
+    <!-- ID de publicidade (AdMob); declarar "ID de publicidade" na Play Console. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
@@ -32,27 +30,20 @@
         android:theme="@style/Theme.AntiSpam"
         tools:targetApi="31">
 
+        <!-- AdMob: ID do app vem de manifestPlaceholders (ADMOB_APP_ID) no build.gradle.kts -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${ADMOB_APP_ID}" />
+
         <!-- Call Screening Service (Android 10+) -->
         <service
             android:name=".screening.CallerIdScreeningService"
             android:permission="android.permission.BIND_SCREENING_SERVICE"
-            android:exported="true"
-            android:foregroundServiceType="phoneCall">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.telecom.CallScreeningService" />
             </intent-filter>
         </service>
-
-        <!-- Broadcast Receiver para boot completed -->
-        <receiver
-            android:name=".sync.BootReceiver"
-            android:exported="false"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

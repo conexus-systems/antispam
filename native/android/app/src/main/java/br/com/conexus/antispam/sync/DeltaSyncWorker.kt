@@ -61,6 +61,17 @@ class DeltaSyncWorker(
             // 5. Atualizar versão
             val updatedSettings = settings.copy(datasetVersion = manifest.version.toLong())
             db.userSettingsDao().upsert(updatedSettings)
+            db.datasetMetaDao().upsert(
+                br.com.conexus.antispam.database.DatasetMeta(
+                    id = 1,
+                    version = manifest.version.toLong(),
+                    publishedAt = "",
+                    signatureOk = true,
+                    source = "delta",
+                    entries = applied,
+                    installedAt = br.com.conexus.antispam.domain.IsoTime.format(System.currentTimeMillis()),
+                ),
+            )
 
             Result.success()
         } catch (e: Exception) {

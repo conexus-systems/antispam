@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ob_step_progress">Passo %1$d de %2$d</string>
+
+    <!-- Passo 1: divulgação em destaque -->
+    <string name="ob_welcome_title">Chega de chamadas indesejadas</string>
+    <string name="ob_welcome_body">O AntiSpam BR identifica e bloqueia telemarketing, golpes e robocalls antes de você atender.</string>
+    <string name="ob_disclosure_title">Antes de começar</string>
+    <string name="ob_disclosure_text">Para bloquear chamadas indesejadas, o AntiSpam BR precisa ser definido como seu app de triagem de chamadas. Ele analisa, somente no seu aparelho, o número de quem liga quando esse número não está na sua agenda. Não lemos sua agenda, não gravamos chamadas e não enviamos seus números para servidores. Você pode desativar a qualquer momento nas configurações do Android.</string>
+    <string name="ob_point_local">O bloqueio é feito no aparelho e funciona offline.</string>
+    <string name="ob_point_contacts">Sua agenda não é lida.</string>
+    <string name="ob_point_nosend">Nenhum número é enviado para servidores.</string>
+    <string name="ob_point_calls">Chamadas não são gravadas.</string>
+    <string name="ob_agree">Entendi, continuar</string>
+
+    <!-- Passo 2: papel de triagem -->
+    <string name="ob_role_title">Ative a proteção</string>
+    <string name="ob_role_body">O Android vai perguntar se o AntiSpam BR pode ser o seu app de triagem de chamadas. Toque em Ativar proteção e confirme na janela do sistema.</string>
+    <string name="ob_role_activate">Ativar proteção</string>
+    <string name="ob_role_later">Agora não</string>
+    <string name="ob_role_denied">A proteção não foi ativada. Você pode usar o app mesmo assim e ativar depois na tela Início.</string>
+    <string name="ob_role_granted">Proteção ativada. O modo padrão é Equilibrado.</string>
+    <string name="ob_role_unavailable">Este aparelho não oferece a opção de app de triagem de chamadas. Você ainda pode verificar números pelo app.</string>
+
+    <!-- Passo 3: notificações -->
+    <string name="ob_notif_title">Avisos de chamadas bloqueadas</string>
+    <string name="ob_notif_body">Podemos mostrar um aviso silencioso quando uma chamada for bloqueada, silenciada ou tiver sinais de risco. Recusar não afeta o bloqueio.</string>
+    <string name="ob_notif_allow">Permitir avisos</string>
+    <string name="ob_notif_skip">Agora não</string>
+
+    <string name="ob_finish">Começar a usar</string>
+    <string name="ob_icon_shield">Escudo do AntiSpam BR</string>
+</resources>

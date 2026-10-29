@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lists_title">Meus números</string>
+    <string name="lists_back">Voltar</string>
+    <string name="lists_tab_blocked">Bloqueados</string>
+    <string name="lists_tab_allowed">Permitidos</string>
+    <string name="lists_input_label">Número</string>
+    <string name="lists_input_placeholder">Ex.: +55 11 91234-5678</string>
+    <string name="lists_note_label">Nota (opcional)</string>
+    <string name="lists_add_block">Bloquear número</string>
+    <string name="lists_add_allow">Permitir número</string>
+    <string name="lists_empty_blocked">Nenhum número bloqueado. Adicione acima ou bloqueie pelo Histórico.</string>
+    <string name="lists_empty_allowed">Nenhum número permitido. Números aqui sempre tocam, mesmo que a base os considere spam.</string>
+    <string name="lists_remove">Remover %1$s da lista</string>
+    <string name="lists_unblock">Desbloquear</string>
+    <string name="lists_unblock_desc">Desbloquear %1$s (mover para permitidos)</string>
+    <string name="lists_block_instead">Bloquear</string>
+    <string name="lists_block_instead_desc">Bloquear %1$s (mover para bloqueados)</string>
+    <string name="lists_undo">Desfazer</string>
+    <string name="lists_source_report">denunciado</string>
+    <string name="lists_source_remote">base de reputação</string>
+    <string name="lists_msg_invalid">Número inválido. Digite o DDD e o número, ou use o formato internacional com +.</string>
+    <string name="lists_msg_duplicate">Já está na lista.</string>
+    <string name="lists_msg_emergency">Números de emergência (190, 192, 193...) nunca podem ser bloqueados.</string>
+    <string name="lists_msg_blocked">%1$s bloqueado.</string>
+    <string name="lists_msg_allowed">%1$s permitido.</string>
+    <string name="lists_msg_removed">%1$s removido da lista.</string>
+</resources>
