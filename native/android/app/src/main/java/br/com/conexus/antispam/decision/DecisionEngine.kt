@@ -287,6 +287,8 @@ object DecisionEngine {
     }
 
     private fun detectCampaign(current: CampaignSignal, recentCalls: List<CampaignSignal>, now: Long): CampaignDetection {
+        // Número sem E.164 (inválido/oculto): prefixo vazio casava com TODAS as chamadas recentes.
+        if (current.number.isEmpty()) return CampaignDetection(risk = 0, similarCount = 0)
         val similar = recentCalls.count { call ->
             val diff = now - call.at
             diff >= 0 && diff <= SIGNAL_WINDOW_MS && isSimilarPrefix(current.number, call.number)
@@ -301,6 +303,7 @@ object DecisionEngine {
     }
 
     private fun isSimilarPrefix(a: String, b: String): Boolean {
+        if (a.isEmpty() || b.isEmpty()) return false
         val minLen = minOf(a.length, b.length, 8)
         return a.substring(0, minLen) == b.substring(0, minLen)
     }

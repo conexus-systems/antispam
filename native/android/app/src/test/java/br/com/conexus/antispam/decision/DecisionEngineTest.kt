@@ -59,4 +59,12 @@ class DecisionEngineTest {
         val decision = decide(input)
         assertEquals(CallAction.BLOCK, decision.action)
     }
+
+    @Test
+    fun invalidNumberDoesNotMatchEveryRecentCallAsCampaign() {
+        val now = System.currentTimeMillis()
+        val recent = (1..10).map { CampaignSignal("+55119000000$it".take(13), now - 1000L * it) }
+        val decision = decide(makeInput("11800001111").copy(recentCalls = recent))
+        assertTrue(!decision.reasons.contains(DecisionReason.CAMPAIGN))
+    }
 }

@@ -22,7 +22,7 @@
 
     <string name="privacy_section_policy">Política de privacidade</string>
     <string name="privacy_policy_label">Política de privacidade completa:</string>
-    <string name="privacy_policy_url">[URL_POLITICA_PRIVACIDADE]</string>
+    <string name="privacy_policy_url">Disponível na ficha do AntiSpam BR na Google Play.</string>
 
     <string name="privacy_section_erase">Seus dados</string>
     <string name="privacy_erase_body">Apaga histórico, listas, regras, ajustes e a base local deste aparelho. O app volta ao estado de primeiro uso.</string>

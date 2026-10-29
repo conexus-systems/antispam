@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.combinedClickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
@@ -137,7 +139,8 @@ fun W10MButton(
 ) {
     val theme = useW10MTheme()
     val palette = theme.palette
-    val pressed = remember { mutableStateOf(false) }
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val pressed = interaction.collectIsPressedAsState()
     val scope = rememberCoroutineScope()
     val inactive = !enabled || loading
     
@@ -174,28 +177,24 @@ fun W10MButton(
             .heightIn(min = minHeight)
             .padding(horizontal = horizontalPadding, vertical = W10MSpacing.xs)
             .border(W10MSpacing.strokeWidth, if (variant == W10MButtonVariant.Text) Color.Transparent else borderColor, RectangleShape)
-            .background(bgColor.copy(alpha = if (inactive && !loading) 0.4f else 1f))
+            .background(if (inactive && !loading) bgColor.copy(alpha = bgColor.alpha * 0.4f) else bgColor) // copy(alpha=1f) tornava o Transparent em preto
+            // Um único detector de toque: um pointerInput(detectTapGestures) separado consumia o toque
+            // e o onClick nunca disparava (botões mortos em toque real).
             .combinedClickable(
+                interactionSource = interaction,
+                indication = null,
                 enabled = !inactive,
                 onClick = onClick ?: {},
                 onLongClick = null
-            )
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        pressed.value = true
-                        tryAwaitRelease()
-                        pressed.value = false
-                    }
-                )
-            },
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (loading) {
             W10MProgress(color = textColor, size = 48.dp)
         } else {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                // fillMaxWidth só em botão "block": senão, como trailing de lista, comia a largura do título
+                modifier = if (block) Modifier.fillMaxWidth() else Modifier,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -513,6 +512,10 @@ fun W10MTextField(
     val focused = remember { mutableStateOf(false) }
     val hasError = errorText != null && errorText.isNotBlank()
     val textFieldValue = remember { mutableStateOf(TextFieldValue(value)) }
+    // Mudança externa do valor (ex.: limpar o campo após adicionar) precisa refletir no campo.
+    if (textFieldValue.value.text != value) {
+        textFieldValue.value = TextFieldValue(value, TextRange(value.length))
+    }
     
     val borderColor = when {
         hasError -> palette.danger
@@ -611,7 +614,7 @@ fun W10MPivot(
                         .padding(horizontal = W10MSpacing.s)
                         .padding(top = 2.dp)
                         .heightIn(min = W10MSpacing.touchTarget)
-                        .fillMaxHeight()
+                        // sem fillMaxHeight: dentro de Column ele ocupava a tela inteira e empurrava o conteúdo
                         .combinedClickable(
                             onClick = { onSelect(section.key) },
                             onLongClick = null
