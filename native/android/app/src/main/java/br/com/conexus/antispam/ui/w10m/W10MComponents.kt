@@ -1,6 +1,7 @@
+@file:OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+
 package br.com.conexus.antispam.ui.w10m
 
-import androidx.compose.animation.animateFloatAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -8,6 +9,29 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
+import br.com.conexus.antispam.ui.theme.TypeVariant
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +44,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.modifiers.weight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -65,9 +87,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextTransform
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.px
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.PopupProperties
@@ -76,8 +96,26 @@ import br.com.conexus.antispam.ui.theme.W10MEssentials
 import br.com.conexus.antispam.ui.theme.W10MMotion
 import br.com.conexus.antispam.ui.theme.W10MSpacing
 import br.com.conexus.antispam.ui.theme.W10MTheme
+import br.com.conexus.antispam.ui.theme.forWhiteText
 import br.com.conexus.antispam.ui.theme.useW10MTheme
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.PhoneDisabled
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Warning
 import kotlinx.coroutines.launch
+
+typealias W10MType = br.com.conexus.antispam.ui.theme.W10MType
 
 // ============================================================
 // W10M BUTTON — Retângulo plano
@@ -101,11 +139,12 @@ fun W10MButton(
 ) {
     val theme = useW10MTheme()
     val palette = theme.palette
-    val pressed = remember { mutableStateOf(false) }
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val pressed = interaction.collectIsPressedAsState()
     val scope = rememberCoroutineScope()
     val inactive = !enabled || loading
     
-    val (bgColor, borderColor, textColor) = when (variant) {
+    val (pair, textColor) = when (variant) {
         W10MButtonVariant.Text -> {
             val bg = if (pressed.value) palette.surface else Color.Transparent
             val border = Color.Transparent
@@ -125,50 +164,43 @@ fun W10MButton(
             else Color.Transparent to palette.text to palette.text
         }
     }
+    val (bgColor, borderColor) = pair
     
     val minHeight = if (size == W10MButtonSize.Small) 36.dp else (W10MSpacing.touchTarget - 4.dp)
     val horizontalPadding = if (size == W10MButtonSize.Small) W10MSpacing.s else W10MSpacing.m
     val gap = if (size == W10MButtonSize.Small) W10MSpacing.xs else W10MSpacing.s
     val textStyle = if (size == W10MButtonSize.Small) theme.type.caption else theme.type.body
     
-    val clickable = if (onClick != null && enabled && !loading) {
-        androidx.compose.foundation.interaction.MutableInteractionSource()
-    } else null
-    
-    androidx.compose.foundation.ClickableText(
-        text = androidx.compose.ui.text.AnnotatedString(label),
-        style = textStyle.copy(color = textColor.copy(alpha = if (inactive) 0.4f else 1f)),
+    Box(
         modifier = modifier
-            .fillMaxWidth(block)
-            .minHeight(minHeight)
+            .then(if (block) Modifier.fillMaxWidth() else Modifier)
+            .heightIn(min = minHeight)
             .padding(horizontal = horizontalPadding, vertical = W10MSpacing.xs)
             .border(W10MSpacing.strokeWidth, if (variant == W10MButtonVariant.Text) Color.Transparent else borderColor, RectangleShape)
-            .background(bgColor.copy(alpha = if (inactive && !loading) 0.4f else 1f))
+            .background(if (inactive && !loading) bgColor.copy(alpha = bgColor.alpha * 0.4f) else bgColor) // copy(alpha=1f) tornava o Transparent em preto
+            // Um único detector de toque: um pointerInput(detectTapGestures) separado consumia o toque
+            // e o onClick nunca disparava (botões mortos em toque real).
             .combinedClickable(
+                interactionSource = interaction,
+                indication = null,
+                enabled = !inactive,
                 onClick = onClick ?: {},
                 onLongClick = null
-            )
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = { pressed.value = true },
-                    onPressUp = { pressed.value = false },
-                    onCancel = { pressed.value = false }
-                )
-            },
-        onClick = {}
+            ),
+        contentAlignment = Alignment.Center
     ) {
         if (loading) {
             W10MProgress(color = textColor, size = 48.dp)
         } else {
             Row(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                // fillMaxWidth só em botão "block": senão, como trailing de lista, comia a largura do título
+                modifier = if (block) Modifier.fillMaxWidth() else Modifier,
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.Center
             ) {
                 icon?.invoke()
                 if (icon != null) androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(gap))
-                androidx.compose.foundation.layout.Text(
+                Text(
                     text = label,
                     style = textStyle.copy(color = textColor.copy(alpha = if (inactive) 0.4f else 1f))
                 )
@@ -204,7 +236,7 @@ fun W10MProgress(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(progress * 1f)
+                    .fillMaxWidth(progress)
                     .background(color)
             )
         }
@@ -268,14 +300,13 @@ fun W10MText(
         W10MTextTone.Mute -> palette.mute
     }
     
-    androidx.compose.foundation.layout.Text(
-        text = text,
+    Text(
+        text = if (variant == W10MType::kicker) text.uppercase() else text,
         color = color,
         fontSize = style.fontSize,
         fontWeight = style.fontWeight,
         lineHeight = style.lineHeight,
         letterSpacing = style.letterSpacing,
-        textTransform = style.textTransform,
         modifier = modifier,
         maxLines = maxLines,
         textAlign = textAlign,
@@ -481,6 +512,10 @@ fun W10MTextField(
     val focused = remember { mutableStateOf(false) }
     val hasError = errorText != null && errorText.isNotBlank()
     val textFieldValue = remember { mutableStateOf(TextFieldValue(value)) }
+    // Mudança externa do valor (ex.: limpar o campo após adicionar) precisa refletir no campo.
+    if (textFieldValue.value.text != value) {
+        textFieldValue.value = TextFieldValue(value, TextRange(value.length))
+    }
     
     val borderColor = when {
         hasError -> palette.danger
@@ -510,22 +545,26 @@ fun W10MTextField(
                 .fillMaxWidth()
                 .background(bgColor, RectangleShape)
                 .border(W10MSpacing.strokeWidth, borderColor, RectangleShape)
-                .minHeight(W10MSpacing.touchTarget)
+                .heightIn(min = W10MSpacing.touchTarget)
                 .padding(horizontal = W10MSpacing.m, vertical = W10MSpacing.s)
                 .onFocusChanged { focusState ->
                     focused.value = focusState.isFocused
                 },
             textStyle = theme.type.body.copy(color = textColor),
-            placeholder = placeholder?.let { 
-                { androidx.compose.foundation.layout.Text(text = it, color = placeholderColor, style = theme.type.body) }
+            decorationBox = { innerTextField ->
+                Box {
+                    if (textFieldValue.value.text.isEmpty()) {
+                        placeholder?.let {
+                            Text(text = it, color = placeholderColor, style = theme.type.body)
+                        }
+                    }
+                    innerTextField()
+                }
             },
             singleLine = true,
             keyboardOptions = keyboardOptions,
             enabled = enabled,
             visualTransformation = visualTransformation,
-            keyboardActions = { 
-                KeyboardAction(onAction = { /* handle ime action */ }) 
-            },
         )
         
         androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(W10MSpacing.xs))
@@ -572,15 +611,16 @@ fun W10MPivot(
                 
                 Box(
                     modifier = Modifier
-                        .padding(horizontal = W10MSpacing.s, top = 2.dp)
-                        .minHeight(W10MSpacing.touchTarget)
-                        .fillMaxHeight()
+                        .padding(horizontal = W10MSpacing.s)
+                        .padding(top = 2.dp)
+                        .heightIn(min = W10MSpacing.touchTarget)
+                        // sem fillMaxHeight: dentro de Column ele ocupava a tela inteira e empurrava o conteúdo
                         .combinedClickable(
                             onClick = { onSelect(section.key) },
                             onLongClick = null
                         )
                         .onGloballyPositioned { coordinates ->
-                            offsets[section.key] = coordinates.positionInRoot().x
+                            offsets[section.key] = coordinates.localToRoot(Offset.Zero).x
                         }
                         .background(if (current) Color.Transparent else Color.Transparent)
                 ) {
@@ -708,7 +748,7 @@ fun W10MAppBar(
                                     .border(1.5.dp, ink, RoundedCornerShape(16.dp))
                                     .background(if (button.disabled) Color.Transparent else ink.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
                             ) {
-                                icon?.invoke()
+                                button.icon()
                             }
                             if (showLabels) {
                                 androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(2.dp))
@@ -824,7 +864,7 @@ fun W10MMenu(
                     )
                 }
                 if (item != items.last()) {
-                    androidx.compose.foundation.layout.Divider(
+                    HorizontalDivider(
                         color = palette.border,
                         thickness = 1.dp,
                         modifier = Modifier.padding(horizontal = W10MSpacing.m)
@@ -839,71 +879,37 @@ fun W10MMenu(
 // W10M ICONS — Catálogo único vetores traço 1.7 em grade 24
 // ============================================================
 
+typealias W10MIconGlyph = @Composable (size: Dp, color: Color) -> Unit
+
 object W10MIcons {
-    @Composable fun Shield(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Shield, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun History(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Search(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Settings(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun MoreHorizontal(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.MoreHoriz, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Heart(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Phone(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Phone, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun PhoneOff(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.PhoneDisabled, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Lock(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Close(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Check(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Warning(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Add(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Delete(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Flag(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Flag, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Block(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Block, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun ContentCopy(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
-    @Composable fun Notifications(size: androidx.compose.ui.unit.Dp = 24.dp, color: Color = useW10MTheme().palette.primary) {
-        androidx.compose.material.Icon(Icons.Default.Notifications, contentDescription = null, modifier = Modifier.size(size), tint = color)
-    }
+    val Shield: W10MIconGlyph = { size, color -> Icon(Icons.Default.Shield, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val History: W10MIconGlyph = { size, color -> Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Search: W10MIconGlyph = { size, color -> Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Settings: W10MIconGlyph = { size, color -> Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val MoreHorizontal: W10MIconGlyph = { size, color -> Icon(Icons.Default.MoreHoriz, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Heart: W10MIconGlyph = { size, color -> Icon(Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Phone: W10MIconGlyph = { size, color -> Icon(Icons.Default.Phone, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val PhoneOff: W10MIconGlyph = { size, color -> Icon(Icons.Default.PhoneDisabled, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Lock: W10MIconGlyph = { size, color -> Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Close: W10MIconGlyph = { size, color -> Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Check: W10MIconGlyph = { size, color -> Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Warning: W10MIconGlyph = { size, color -> Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Add: W10MIconGlyph = { size, color -> Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Delete: W10MIconGlyph = { size, color -> Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Flag: W10MIconGlyph = { size, color -> Icon(Icons.Default.Flag, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Block: W10MIconGlyph = { size, color -> Icon(Icons.Default.Block, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val ContentCopy: W10MIconGlyph = { size, color -> Icon(Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(size), tint = color) }
+    val Notifications: W10MIconGlyph = { size, color -> Icon(Icons.Default.Notifications, contentDescription = null, modifier = Modifier.size(size), tint = color) }
 }
 
 @Composable
 fun W10MIcon(
-    name: @Composable () -> Unit,
-    size: androidx.compose.ui.unit.Dp = 24.dp,
+    name: W10MIconGlyph,
+    size: Dp = 24.dp,
     color: Color = useW10MTheme().palette.primary,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.size(size)) { name() }
+    Box(modifier = modifier.size(size)) { name(size, color) }
 }
 
 // ============================================================
@@ -964,7 +970,7 @@ fun W10MListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .minHeight(W10MSpacing.touchTarget)
+                .heightIn(min = W10MSpacing.touchTarget)
                 .padding(vertical = W10MSpacing.s)
             ) {
                 // Barra de seleção 4dp à esquerda (ativo)
@@ -1012,7 +1018,6 @@ fun W10MListItem(
             }
         }
     }
-}
 
 data class W10MListItemAction(
     val label: String,
@@ -1024,7 +1029,7 @@ data class W10MListItemAction(
 @Composable
 fun W10MDivider(modifier: Modifier = Modifier) {
     val palette = useW10MTheme().palette
-    androidx.compose.foundation.layout.Divider(
+    HorizontalDivider(
         color = palette.border,
         thickness = 1.dp,
         modifier = modifier.padding(horizontal = W10MSpacing.gutter)
@@ -1048,7 +1053,7 @@ fun W10MRow(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .minHeight(W10MSpacing.touchTarget)
+            .heightIn(min = W10MSpacing.touchTarget)
             .padding(horizontal = W10MSpacing.gutter, vertical = W10MSpacing.s)
             .combinedClickable(onClick = onClick ?: {}, onLongClick = null)
             .background(Color.Transparent)
@@ -1078,13 +1083,14 @@ fun W10MTag(
     val palette = useW10MTheme().palette
     val c = color ?: palette.primary
     
-    val (bg, border, fg) = when (tone) {
+    val (pair, fg) = when (tone) {
         W10MTagTone.Filled -> c to c to c.forWhiteText()
         W10MTagTone.Outline -> Color.Transparent to c to c
         W10MTagTone.Danger -> palette.dangerFill to palette.dangerFill to palette.onAccent
         W10MTagTone.Warn -> palette.warnFill to palette.warnFill to palette.onAccent
-        W10MTagTone.Info -> palette.info.toColor().forWhiteText() to palette.info.toColor().forWhiteText() to palette.onAccent
+        W10MTagTone.Info -> palette.info.forWhiteText() to palette.info.forWhiteText() to palette.onAccent
     }
+    val (bg, border) = pair
     
     Box(
         modifier = modifier
@@ -1156,7 +1162,7 @@ fun W10MDialog(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
-                    horizontalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     buttons.forEachIndexed { index, button ->
                         if (index > 0) androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(W10MSpacing.s))
@@ -1299,7 +1305,7 @@ fun W10MCheckbox(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .minHeight(W10MSpacing.touchTarget)
+            .heightIn(min = W10MSpacing.touchTarget)
             .padding(horizontal = W10MSpacing.gutter, vertical = W10MSpacing.xs)
             .combinedClickable(onClick = { if (enabled) onCheckedChange(!checked) }, onLongClick = null)
     ) {
@@ -1333,7 +1339,7 @@ fun W10MRadio(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .minHeight(W10MSpacing.touchTarget)
+            .heightIn(min = W10MSpacing.touchTarget)
             .padding(horizontal = W10MSpacing.gutter, vertical = W10MSpacing.xs)
             .combinedClickable(onClick = { if (enabled) onClick() }, onLongClick = null)
     ) {
@@ -1397,7 +1403,7 @@ fun W10MScore(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width((score / 100f))
+                    .fillMaxWidth(score / 100f)
                     .background(scoreColor)
             )
         }

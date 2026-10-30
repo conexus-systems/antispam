@@ -1,8 +1,18 @@
 package br.com.conexus.antispam.ui.theme
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
 
 /**
  * W10M Design System Tokens — Port 1:1 do Conexus Launcher (ui/Theme.kt, Accent.kt, Type.kt, Motion.kt)
@@ -27,8 +37,8 @@ object W10MEssentials {
     const val MARROM = "#825A2C"        // marrom
 }
 
-// Destaque padrão do app (brand primary)
-const val DEFAULT_ACCENT = W10MEssentials.VERDE
+// Destaque padrão do app: brand primary do AntiSpam BR (fleet.yml, família Conexus)
+const val DEFAULT_ACCENT = "#DC2626"
 
 // Extras para faixas de score
 const val AMBAR = "#F0A30A"
@@ -45,16 +55,18 @@ fun Color.toRgb(): IntArray {
     )
 }
 
-fun IntArray.toColor(): Color = Color.rgb(this[0], this[1], this[2])
+fun IntArray.toColor(): Color = Color(this[0], this[1], this[2])
+
+fun String.toColor(): Color = Color(android.graphics.Color.parseColor(this))
 
 /**
  * Luminância relativa WCAG
  */
-fun Color.luminance(): Float {
+fun Color.wcagLuminance(): Float {
     val rgb = toRgb()
     fun channel(v: Int): Float {
         val c = v / 255f
-        return if (c <= 0.03928) c / 12.92 else ((c + 0.055) / 1.055).pow(2.4)
+        return if (c <= 0.03928f) c / 12.92f else ((c + 0.055f) / 1.055f).pow(2.4f)
     }
     val (r, g, b) = rgb
     return 0.2126f * channel(r) + 0.7152f * channel(g) + 0.0722f * channel(b)
@@ -64,8 +76,8 @@ fun Color.luminance(): Float {
  * Razão de contraste WCAG entre duas cores opacas
  */
 fun Color.contrast(other: Color): Float {
-    val l1 = this.luminance()
-    val l2 = other.luminance()
+    val l1 = this.wcagLuminance()
+    val l2 = other.wcagLuminance()
     return (max(l1, l2) + 0.05f) / (min(l1, l2) + 0.05f)
 }
 
@@ -87,7 +99,7 @@ fun Color.scale(factor: Float): Color {
  */
 fun Color.forBackground(background: Color): Color {
     var current = this
-    val dark = background.luminance() < 0.5f
+    val dark = background.wcagLuminance() < 0.5f
     repeat(40) {
         if (current.contrast(background) >= 4.5f) return current
         current = if (dark) current.mix(Color.White, 0.1f) else current.scale(0.92f)
@@ -152,21 +164,21 @@ data class W10MPalette(
     }
 }
 
-private const val DARK_BG = Color(0xFF000000)
-private const val DARK_CHROME = Color(0xFF1A1A1A)
-private const val DARK_SURFACE = Color(0xFF2B2B2B)
-private const val DARK_TEXT = Color(0xFFFFFFFF)
-private const val DARK_TEXT_DIM = Color(0xFFCCCCCC)
-private const val DARK_BORDER = Color(0xFF333333)
-private const val DARK_DISABLED = Color(0xFF666666)
+private val DARK_BG = Color(0xFF000000)
+private val DARK_CHROME = Color(0xFF1A1A1A)
+private val DARK_SURFACE = Color(0xFF2B2B2B)
+private val DARK_TEXT = Color(0xFFFFFFFF)
+private val DARK_TEXT_DIM = Color(0xFFCCCCCC)
+private val DARK_BORDER = Color(0xFF333333)
+private val DARK_DISABLED = Color(0xFF666666)
 
-private const val LIGHT_BG = Color(0xFFFFFFFF)
-private const val LIGHT_CHROME = Color(0xFFF2F2F2)
-private const val LIGHT_SURFACE = Color(0xFFE6E6E6)
-private const val LIGHT_TEXT = Color(0xFF000000)
-private const val LIGHT_TEXT_DIM = Color(0xFF505050)
-private const val LIGHT_BORDER = Color(0xFFCCCCCC)
-private const val LIGHT_DISABLED = Color(0xFF999999)
+private val LIGHT_BG = Color(0xFFFFFFFF)
+private val LIGHT_CHROME = Color(0xFFF2F2F2)
+private val LIGHT_SURFACE = Color(0xFFE6E6E6)
+private val LIGHT_TEXT = Color(0xFF000000)
+private val LIGHT_TEXT_DIM = Color(0xFF505050)
+private val LIGHT_BORDER = Color(0xFFCCCCCC)
+private val LIGHT_DISABLED = Color(0xFF999999)
 
 fun buildW10MPalette(dark: Boolean, accentHex: String = DEFAULT_ACCENT): W10MPalette {
     val accent = Color(android.graphics.Color.parseColor(accentHex))
@@ -220,11 +232,13 @@ data class W10MType(
     val group: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, lineHeight = 22.sp),
     val body: TextStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Normal, lineHeight = 21.sp),
     val caption: TextStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, lineHeight = 16.sp),
-    val kicker: TextStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.SemiBold, lineHeight = 16.sp, letterSpacing = 0.72.sp, textTransform = TextTransform.Uppercase),
-)
+    val kicker: TextStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.SemiBold, lineHeight = 16.sp, letterSpacing = 0.72.sp),
+) {
+    companion object {
+        val Default = W10MType()
+    }
 
-object W10MType {
-    val Default = W10MType()
+    operator fun get(variant: TypeVariant): TextStyle = variant(this)
 }
 
 typealias TypeVariant = W10MType.() -> TextStyle
@@ -234,22 +248,22 @@ typealias TypeVariant = W10MType.() -> TextStyle
 // ============================================================
 
 object W10MSpacing {
-    const val xs = 4.dp
-    const val s = 8.dp
-    const val m = 12.dp
-    const val l = 16.dp
-    const val xl = 24.dp
-    const val gutter = 16.dp  // Margem lateral das páginas
-    const val touchTarget = 44.dp
-    const val strokeWidth = 2.dp
-    const val radius = 0.dp   // W10M: flat and square
+    val xs = 4.dp
+    val s = 8.dp
+    val m = 12.dp
+    val l = 16.dp
+    val xl = 24.dp
+    val gutter = 16.dp  // Margem lateral das páginas
+    val touchTarget = 44.dp
+    val strokeWidth = 2.dp
+    val radius = 0.dp   // W10M: flat and square
 }
 
 object W10MMotion {
     const val quickMs = 100      // interruptor
     const val fastMs = 167
     const val pageMs = 250       // entrada de página: sobe 20dp + aparece; diálogo/menu
-    const val pageRise = 20.dp
+    val pageRise = 20.dp
     const val pressScale = 0.98f
 }
 
@@ -260,8 +274,8 @@ object W10MMotion {
 data class W10MTheme(
     val palette: W10MPalette,
     val type: W10MType = W10MType.Default,
-    val spacing: W10MSpacing.type = W10MSpacing,
-    val motion: W10MMotion.type = W10MMotion,
+    val spacing: W10MSpacing = W10MSpacing,
+    val motion: W10MMotion = W10MMotion,
 ) {
     val radius = W10MSpacing.radius
     fun space(n: Int) = (n * 8).dp

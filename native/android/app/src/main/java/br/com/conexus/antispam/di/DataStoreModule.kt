@@ -1,15 +1,17 @@
 package br.com.conexus.antispam.di
 
 import android.content.Context
-import androidx.datastore.preferences.PreferencesKeys
-import androidx.datastore.preferences.core.mutablePreferencesOf
-import androidx.datastore.preferences.rx.RxDataStore
-import androidx.datastore.preferences.rx.preferencesDataStoreFactory
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
+private val Context.callerIdPrefs: DataStore<Preferences> by preferencesDataStore(name = "conexus_caller_id_prefs")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -17,17 +19,6 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideDataStore(@dagger.hilt.android.qualifiers.ApplicationContext context: Context): RxDataStore {
-        return preferencesDataStoreFactory(
-            name = "conexus_caller_id_prefs",
-            corruptionHandler = { throw it },
-            migrations = listOf(
-                PreferencesKeys.Migration { mutablePreferences ->
-                    // Migrações futuras se necessário
-                }
-            ),
-            produceMigrations = { mutablePreferencesOf() },
-            scope = context
-        )
-    }
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.callerIdPrefs
 }

@@ -15,7 +15,7 @@ import br.com.conexus.antispam.ui.theme.ConexusColors.Surface
 
 @Composable
 fun ConexusTheme(
-    darkTheme: Boolean = androidx.compose.material3.isSystemInDarkTheme(),
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) ConexusDarkColors else ConexusLightColors
@@ -35,7 +35,7 @@ fun ConexusTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = ConexusTypography,
+        typography = ConexusMaterialTypography,
         content = content
     )
 }

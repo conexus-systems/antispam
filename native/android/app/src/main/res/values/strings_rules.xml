@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rules_title">Regras</string>
+    <string name="rules_add">Nova regra</string>
+    <string name="rules_intro">A primeira regra ativa que combina com o número vale. Seus números bloqueados e permitidos vêm antes das regras.</string>
+    <string name="rules_section_user">Suas regras</string>
+    <string name="rules_section_system">Regras do app</string>
+    <string name="rules_empty">Você ainda não criou regras. Toque em Nova regra para bloquear um prefixo ou DDD.</string>
+    <string name="rules_system_hint">Regras do app não podem ser excluídas, só desativadas.</string>
+    <string name="rules_enabled_desc">Regra %1$s ativa</string>
+    <string name="rules_move_up">Subir prioridade de %1$s</string>
+    <string name="rules_move_down">Descer prioridade de %1$s</string>
+
+    <string name="rules_kind_prefix">Prefixo</string>
+    <string name="rules_kind_ddd">DDD</string>
+    <string name="rules_kind_hidden">Números ocultos</string>
+    <string name="rules_kind_international">Internacionais</string>
+    <string name="rules_kind_other">Regra</string>
+    <string name="rules_kind_prefix_desc">Começa com certos dígitos, como 4000 ou +55 11 4000.</string>
+    <string name="rules_kind_ddd_desc">Qualquer número de um DDD, como 21.</string>
+    <string name="rules_kind_hidden_desc">Chamadas sem identificação.</string>
+    <string name="rules_kind_international_desc">Chamadas de fora do Brasil.</string>
+
+    <string name="rules_action_block">Bloquear</string>
+    <string name="rules_action_silence">Silenciar</string>
+    <string name="rules_action_warn">Avisar</string>
+    <string name="rules_action_allow">Permitir</string>
+
+    <string name="rules_summary">%1$s · %2$s</string>
+    <string name="rules_summary_value">%1$s %2$s · %3$s</string>
+
+    <string name="rules_editor_new">Nova regra</string>
+    <string name="rules_editor_edit">Editar regra</string>
+    <string name="rules_editor_cancel">Cancelar</string>
+    <string name="rules_editor_save">Salvar regra</string>
+    <string name="rules_editor_delete">Excluir regra</string>
+    <string name="rules_field_name">Nome da regra</string>
+    <string name="rules_field_kind">Tipo</string>
+    <string name="rules_field_action">Ação</string>
+    <string name="rules_field_prefix">Prefixo</string>
+    <string name="rules_field_prefix_hint">Só dígitos e +. Sem + vale o Brasil (+55).</string>
+    <string name="rules_field_ddd">DDD</string>
+    <string name="rules_field_ddd_hint">Dois dígitos, como 11 ou 21.</string>
+    <string name="rules_will_match">Vai valer para números que começam com %1$s</string>
+    <string name="rules_will_match_ddd">Vai valer para números do DDD %1$s</string>
+    <string name="rules_error_name">Dê um nome à regra.</string>
+    <string name="rules_error_prefix">Prefixo inválido. Use pelo menos 3 dígitos (e + se for de fora do Brasil).</string>
+    <string name="rules_error_ddd">DDD inválido. Use 2 dígitos, sem começar por 0.</string>
+    <string name="rules_error_generic">Não foi possível salvar a regra.</string>
+
+    <string name="rules_delete_title">Excluir regra?</string>
+    <string name="rules_delete_message">A regra %1$s deixa de valer. Isso não pode ser desfeito.</string>
+    <string name="rules_delete_confirm">Excluir</string>
+    <string name="rules_delete_cancel">Cancelar</string>
+</resources>

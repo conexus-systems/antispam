@@ -32,10 +32,9 @@ val ConexusLightColors = lightColorScheme(
     onSurfaceVariant = Color(0xFF44474C),
     outline = Color(0xFF74777C),
     outlineVariant = Color(0xFFC4C6CC),
-    shadow = Color(0xFF000000),
     scrim = Color(0xFF000000),
     inverseSurface = Color(0xFF2F3033),
-    onInverseSurface = Color(0xFFF1F0F4),
+    inverseOnSurface = Color(0xFFF1F0F4),
     inversePrimary = Color(0xFF9CCCFF),
     surfaceTint = Color(0xFF1BA1E2)
 )
@@ -65,10 +64,9 @@ val ConexusDarkColors = darkColorScheme(
     onSurfaceVariant = Color(0xFFC4C6CC),
     outline = Color(0xFF8E9095),
     outlineVariant = Color(0xFF44474C),
-    shadow = Color(0xFF000000),
     scrim = Color(0xFF000000),
     inverseSurface = Color(0xFFE4E2E6),
-    onInverseSurface = Color(0xFF1A1C1E),
+    inverseOnSurface = Color(0xFF1A1C1E),
     inversePrimary = Color(0xFF1BA1E2),
     surfaceTint = Color(0xFF9CCCFF)
 )

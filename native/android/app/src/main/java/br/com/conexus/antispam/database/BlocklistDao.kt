@@ -11,14 +11,12 @@ interface BlocklistDao {
     @Query("SELECT * FROM blocklist_entries WHERE number = :number")
     suspend fun get(number: String): BlocklistEntry?
 
-    @Query("SELECT * FROM blocklist_entries")
-    fun getAll(): Flow<List<BlocklistEntry>>
+    /** action = "block" ou "allow". Mais recentes primeiro. */
+    @Query("SELECT * FROM blocklist_entries WHERE action = :action ORDER BY createdAt DESC")
+    fun observeByAction(action: String): Flow<List<BlocklistEntry>>
 
-    @Query("SELECT * FROM blocklist_entries WHERE action = 'block'")
-    fun getBlocked(): Flow<List<BlocklistEntry>>
-
-    @Query("SELECT * FROM blocklist_entries WHERE action = 'allow'")
-    fun getAllowed(): Flow<List<BlocklistEntry>>
+    @Query("SELECT number FROM blocklist_entries WHERE action = :action")
+    suspend fun numbers(action: String): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entry: BlocklistEntry): Long
@@ -29,6 +27,6 @@ interface BlocklistDao {
     @Query("DELETE FROM blocklist_entries")
     suspend fun clear(): Int
 
-    @Query("SELECT COUNT(*) FROM blocklist_entries WHERE action = 'block'")
-    suspend fun countBlocked(): Int
+    @Query("SELECT COUNT(*) FROM blocklist_entries WHERE action = :action")
+    suspend fun countByAction(action: String): Int
 }

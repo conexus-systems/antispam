@@ -1,5 +1,6 @@
 package br.com.conexus.antispam.sync
 
+import kotlinx.serialization.builtins.ListSerializer
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
@@ -60,6 +61,17 @@ class DeltaSyncWorker(
             // 5. Atualizar versão
             val updatedSettings = settings.copy(datasetVersion = manifest.version.toLong())
             db.userSettingsDao().upsert(updatedSettings)
+            db.datasetMetaDao().upsert(
+                br.com.conexus.antispam.database.DatasetMeta(
+                    id = 1,
+                    version = manifest.version.toLong(),
+                    publishedAt = "",
+                    signatureOk = true,
+                    source = "delta",
+                    entries = applied,
+                    installedAt = br.com.conexus.antispam.domain.IsoTime.format(System.currentTimeMillis()),
+                ),
+            )
 
             Result.success()
         } catch (e: Exception) {
@@ -81,6 +93,7 @@ class DeltaSyncWorker(
         val entries: List<DeltaEntry>
     )
 
+    @kotlinx.serialization.Serializable
     private data class DeltaEntry(
         val key: String,
         val country: String,
@@ -106,7 +119,7 @@ class DeltaSyncWorker(
     }
 
     private fun verifyDelta(delta: DeltaResponse, manifest: DatasetManifest): Boolean {
-        val json = Json.encodeToString(delta.entries)
+        val json = Json.encodeToString(ListSerializer(DeltaEntry.serializer()), delta.entries)
         val digest = sha256Hex(json)
         if (digest != manifest.digest) return false
 
@@ -114,11 +127,24 @@ class DeltaSyncWorker(
         return verifyEd25519(json, manifest.signature, publicKeyBytes)
     }
 
-    private fun applyDelta(db: AppDatabase, entries: List<DeltaEntry>): Int {
+    private suspend fun applyDelta(db: AppDatabase, entries: List<DeltaEntry>): Int {
         val reputationEntries = entries.map { it.toReputationEntry() }
         db.reputationDao().upsertAll(reputationEntries)
         return entries.size
     }
+
+    private fun DeltaEntry.toReputationEntry(): ReputationEntry = ReputationEntry(
+        key = key,
+        country = country,
+        category = category,
+        score = score,
+        reports = reports,
+        uniqueReporters = uniqueReporters,
+        firstSeen = firstSeen,
+        lastSeen = lastSeen,
+        confidence = confidence,
+        falsePositives = falsePositives
+    )
 
     private fun sha256Hex(input: String): String {
         val digest = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
@@ -138,19 +164,6 @@ class DeltaSyncWorker(
         }
     }
 }
-
-private fun DeltaEntry.toReputationEntry(): ReputationEntry = ReputationEntry(
-    key = key,
-    country = country,
-    category = category,
-    score = score,
-    reports = reports,
-    uniqueReporters = uniqueReporters,
-    firstSeen = firstSeen,
-    lastSeen = lastSeen,
-    confidence = confidence,
-    falsePositives = falsePositives
-)
 
 private fun String.hexToByteArray(): ByteArray {
     return chunked(2).map { it.toInt(16).toByte() }.toByteArray()

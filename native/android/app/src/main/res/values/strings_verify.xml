@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ver_intro">Veja o que o app faria se este número ligasse agora. A verificação usa as mesmas listas e regras da proteção real, não bloqueia nada e não entra no histórico.</string>
+    <string name="ver_field_label">Número para verificar</string>
+    <string name="ver_field_placeholder">Ex.: (11) 91234-5678</string>
+    <string name="ver_field_helper">Tudo é analisado neste aparelho, sem enviar o número.</string>
+    <string name="ver_checking">Verificando…</string>
+
+    <string name="ver_result_action">Ação: %1$s</string>
+    <string name="ver_result_risk">Risco: %1$s</string>
+    <string name="ver_result_number">Número: %1$s</string>
+    <string name="ver_result_list_blocked">Este número está na sua lista de bloqueados.</string>
+    <string name="ver_result_list_allowed">Este número está na sua lista de permitidos.</string>
+    <string name="ver_result_score_desc">Pontuação de risco %1$d de 100</string>
+    <string name="ver_result_confidence">Confiança: %1$s</string>
+    <string name="ver_result_why">Por que este resultado?</string>
+    <string name="ver_result_simulation">Simulação: nada foi gravado.</string>
+
+    <string name="ver_act_block">Bloquear número</string>
+    <string name="ver_act_unblock">Desbloquear</string>
+    <string name="ver_act_allow">Permitir sempre</string>
+    <string name="ver_act_report">Denunciar como spam</string>
+    <string name="ver_hidden_note">Número oculto não pode entrar em listas. Para tratar chamadas ocultas, use as regras em Ajustes.</string>
+
+
+</resources>

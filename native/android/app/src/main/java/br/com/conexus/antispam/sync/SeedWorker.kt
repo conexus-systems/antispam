@@ -16,8 +16,8 @@ import java.security.KeyFactory
 import kotlinx.serialization.json.Json
 
 /**
- * Worker para inicializar o dataset seed assinado (Ed25519) no primeiro boot.
- * O dataset vem como asset assinado no APK.
+ * Inicializa a base local no primeiro uso. Sem asset (o caso atual), aplica a semente embutida em código
+ * ([EmbeddedSeed]) e registra dataset_meta. Se existir um asset assinado (Ed25519), ele é verificado e usado.
  */
 class SeedWorker(
     context: Context,
@@ -34,6 +34,7 @@ class SeedWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val db = AppDatabase.getInstance(applicationContext)
+            val seeder = DatasetSeeder(db.reputationDao(), db.datasetMetaDao(), db.userSettingsDao())
             val currentVersion = db.userSettingsDao().getSync()?.datasetVersion ?: 0L
 
             // Se já tem versão > 0, pular (já inicializado)
@@ -42,9 +43,14 @@ class SeedWorker(
                 return@withContext Result.success()
             }
 
-            // Carregar dataset do asset
-            val datasetJson = loadAssetString(DATASET_ASSET) ?: return@withContext Result.failure()
-            val publicKeyBytes = loadAssetBytes(PUBLIC_KEY_ASSET) ?: return@withContext Result.failure()
+            val datasetJson = loadAssetString(DATASET_ASSET)
+            val publicKeyBytes = loadAssetBytes(PUBLIC_KEY_ASSET)
+            if (datasetJson == null || publicKeyBytes == null) {
+                // Sem asset: semente embutida (não é erro).
+                seeder.applyEmbedded()
+                Log.i(TAG, "Semente embutida v${EmbeddedSeed.VERSION} aplicada")
+                return@withContext Result.success()
+            }
 
             // Parse e verificação
             val manifest = Json.decodeFromString<DatasetManifest>(datasetJson)
@@ -52,43 +58,49 @@ class SeedWorker(
 
             // Verificar assinatura Ed25519
             if (!verifyEd25519(entriesJson, manifest.signature, publicKeyBytes)) {
-                Log.e(TAG, "Falha na verificação Ed25519 do dataset seed")
-                return@withContext Result.failure()
+                Log.e(TAG, "Falha na verificação Ed25519 do dataset seed; usando semente embutida")
+                seeder.applyEmbedded()
+                return@withContext Result.success()
             }
 
             // Verificar digest SHA256
             val digest = sha256Hex(entriesJson)
             if (digest != manifest.digest) {
-                Log.e(TAG, "Digest SHA256 não confere")
-                return@withContext Result.failure()
+                Log.e(TAG, "Digest SHA256 não confere; usando semente embutida")
+                seeder.applyEmbedded()
+                return@withContext Result.success()
             }
 
             // Parse entries
             val entries = Json.decodeFromString<List<SeedEntry>>(entriesJson)
-            val reputationEntries = entries.map { it.toReputationEntry() }
-
-            // Inserir no banco
-            db.reputationDao().upsertAll(reputationEntries)
-
-            // Atualizar versão no settings
-            val settings = db.userSettingsDao().getSync() ?: br.com.conexus.antispam.database.UserSettings()
-            val updatedSettings = settings.copy(datasetVersion = manifest.version.toLong())
-            db.userSettingsDao().upsert(updatedSettings)
+            db.reputationDao().upsertAll(entries.map { it.toReputationEntry() })
+            seeder.record(
+                version = manifest.version.toLong(),
+                publishedAt = "",
+                entries = entries.size,
+                signatureOk = true,
+                nowMillis = System.currentTimeMillis(),
+            )
 
             Log.i(TAG, "Dataset seed v${manifest.version} carregado: ${entries.size} entradas")
             Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao inicializar dataset seed", e)
-            Result.failure()
+            Result.retry()
         }
     }
 
-    private fun loadAssetString(name: String): String? {
-        return applicationContext.assets.open(name).use { InputStreamReader(it) }.readText()
+    /** null se o asset não existe. */
+    private fun loadAssetString(name: String): String? = try {
+        applicationContext.assets.open(name).bufferedReader().use { it.readText() }
+    } catch (e: java.io.FileNotFoundException) {
+        null
     }
 
-    private fun loadAssetBytes(name: String): ByteArray? {
-        return applicationContext.assets.open(name).readAllBytes()
+    private fun loadAssetBytes(name: String): ByteArray? = try {
+        applicationContext.assets.open(name).use { it.readBytes() }
+    } catch (e: java.io.FileNotFoundException) {
+        null
     }
 
     private fun sha256Hex(input: String): String {

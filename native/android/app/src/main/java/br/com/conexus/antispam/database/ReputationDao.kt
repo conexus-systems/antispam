@@ -21,6 +21,9 @@ interface ReputationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(entries: List<ReputationEntry>): List<Long>
 
+    @Query("DELETE FROM reputation_entries WHERE key = :canonical")
+    suspend fun remove(canonical: String): Int
+
     @Query("DELETE FROM reputation_entries")
     suspend fun clear(): Int
 

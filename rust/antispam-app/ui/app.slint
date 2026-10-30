@@ -1,0 +1,74 @@
+import { Button, ComboBox, LineEdit, ScrollView, TabWidget, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export struct HistoryItem {
+    number: string,
+    action: string,
+    explanation: string,
+}
+
+export component AppWindow inherits Window {
+    title: "AntiSpam BR";
+    preferred-width: 360px;
+    preferred-height: 720px;
+
+    in-out property <[string]> modes;
+    in-out property <int> mode-index: 2;
+    in-out property <[HistoryItem]> history;
+    in-out property <string> verdict-action;
+    in-out property <string> verdict-text;
+
+    callback verify(string);
+    callback mode-changed(int);
+
+    TabWidget {
+        Tab {
+            title: "Início";
+            VerticalBox {
+                Text { text: "Proteção de chamadas"; font-size: 20px; }
+                Text { text: "Modo: " + (root.mode-index == 0 ? "Desligado" : root.mode-index == 1 ? "Básico" : root.mode-index == 3 ? "Agressivo" : "Equilibrado"); }
+                Text { text: "Verifique um número na aba Verificar."; wrap: word-wrap; }
+            }
+        }
+        Tab {
+            title: "Histórico";
+            VerticalBox {
+                Text { text: "Verificações recentes"; font-size: 18px; }
+                ScrollView {
+                    VerticalBox {
+                        for item in root.history: VerticalBox {
+                            Text { text: item.number + " — " + item.action; font-weight: 700; }
+                            Text { text: item.explanation; wrap: word-wrap; }
+                        }
+                    }
+                }
+            }
+        }
+        Tab {
+            title: "Verificar";
+            VerticalBox {
+                Text { text: "Análise manual"; font-size: 18px; }
+                input := LineEdit { placeholder-text: "Ex.: 11 99999-9999"; }
+                Button {
+                    text: "Verificar";
+                    clicked => { root.verify(input.text); }
+                }
+                if root.verdict-action != "": Text { text: root.verdict-action; font-size: 16px; font-weight: 700; }
+                Text { text: root.verdict-text; wrap: word-wrap; }
+            }
+        }
+        Tab {
+            title: "Ajustes";
+            VerticalBox {
+                Text { text: "Modo de proteção"; font-size: 18px; }
+                ComboBox {
+                    model: root.modes;
+                    current-index: root.mode-index;
+                    selected(value) => {
+                        root.mode-index = self.current-index;
+                        root.mode-changed(self.current-index);
+                    }
+                }
+            }
+        }
+    }
+}

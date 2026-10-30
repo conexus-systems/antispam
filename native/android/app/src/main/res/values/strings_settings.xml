@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_screen_title">Ajustes</string>
+
+    <string name="settings_section_protection">Modo de proteção</string>
+    <string name="settings_mode_off">Desativado</string>
+    <string name="settings_mode_off_desc">Não analisa nem bloqueia nada.</string>
+    <string name="settings_mode_basic">Básico</string>
+    <string name="settings_mode_basic_desc">Bloqueia só spam de altíssima confiança.</string>
+    <string name="settings_mode_balanced">Equilibrado</string>
+    <string name="settings_mode_balanced_desc">Bloqueia spam conhecido e campanhas suspeitas. Recomendado.</string>
+    <string name="settings_mode_aggressive">Agressivo</string>
+    <string name="settings_mode_aggressive_desc">Mais restritivo. Maior risco de bloquear algo legítimo.</string>
+    <string name="settings_mode_custom">Personalizado</string>
+    <string name="settings_mode_custom_desc">Você define a partir de que risco o app avisa, bloqueia ou silencia.</string>
+
+    <string name="settings_section_thresholds">Limiares do modo personalizado</string>
+    <string name="settings_thresholds_hint">Pontuação de risco de 0 a 100. Quanto menor o número, mais chamadas são afetadas.</string>
+    <string name="settings_threshold_warn">Avisar a partir de</string>
+    <string name="settings_threshold_block">Bloquear a partir de</string>
+    <string name="settings_threshold_silence">Silenciar a partir de</string>
+    <string name="settings_threshold_silence_off">Desligado</string>
+    <string name="settings_threshold_decrease">Diminuir %1$s</string>
+    <string name="settings_threshold_increase">Aumentar %1$s</string>
+    <string name="settings_block_unknown_title">Bloquear desconhecidos</string>
+    <string name="settings_block_unknown_desc">No modo Agressivo, bloqueia também números sem nenhuma informação na base.</string>
+
+    <string name="settings_section_special">Números especiais</string>
+    <string name="settings_special_0303_title">Chamadas 0303 (telemarketing)</string>
+    <string name="settings_0303_allow">Permitir</string>
+    <string name="settings_0303_identify">Avisar</string>
+    <string name="settings_0303_silence">Silenciar</string>
+    <string name="settings_0303_block">Bloquear</string>
+    <string name="settings_block_hidden_title">Bloquear números ocultos</string>
+    <string name="settings_block_hidden_desc">Chamadas sem identificação de quem liga.</string>
+    <string name="settings_block_international_title">Bloquear números internacionais</string>
+    <string name="settings_block_international_desc">Chamadas de fora do Brasil.</string>
+    <string name="settings_reject_title">Rejeitar chamadas bloqueadas</string>
+    <string name="settings_reject_desc">Quem liga ouve sinal de ocupado. Desligado, a chamada some sem tocar.</string>
+
+    <string name="settings_section_notifications">Notificações</string>
+    <string name="settings_notifications_title">Avisar sobre chamadas tratadas</string>
+    <string name="settings_notifications_desc">Mostra uma notificação discreta quando uma chamada é bloqueada ou suspeita.</string>
+
+    <string name="settings_section_appearance">Aparência</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_dark">Escuro</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_accent_heading">Cor de destaque</string>
+    <string name="settings_accent_option">Cor %1$s</string>
+    <string name="settings_accent_custom">Cor personalizada</string>
+    <string name="settings_accent_custom_placeholder">#RRGGBB</string>
+    <string name="settings_accent_custom_error">Use o formato #RRGGBB</string>
+    <string name="settings_accent_apply">Aplicar cor</string>
+    <string name="settings_accent_reset">Restaurar cor padrão</string>
+    <string name="settings_reduce_motion_title">Reduzir animações</string>
+    <string name="settings_motion_desc">Desliga o movimento das telas e dos controles.</string>
+
+    <string name="settings_section_manage">Gerenciar</string>
+    <string name="settings_open_lists">Números bloqueados e permitidos</string>
+    <string name="settings_open_lists_desc">Sua lista pessoal, que vale antes de qualquer regra.</string>
+    <string name="settings_open_rules">Regras</string>
+    <string name="settings_open_rules_desc">Prefixos, DDDs, ocultos e internacionais.</string>
+    <string name="settings_open_privacy">Privacidade</string>
+    <string name="settings_open_privacy_desc">O que fica no aparelho e como apagar tudo.</string>
+
+    <string name="settings_section_dataset">Base local</string>
+    <string name="settings_dataset_version">Base local: versão %1$d, de %2$s</string>
+    <string name="settings_dataset_entries">%1$d números conhecidos, guardados no aparelho</string>
+    <string name="settings_dataset_none">Base local ainda não instalada</string>
+
+    <string name="settings_ads_privacy_options">Opções de privacidade de anúncios</string>
+    <string name="settings_ads_privacy_options_desc">Revise sua escolha de consentimento para anúncios.</string>
+</resources>

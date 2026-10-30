@@ -1,35 +1,74 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
+// AdMob: IDs só por configuração (-P ou variável de ambiente). Padrão = IDs de TESTE do Google.
+val admobTestAppId = "ca-app-pub-3940256099942544~3347511713"
+val admobTestBannerId = "ca-app-pub-3940256099942544/6300978111"
+val admobTestInterstitialId = "ca-app-pub-3940256099942544/1033173712"
+
+fun admobConfig(name: String, testDefault: String): String =
+    (providers.gradleProperty(name).orNull ?: System.getenv(name))?.trim()?.takeIf { it.isNotEmpty() } ?: testDefault
+
+val admobAppId = admobConfig("ADMOB_ANDROID_APP_ID", admobTestAppId)
+val admobBannerId = admobConfig("ADMOB_BANNER_ID", admobTestBannerId)
+val admobInterstitialId = admobConfig("ADMOB_INTERSTITIAL_ID", admobTestInterstitialId)
+
 android {
     namespace = "br.com.conexus.antispam"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "br.com.conexus.antispam"
+        applicationId = "com.conexus.antispam"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        targetSdk = 36
+        versionCode = 12
+        versionName = "0.2.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
+    // Chave de upload da Play: lida de ~/secrets (fora do repositório). Sem ela, release sai sem assinatura.
+    val uploadProps = Properties().apply {
+        val f = File(System.getProperty("user.home"), "secrets/antispam-br-upload.properties")
+        if (f.exists()) f.inputStream().use { load(it) }
+    }
+
+    signingConfigs {
+        if (uploadProps.getProperty("storeFile") != null) {
+            create("release") {
+                storeFile = file(uploadProps.getProperty("storeFile"))
+                storePassword = uploadProps.getProperty("storePassword")
+                keyAlias = uploadProps.getProperty("keyAlias")
+                keyPassword = uploadProps.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         debug {
+            // Debug sempre usa os IDs de teste.
+            manifestPlaceholders["ADMOB_APP_ID"] = admobTestAppId
+            buildConfigField("String", "ADMOB_BANNER_ID", "\"$admobTestBannerId\"")
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"$admobTestInterstitialId\"")
             isDebuggable = true
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
+            buildConfigField("String", "ADMOB_BANNER_ID", "\"$admobBannerId\"")
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"$admobInterstitialId\"")
+            // R8 desligado na primeira versão: Room/Hilt/serialization ainda sem regras validadas em release.
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 
@@ -43,33 +82,13 @@ android {
         freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
-    }
-
     buildFeatures {
         compose = true
-        viewBinding = true
-        dataBinding = true
+        buildConfig = true
     }
 
     packagingOptions {
         resources.excludes += "META-INF/*.kotlin_module"
-    }
-
-    signingConfigs {
-        create("debug") {
-            storeFile = file("debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-        create("release") {
-            storeFile = file("../keystore/release.keystore")
-            storePassword = providers.gradleProperty("keystore.password")
-            keyAlias = providers.gradleProperty("keystore.alias")
-            keyPassword = providers.gradleProperty("keystore.key.password")
-        }
     }
 }
 
@@ -116,6 +135,7 @@ dependencies {
 
     // Hilt DI
     implementation("com.google.dagger:hilt-android:$hilt_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp("com.google.dagger:hilt-compiler:$hilt_version")
 
     // Navigation
@@ -124,8 +144,6 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:$datastore_version")
-    implementation("androidx.datastore:datastore-core:$datastore_version")
-    implementation("androidx.datastore:datastore-preferences-rxjava3:$datastore_version")
 
     // Retrofit / OkHttp
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -147,12 +165,14 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
+    // AdMob + consentimento UMP (play-services-ads 23.6.0 é a última compatível com compileSdk 34)
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation("com.google.android.ump:user-messaging-platform:3.1.0")
+
     // Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     // RxJava3 para DataStore
-    implementation("io.reactivex.rxjava3:rxandroid:3.1.8")
-    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
 
     // Testes
     testImplementation("junit:junit:4.13.2")
@@ -178,5 +198,23 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-Xopt-in=androidx.lifecycle.ExperimentalLifecycleApi"
         )
+    }
+}
+
+// Guarda de release: não gera AAB/APK de release com IDs de teste do AdMob (como assertStoreSafe do app.config.js).
+gradle.taskGraph.whenReady {
+    val releaseBuild = allTasks.any { t ->
+        t.project == project && t.name.matches(Regex("(bundle|assemble)(.*)Release"))
+    }
+    if (releaseBuild) {
+        val testValues = setOf(admobTestAppId, admobTestBannerId, admobTestInterstitialId)
+        val usingTest = listOf(admobAppId, admobBannerId, admobInterstitialId).filter { it in testValues }
+        if (usingTest.isNotEmpty()) {
+            throw GradleException(
+                "AdMob: build de release com ID(s) de TESTE do Google (" + usingTest.joinToString() + "). " +
+                    "Informe os IDs reais com -PADMOB_ANDROID_APP_ID, -PADMOB_BANNER_ID e -PADMOB_INTERSTITIAL_ID " +
+                    "(ou variaveis de ambiente de mesmo nome). Veja docs/sdd/admob-kotlin.md."
+            )
+        }
     }
 }

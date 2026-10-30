@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "antispam-core",
     "antispam-android",
+    "antispam-app",
 ]
 
 [workspace.package]
