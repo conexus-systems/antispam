@@ -23,14 +23,14 @@ val admobInterstitialId = admobConfig("ADMOB_INTERSTITIAL_ID", admobTestIntersti
 
 android {
     namespace = "br.com.conexus.antispam"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.conexus.antispam"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 10
-        versionName = "0.2.0"
+        targetSdk = 36
+        versionCode = 12
+        versionName = "0.2.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

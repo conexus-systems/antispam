@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
@@ -125,7 +126,7 @@ private fun AntiSpamApp(viewModel: MainViewModel = hiltViewModel()) {
             Box(modifier = Modifier.fillMaxSize().background(palette.bg)) {
                 when (val s = settings) {
                     null -> Unit // carregando: só o fundo, sem piscar o onboarding
-                    else -> if (s.onboardingDone) MainContent() else OnboardingScreen()
+                    else -> if (s.onboardingDone) MainContent() else Box(Modifier.fillMaxSize().safeDrawingPadding()) { OnboardingScreen() }
                 }
             }
         }
